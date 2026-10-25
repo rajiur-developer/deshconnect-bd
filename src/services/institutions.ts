@@ -33,6 +33,7 @@ divisionId?: string;
 districtId?: string;
 upazilaId?: string;
 category?: string;
+categories?: string[];
 sort?: "relevance" | "name" | "newest" | "rating";
 page?: number;
 pageSize?: number; }) {
@@ -41,7 +42,8 @@ addTextSearch(params, query.q, ["name", "description", "address", "category"]);
 if (query.divisionId) params["division_id"] = `eq.${query.divisionId}`;
 if (query.districtId) params["district_id"] = `eq.${query.districtId}`;
 if (query.upazilaId) params["upazila_id"] = `eq.${query.upazilaId}`;
-if (query.category) params["category"] = `eq.${query.category}`;
+if (query.categories?.length) params["category"] = `in.(${query.categories.join(",")})`;
+else if (query.category) params["category"] = `eq.${query.category}`;
 const page = query.page ?? 1;
 const pageSize = query.pageSize ?? 12;
 params["offset"] = ((page - 1) * pageSize).toString();
@@ -85,7 +87,7 @@ export async function listHospitals(query: any = {}) {
   const { category, ...rest } = query;
   const result = await insforgeListInstitutions({
     ...rest,
-    category: category ?? "in.(hospital,health-centre)",
+    ...(category ? { category } : { categories: ["hospital", "health-centre"] }),
   });
   return result;
 }

@@ -55,7 +55,7 @@ describe("institution listings", () => {
     expect(mockInsforgeSelectMany).toHaveBeenCalledWith(
       "institutions",
       expect.objectContaining({
-        category: "eq.in.(hospital,health-centre)",
+        category: "in.(hospital,health-centre)",
         status: "eq.published",
       }),
     );
