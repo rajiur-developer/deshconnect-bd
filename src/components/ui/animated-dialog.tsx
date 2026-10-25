@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "@/components/ui/icons";
 
 export function AnimatedDialog({
@@ -46,11 +47,11 @@ export function AnimatedDialog({
     closeTimer.current = setTimeout(onClose, 160);
   }
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-4 backdrop-blur-sm ${closing ? "modal-backdrop-exit" : "modal-backdrop-enter"}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/45 p-4 backdrop-blur-sm ${closing ? "modal-backdrop-exit" : "modal-backdrop-enter"}`}
       onClick={close}
     >
       <section
@@ -70,6 +71,7 @@ export function AnimatedDialog({
         </button>
         {typeof children === "function" ? children(close) : children}
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

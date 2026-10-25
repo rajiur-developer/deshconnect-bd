@@ -21,6 +21,7 @@ deleteBusinessAction,
 toggleModeratorAction, } from "@/features/admin/actions"; import { ALL_ACTIONS, ROLE_LABELS } from "@/config/permissions"; import { Button } from "@/components/ui/button"; import type { Role } from "@/types/auth";
 import { rolePermissions } from "@/lib/auth/permissions";
 import type { ContentCategory } from "@/services/content-categories";
+import { AnimatedDialog } from "@/components/ui/animated-dialog";
 const selectClass = "rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs focus-ring";
 type FormState = { error?: string; success?: string };
 export function NewsStatusButtons({ article, categories }: { article: { id: string; status: string; title: string; excerpt: string; body: string; category: string; source?: string | null; image: string }; categories: ContentCategory[] }) {
@@ -66,21 +67,27 @@ return (
 {article.status === "published" && (
 <button type="button" disabled={pending} onClick={() => act("pending_review")} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Unpublish</button>
 )}
-<button type="button" disabled={pending} onClick={() => setEditing((value) => !value)} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">{editing ? "Cancel edit" : "Update"}</button>
+<button type="button" disabled={pending} onClick={() => setEditing(true)} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Update</button>
 <button type="button" disabled={pending} onClick={remove} className="rounded-lg border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50">Delete</button>
 {article.status === "pending_review" && (
 <button type="button" disabled={pending} onClick={() => act("rejected")} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Reject</button>
 )}
 </div>
-{editing && <form onSubmit={saveEdit} className="w-72 space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+<AnimatedDialog open={editing} onClose={() => setEditing(false)} label={`Update news: ${article.title}`} panelClassName="max-w-2xl">
+<form onSubmit={saveEdit} className="space-y-4">
+<h2 className="font-semibold text-slate-900">Update news</h2>
 <label className="block text-xs font-medium text-slate-700">Title<input name="title" required maxLength={200} defaultValue={article.title} className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm" /></label>
 <label className="block text-xs font-medium text-slate-700">Excerpt<input name="excerpt" required maxLength={300} defaultValue={article.excerpt} className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm" /></label>
 <label className="block text-xs font-medium text-slate-700">Category<select name="category" required defaultValue={article.category} className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm">{categories.map((category) => <option key={category.value} value={category.value}>{category.name}</option>)}</select></label>
 <label className="block text-xs font-medium text-slate-700">Article<textarea name="body" required defaultValue={article.body} rows={6} className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm" /></label>
 <label className="block text-xs font-medium text-slate-700">Source (optional)<input name="source" defaultValue={article.source ?? ""} className="mt-1 w-full rounded border border-slate-300 bg-white px-2 py-1.5 text-sm" /></label>
 <input type="hidden" name="image" value={article.image} />
+<div className="flex gap-2">
 <button type="submit" disabled={pending} className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50">{pending ? "Saving…" : "Save changes"}</button>
-</form>}
+<button type="button" disabled={pending} onClick={() => setEditing(false)} className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 disabled:opacity-50">Cancel</button>
+</div>
+</form>
+</AnimatedDialog>
 {message && <p role="status" className="text-xs text-slate-600">{message}</p>}
 </div>
 ); }
