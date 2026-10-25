@@ -2,6 +2,7 @@
 import "server-only";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 import { addTextSearch, makePageMeta } from "@/lib/insforge-query";
+import { listContentCategories } from "@/services/content-categories";
 export async function insforgeListAdminInstitutions(query: {
 categories: string[];
 q?: string;
@@ -11,11 +12,11 @@ pageSize?: number;
 const pageSize = query.pageSize ?? 50;
 const requestedPage = Math.max(1, query.page ?? 1);
 const params: Record<string, string> = {
-category: `in.(${query.categories.join(",")})`,
 order: "updated_at.desc,id.asc",
 offset: ((requestedPage - 1) * pageSize).toString(),
 limit: pageSize.toString(),
 };
+if (query.categories.length) params.category = `in.(${query.categories.join(",")})`;
 addTextSearch(params, query.q, ["name", "address", "description"]);
 let result = await insforgeSelectMany("institutions", params);
 const meta = makePageMeta(result.count, requestedPage, pageSize);
@@ -47,12 +48,15 @@ params["offset"] = ((page - 1) * pageSize).toString();
 params["limit"] = pageSize.toString();
 params["order"] = query.sort === "name" ? "name.asc" : "created_at.desc";
 const { data, count } = await insforgeSelectMany("institutions", params);
+const categories = await listContentCategories("institution");
+const categoryNames = new Map(categories.map((category) => [category.value, category.name]));
 return {
 items: (data || []).map((r: any) => ({
 id: r.id,
 slug: r.slug,
 name: r.name,
 category: r.category,
+categoryName: categoryNames.get(r.category) ?? r.category,
 description: r.description,
 address: r.address,
 phone: r.phone,
@@ -78,17 +82,24 @@ export const listInstitutions = insforgeListInstitutions;
 export const getInstitutionBySlug = insforgeGetInstitutionBySlug;
 export const getHospitalBySlug = insforgeGetInstitutionBySlug;
 export async function listHospitals(query: any = {}) {
-  const result = await insforgeListInstitutions({ ...query, category: "hospital" });
+  const { category, ...rest } = query;
+  const result = await insforgeListInstitutions({
+    ...rest,
+    category: category ?? "in.(hospital,health-centre)",
+  });
   return result;
 }
 export async function insforgeGetInstitutionBySlug(slug: string) {
 const data = await insforgeSelectOne("institutions", { slug: `eq.${slug}`, status: "eq.published" });
 if (!data) return null;
+const categories = await listContentCategories("institution");
+const categoryName = categories.find((category) => category.value === data.category)?.name ?? data.category;
 return {
 id: data.id,
 slug: data.slug,
 name: data.name,
 category: data.category,
+categoryName,
 description: data.description,
 address: data.address,
 phone: data.phone,

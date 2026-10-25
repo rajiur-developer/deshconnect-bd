@@ -8,7 +8,7 @@ import { InstitutionForm } from "@/components/admin/institution-form";
 import { RecordActions } from "@/components/admin/record-actions";
 import { formatDate } from "@/lib/utils";
 import type { LocationOption, DistrictOption, UpazilaOption } from "@/components/search/directory-filters";
-import type { Institution, InstitutionCategory } from "@/types/content";
+import type { Institution } from "@/types/content";
 
 type Props = {
   title: string;
@@ -18,7 +18,7 @@ type Props = {
   adminPath: string;
   query: string;
   meta: PageMeta & { pageSize: number };
-  categories: { value: InstitutionCategory; label: string }[];
+  categories: { value: string; label: string }[];
   divisions: LocationOption[];
   districts: DistrictOption[];
   upazilas: UpazilaOption[];

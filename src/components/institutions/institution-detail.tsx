@@ -15,7 +15,7 @@ return (
 <Image src={institution.image} alt={institution.name} fill priority sizes="(max-width: 1024px) 100vw, 66vw" className="object-cover" />
 </div>
 <div className="mt-4 flex flex-wrap items-center gap-2">
-<Badge tone="info">{institutionCategoryLabel(institution.category)}</Badge>
+<Badge tone="info">{institutionCategoryLabel(institution.category, institution.categoryName)}</Badge>
 {institution.verification === "verified" && <Badge tone="success">Verified listing</Badge>}
 {institution.verification !== "verified" && <Badge tone="neutral">Unverified listing</Badge>}
 {institution.source?.startsWith("Mahadi Hassan (CC BY 2.0)") ? (
@@ -26,6 +26,15 @@ rel="noreferrer"
 className="text-xs font-medium text-brand-700 underline"
 >
 Source: Mahadi Hassan · CC BY 2.0
+</a>
+) : institution.source?.startsWith("OpenStreetMap") ? (
+<a
+href="https://www.openstreetmap.org/copyright"
+target="_blank"
+rel="noreferrer"
+className="text-xs font-medium text-brand-700 underline"
+>
+Source: OpenStreetMap contributors · ODbL
 </a>
 ) : institution.source ? <Badge tone="neutral">Source: {institution.source}</Badge> : null}
 </div>

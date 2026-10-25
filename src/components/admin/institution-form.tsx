@@ -12,7 +12,7 @@ import { LocationFields } from "@/components/forms/location-fields";
 import { ImageUpload } from "@/components/forms/image-upload";
 import { useFormStateToast } from "@/components/ui/toast";
 import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters";
-import type { Institution, InstitutionCategory } from "@/types/content";
+import type { Institution } from "@/types/content";
 
 const selectClass = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring";
 
@@ -20,7 +20,7 @@ type Props = {
   divisions: LocationOption[];
   districts: DistrictOption[];
   upazilas: UpazilaOption[];
-  categories: { value: InstitutionCategory; label: string }[];
+  categories: { value: string; label: string }[];
   userId: string;
   record?: Institution;
 };

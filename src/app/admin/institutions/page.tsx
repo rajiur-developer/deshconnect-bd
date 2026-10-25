@@ -1,10 +1,10 @@
 import { InstitutionManager } from "@/components/admin/institution-manager";
-import { INSTITUTION_CATEGORIES } from "@/lib/constants";
 import { mapDbRow } from "@/lib/db/insforge";
 import { firstParam } from "@/lib/query";
 import { parsePage } from "@/lib/utils";
 import { requireUser } from "@/lib/auth/current-user";
 import { insforgeListAdminInstitutions } from "@/services/institutions";
+import { listContentCategories } from "@/services/content-categories";
 import { getDirectoryLocationOptions } from "@/services/locations";
 import type { Institution } from "@/types/content";
 
@@ -17,23 +17,24 @@ export default async function AdminInstitutionsPage({
 }) {
   const params = await searchParams;
   const query = firstParam(params.q)?.trim().slice(0, 100) ?? "";
-  const [{ items, meta }, options, user] = await Promise.all([
-    insforgeListAdminInstitutions({
-      categories: ["school", "college", "madrasah"],
-      q: query,
-      page: parsePage(firstParam(params.page)),
-    }),
+  const [options, user, allCategories] = await Promise.all([
     getDirectoryLocationOptions(),
     requireUser("/admin/institutions"),
+    listContentCategories("institution"),
   ]);
-  const categories = INSTITUTION_CATEGORIES.filter(
-    (category) => category.value === "school" || category.value === "college" || category.value === "madrasah",
-  );
+  const categories = allCategories
+    .filter((category) => !["hospital", "health-centre"].includes(category.value))
+    .map((category) => ({ value: category.value, label: category.name }));
+  const { items, meta } = await insforgeListAdminInstitutions({
+    categories: categories.map((category) => category.value),
+    q: query,
+    page: parsePage(firstParam(params.page)),
+  });
 
   return (
     <InstitutionManager
       title="Institutions"
-      description="Create and manage schools, colleges and madrasahs."
+      description="Create and manage schools, colleges, madrasahs, universities and other educational institutions."
       isHospital={false}
       records={mapDbRow<Institution[]>(items)}
       adminPath="/admin/institutions"

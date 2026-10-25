@@ -13,6 +13,11 @@ describe("query utilities", () => {
 
   it("normalizes array-valued search parameters", () => {
     expect(firstParam([" Dhaka ", "Khulna"])).toBe(" Dhaka ");
+    expect(firstParam(["", " Khulna "])).toBe(" Khulna ");
     expect(parseSort("invalid")).toBe("relevance");
+  });
+
+  it("ignores blank values when building URLs from repeated params", () => {
+    expect(buildHref("/places", { q: ["", "Dhaka"], sort: ["", "name"] })).toBe("/places?q=Dhaka&sort=name");
   });
 });

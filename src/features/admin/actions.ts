@@ -7,6 +7,7 @@ import { createServerClient } from "@insforge/sdk/ssr";
 import { getRolePermissionOverrides, saveRolePermissionOverrides } from "@/services/role-permissions";
 import { isContentCategory, type ContentCategorySection } from "@/services/content-categories";
 import { isValidAdminDirectoryImageUrl, isValidAdminPlaceImageUrl } from "@/features/admin/place-image";
+import { insforgeUpdate } from "@/lib/insforge";
 export type AdminFormState = { error?: string; success?: string };
 async function guard(action: PermissionAction, redirectTo = "/admin") {
 const user = await requireUser(redirectTo);
@@ -36,7 +37,24 @@ return user;
 }
 function categorySectionFromForm(formData: FormData): ContentCategorySection | null {
 const section = formData.get("section");
-return section === "place" || section === "news" ? section : null;
+return section === "place" || section === "news" || section === "institution" ? section : null;
+}
+function revalidateContentCategoryPaths(section: ContentCategorySection) {
+revalidatePath("/admin/categories");
+if (section === "place") {
+revalidatePath("/admin/places");
+revalidatePath("/admin/tourism");
+revalidatePath("/places");
+} else if (section === "news") {
+revalidatePath("/admin/news");
+revalidatePath("/news");
+revalidatePath("/my-news");
+} else {
+revalidatePath("/admin/institutions");
+revalidatePath("/admin/hospitals");
+revalidatePath("/institutions");
+revalidatePath("/hospitals");
+}
 }
 export async function createContentCategoryAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
 const user = await requireMainAdmin();
@@ -54,13 +72,7 @@ return { error: error.code === "23505" ? "A category with this name already exis
 }
 if (!data) return { error: "The category could not be confirmed as saved." };
 try { await audit(user, `category:${section}:create`, "content_category", value); } catch (error) { console.error("Category added but audit logging failed.", error); }
-revalidatePath("/admin/categories");
-revalidatePath("/admin/places");
-revalidatePath("/admin/tourism");
-revalidatePath("/admin/news");
-revalidatePath("/places");
-revalidatePath("/news");
-revalidatePath("/my-news");
+revalidateContentCategoryPaths(section);
 return { success: "Category added." };
 }
 export async function updateContentCategoryAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
@@ -79,13 +91,7 @@ return { error: error.code === "23505" ? "A category with this name already exis
 }
 if (!data) return { error: "Category not found." };
 try { await audit(user, `category:${section}:update`, "content_category", value); } catch (error) { console.error("Category updated but audit logging failed.", error); }
-revalidatePath("/admin/categories");
-revalidatePath("/admin/places");
-revalidatePath("/admin/tourism");
-revalidatePath("/admin/news");
-revalidatePath("/places");
-revalidatePath("/news");
-revalidatePath("/my-news");
+revalidateContentCategoryPaths(section);
 return { success: "Category updated." };
 }
 export async function deleteContentCategoryAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
@@ -93,7 +99,7 @@ const user = await requireMainAdmin();
 const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 if (!section || !value) return { error: "Invalid category." };
-const table = section === "place" ? "places" : "news";
+const table = section === "place" ? "places" : section === "news" ? "news" : "institutions";
 const client = createServerClient({ cookies: await cookies() });
 const { data: uses, error: usesError } = await client.database.from(table).select("id").eq("category", value).limit(1);
 if (usesError) {
@@ -109,13 +115,7 @@ return { error: "Could not delete the category. Please try again." };
 }
 if (!data) return { error: "Category not found." };
 try { await audit(user, `category:${section}:delete`, "content_category", value); } catch (error) { console.error("Category deleted but audit logging failed.", error); }
-revalidatePath("/admin/categories");
-revalidatePath("/admin/places");
-revalidatePath("/admin/tourism");
-revalidatePath("/admin/news");
-revalidatePath("/places");
-revalidatePath("/news");
-revalidatePath("/my-news");
+revalidateContentCategoryPaths(section);
 return { success: "Category deleted." };
 }
 export async function adminSetNewsStatusAction(id: string, status: "pending_review" | "published" | "rejected" | "archived"): Promise<{ ok: boolean; error?: string }> {
@@ -402,6 +402,7 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+if (!(await isContentCategory("institution", parsed.data.category))) return { error: "Please choose a valid institution category." };
 if (parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
 return { error: "The selected institution image could not be verified. Please upload it again." };
 }
@@ -735,12 +736,13 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+if (!(await isContentCategory("institution", parsed.data.category))) return { error: "Please choose a valid institution category." };
 if (imageChanged && parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
 return { error: "The selected institution image could not be verified. Please upload it again." };
 }
 let updated;
 try {
-updated = await updateAdminRow("institutions", id, {
+const values = {
 name: sanitizeText(parsed.data.name, 200),
 category: parsed.data.category,
 description: sanitizeMultiline(parsed.data.description),
@@ -753,7 +755,13 @@ emergency_phone: parsed.data.emergencyPhone ? sanitizeText(parsed.data.emergency
 division_id: parsed.data.divisionId ?? null,
 district_id: parsed.data.districtId ?? null,
 upazila_id: parsed.data.upazilaId ?? null,
-});
+};
+if (process.env.NODE_ENV === "development" && id.startsWith("inst_")) {
+const result = await insforgeUpdate("institutions", id, values);
+updated = result.data?.[0] ? { id: result.data[0].id } : null;
+} else {
+updated = await updateAdminRow("institutions", id, values);
+}
 } catch (error) {
 console.error("Institution update failed.", error instanceof Error ? error.message : "Unknown error");
 return { error: "Could not save this institution. Please try again." };

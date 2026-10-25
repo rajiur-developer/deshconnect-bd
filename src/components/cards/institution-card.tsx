@@ -1,8 +1,8 @@
 // @ts-nocheck
 import Image from "next/image"; import Link from "next/link";
 import type { Institution } from "@/types/content"; import { INSTITUTION_CATEGORIES } from "@/lib/constants"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
-export function institutionCategoryLabel(category: string): string {
-return INSTITUTION_CATEGORIES.find((item) => item.value === category)?.label ?? category; }
+export function institutionCategoryLabel(category: string, categoryName?: string): string {
+return categoryName ?? INSTITUTION_CATEGORIES.find((item) => item.value === category)?.label ?? category; }
 export function InstitutionCard({ institution, locationLabel }: { institution: Institution; locationLabel?: string }) {
 const href = institution.category === "hospital" || institution.category === "health-centre"
 ? `/hospitals/${institution.slug}`
@@ -18,7 +18,7 @@ sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
 />
 <div className="absolute left-3 top-3">
-<Badge tone="info">{institutionCategoryLabel(institution.category)}</Badge>
+<Badge tone="info">{institutionCategoryLabel(institution.category, institution.categoryName)}</Badge>
 </div>
 </div>
 <div className="flex flex-1 flex-col p-4">

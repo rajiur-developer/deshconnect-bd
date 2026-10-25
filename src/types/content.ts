@@ -31,17 +31,13 @@ source?: string;
 lastCheckedAt?: string;
 createdAt: string;
 updatedAt: string; }
-export type InstitutionCategory =
-| "school"
-| "college"
-| "madrasah"
-| "hospital"
-| "health-centre";
+export type InstitutionCategory = string;
 export interface Institution extends LocationRef {
 id: string;
 slug: string;
 name: string;
 category: InstitutionCategory;
+categoryName?: string;
 description: string;
 address: string;
 phone?: string | null;

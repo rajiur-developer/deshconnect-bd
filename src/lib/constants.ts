@@ -20,6 +20,9 @@ label: string; }[] = [
 { value: "school", label: "School" },
 { value: "college", label: "College" },
 { value: "madrasah", label: "Madrasah" },
+{ value: "university", label: "University" },
+{ value: "kindergarten", label: "Kindergarten" },
+{ value: "education-centre", label: "Other education centre" },
 { value: "hospital", label: "Hospital" },
 { value: "health-centre", label: "Health centre" }, ];
 export const PLACE_CATEGORIES = [

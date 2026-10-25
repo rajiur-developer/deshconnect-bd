@@ -16,14 +16,17 @@ import { useFormStateToast } from "@/components/ui/toast";
 export function CategoryManager({
   placeCategories,
   newsCategories,
+  institutionCategories,
 }: {
   placeCategories: ContentCategory[];
   newsCategories: ContentCategory[];
+  institutionCategories: ContentCategory[];
 }) {
   return (
     <div className="space-y-8">
       <CategorySection section="place" title="Place categories" categories={placeCategories} />
       <CategorySection section="news" title="News categories" categories={newsCategories} />
+      <CategorySection section="institution" title="Institution categories" categories={institutionCategories} />
     </div>
   );
 }
