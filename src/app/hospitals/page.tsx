@@ -36,7 +36,7 @@ sortOptions={["relevance", "name", "newest"]}
 current={{ divisionId, districtId, upazilaId }}
 />
 <p className="mt-6 text-sm text-slate-500">{meta.total} records found</p>
-<p className="mt-2 text-xs text-slate-500">
+{/* <p className="mt-2 text-xs text-slate-500">
 Directory data adapted from{" "}
 <a
   href="https://huggingface.co/datasets/Mahadih534/all-bangladeshi-hospitals"
@@ -48,7 +48,7 @@ All Bangladeshi Hospitals by Mahadi Hassan
 </a>{" "}
 under <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer" className="font-medium text-brand-700 underline">CC BY 2.0</a>.
 Listings are unverified and may be incomplete or out of date.
-</p>
+</p> */}
 {items.length ? (
 <ListGrid className="mt-4">
 {items.map((institution) => (
