@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
@@ -23,6 +23,8 @@ export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMes
   const [previewByConversation, setPreviewByConversation] = useState<Record<string, MessagePreview>>(() => Object.fromEntries(initialPreviews.map((preview) => [preview.conversationId, preview])));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [listFilter, setListFilter] = useState<"all" | "unread">("all");
   const [unreadByConversation, setUnreadByConversation] = useState<Record<string, number>>(() => Object.fromEntries(initialUnreadMessages.map(({ conversationId, count }) => [conversationId, count])));
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -184,6 +186,21 @@ export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMes
     if (target) void openChat(target);
   }, [chats, initialUsername, openChat]);
 
+  const visibleChats = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase();
+    return chatList
+      .filter((chat) => !query || chat.member.fullName.toLocaleLowerCase().includes(query) || chat.member.username.toLocaleLowerCase().includes(query))
+      .filter((chat) => listFilter === "all" || (chat.id ? (unreadByConversation[chat.id] ?? 0) > 0 : false))
+      .sort((a, b) => {
+        const aUnread = a.id ? unreadByConversation[a.id] ?? 0 : 0;
+        const bUnread = b.id ? unreadByConversation[b.id] ?? 0 : 0;
+        if (bUnread !== aUnread) return bUnread - aUnread;
+        const aTime = a.id ? previewByConversation[a.id]?.createdAt ?? "" : "";
+        const bTime = b.id ? previewByConversation[b.id]?.createdAt ?? "" : "";
+        return bTime.localeCompare(aTime);
+      });
+  }, [chatList, searchQuery, listFilter, unreadByConversation, previewByConversation]);
+
   const conversationContent = active ? <>
     <header className="flex shrink-0 items-center gap-3 border-b border-slate-100 bg-white px-4 py-3">
       <ProfileAvatar name={active.member.fullName} src={active.member.avatar} storageKey={active.member.avatarKey} className="h-11 w-11" textClassName="text-sm" />
@@ -201,8 +218,9 @@ export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMes
   <div className="h-[min(70vh,42rem)] min-h-[30rem] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm md:grid md:grid-cols-[18rem_minmax(0,1fr)]">
     <aside className={`flex h-full min-h-0 flex-col overflow-hidden md:border-r md:border-slate-200 ${active ? "hidden md:flex" : ""}`} aria-label="Friends">
       <div className="shrink-0 border-b border-slate-100 px-4 py-4">
-        <h2 className="font-semibold text-slate-900">Friends</h2>
-        <p className="mt-1 text-xs text-slate-500">Choose someone to message</p>
+        <div className="flex items-center justify-between gap-2"><div><h2 className="font-semibold text-slate-900">Messages</h2><p className="mt-1 text-xs text-slate-500">Your conversations</p></div><span className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">{chatList.length}</span></div>
+        <label className="relative mt-3 block"><span className="sr-only">Search conversations</span><Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search people…" className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-2 focus:ring-brand-100" /></label>
+        <div className="mt-3 flex gap-2" aria-label="Conversation filters"><button type="button" onClick={() => setListFilter("all")} aria-pressed={listFilter === "all"} className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${listFilter === "all" ? "bg-brand-700 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>All</button><button type="button" onClick={() => setListFilter("unread")} aria-pressed={listFilter === "unread"} className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${listFilter === "unread" ? "bg-brand-700 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>Unread</button></div>
         {notificationPermission === "default" && <button type="button" onClick={() => void enableBrowserNotifications()} className="mt-2 text-xs font-medium text-brand-700 underline underline-offset-2 hover:text-brand-900">Enable browser notifications</button>}
         {notificationPermission === "granted" && <p className="mt-2 text-xs text-emerald-700" role="status">Browser notifications enabled</p>}
         {notificationPermission === "denied" && <p className="mt-2 text-xs text-slate-500">Allow notifications in your browser settings.</p>}
@@ -217,10 +235,10 @@ export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMes
         </div>
       </div>}
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
-        {chatList.length ? chatList.map((chat) => { const preview = chat.id ? previewByConversation[chat.id] : undefined; const previewText = preview?.body?.trim() || (preview?.attachmentType === "image" ? "Image" : preview?.attachmentType === "audio" ? "Voice message" : ""); return <button key={chat.member.id} type="button" onClick={() => void openChat(chat)} className={`flex w-full items-center gap-3 rounded-xl p-3 text-left transition ${active?.member.id === chat.member.id ? "bg-brand-50 ring-1 ring-brand-200" : "hover:bg-slate-50"}`}>
+        {chatList.length ? visibleChats.length ? visibleChats.map((chat) => { const preview = chat.id ? previewByConversation[chat.id] : undefined; const previewText = preview?.body?.trim() || (preview?.attachmentType === "image" ? "📷 Image" : preview?.attachmentType === "audio" ? "🎙 Voice message" : "Start a conversation"); const previewTime = preview?.createdAt ? new Date(preview.createdAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : ""; return <button key={chat.member.id} type="button" onClick={() => void openChat(chat)} aria-current={active?.member.id === chat.member.id ? "true" : undefined} className={`flex w-full items-center gap-3 rounded-xl p-3 text-left transition ${active?.member.id === chat.member.id ? "bg-brand-50 ring-1 ring-brand-200" : "hover:bg-slate-50"}`}>
         <ProfileAvatar name={chat.member.fullName} src={chat.member.avatar} storageKey={chat.member.avatarKey} className="h-11 w-11" textClassName="text-sm" />
-        <span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium text-slate-900">{chat.member.fullName}</span>{preview && <span className="block truncate text-xs text-slate-500">{preview.senderId === userId ? "You" : chat.member.fullName}: {previewText || "Attachment"}</span>}</span><UnreadMessageBadge count={chat.id ? unreadByConversation[chat.id] ?? 0 : 0} />
-      </button>;}) : <p className="p-4 text-sm text-slate-500">Accepted connections will appear here.</p>}
+        <span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="block min-w-0 flex-1 truncate text-sm font-semibold text-slate-900">{chat.member.fullName}</span>{previewTime && <time className="shrink-0 text-[10px] text-slate-400">{previewTime}</time>}</span><span className="mt-1 block truncate text-xs text-slate-500">{preview ? `${preview.senderId === userId ? "You: " : ""}${previewText || "Attachment"}` : previewText}</span></span><UnreadMessageBadge count={chat.id ? unreadByConversation[chat.id] ?? 0 : 0} />
+      </button>;}) : <div className="px-4 py-10 text-center"><span className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-500"><Icon name="search" className="h-4 w-4" /></span><p className="mt-3 text-sm font-medium text-slate-700">{listFilter === "unread" ? "No unread messages" : "No people found"}</p><p className="mt-1 text-xs text-slate-500">{listFilter === "unread" ? "You’re all caught up." : "Try another name or username."}</p><button type="button" onClick={() => { setSearchQuery(""); setListFilter("all"); }} className="mt-3 text-xs font-semibold text-brand-700 hover:underline">Clear filters</button></div> : <div className="px-4 py-10 text-center"><span className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-brand-50 text-brand-700">✉</span><p className="mt-3 text-sm font-medium text-slate-800">No conversations yet</p><p className="mt-1 text-xs text-slate-500">Accepted connections will appear here.</p></div>}
       </div>
     </aside>
     <section className="hidden min-h-0 min-w-0 flex-col overflow-hidden bg-white md:flex" aria-label="Conversation">{conversationContent}</section>
