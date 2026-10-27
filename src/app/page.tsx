@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CATEGORY_SHORTCUTS, SITE } from "@/config/site";
-import { listBloodRequests, listPublicDonors } from "@/services/blood";
 import { listGovernmentServices } from "@/services/government-services";
 import { listInstitutions } from "@/services/institutions";
 import { featuredPlaces } from "@/services/places";
@@ -14,8 +13,6 @@ import { CategoryCard } from "@/components/cards/category-card";
 import { InstitutionCard } from "@/components/cards/institution-card";
 import { NewsCard } from "@/components/cards/news-card";
 import { PlaceCard } from "@/components/cards/place-card";
-import { BloodRequestCard } from "@/components/blood/blood-request-card";
-import { DonorCard } from "@/components/blood/donor-card";
 import { Icon } from "@/components/ui/icons";
 import { HeroSearch } from "@/components/search/hero-search";
 import { ListGrid } from "@/components/layout/list-grid";
@@ -44,13 +41,11 @@ function SectionHeading({ eyebrow, title, description }: { eyebrow: string; titl
 
 export default async function HomePage() {
   const user = await loadOr(getCurrentUser(), null);
-  const [divisions, featured, institutions, services, donors, requests, posts, news] = await Promise.all([
+  const [divisions, featured, institutions, services, posts, news] = await Promise.all([
     loadOr(listDivisions(), []),
     loadOr(featuredPlaces(6), []),
     loadOr(listInstitutions({ page: 1, pageSize: 4 }).then((result) => result.items.slice(0, 4)), []),
     loadOr(listGovernmentServices({ page: 1, pageSize: 4 }).then((result) => result.items.slice(0, 4)), []),
-    loadOr(listPublicDonors({}).then((items) => items.slice(0, 3)), []),
-    loadOr(listBloodRequests({}).then((items) => items.slice(0, 3)), []),
     loadOr(listPosts({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
     loadOr(listNews({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
   ]);
@@ -76,7 +71,7 @@ export default async function HomePage() {
             <div className="rounded-3xl border border-white/20 bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur sm:p-7">
               <div className="flex items-start gap-4">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent-50 text-accent-600"><Icon name="heart" className="h-6 w-6" /></span>
-                <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-600">Community first</p><h2 className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">Small connections. Real impact.</h2><p className="mt-2 text-sm leading-6 text-slate-600">Discover helpful local information and reach the services and people that matter.</p></div>
+                <div><p className="mt-2 text-sm leading-6 text-slate-600">Discover helpful local information and reach the services and people that matter.</p></div>
               </div>
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <Link href="/blood-donation" className="group rounded-2xl border border-accent-100 bg-accent-50 p-4 transition hover:-translate-y-0.5 hover:border-accent-500"><Icon name="heart" className="h-5 w-5 text-accent-600" /><span className="mt-3 block font-bold text-slate-900">Blood donation</span><span className="mt-1 block text-xs text-slate-600">Find donors & request blood</span><span className="mt-3 block text-sm font-bold text-accent-700">Open blood support →</span></Link>
@@ -98,10 +93,6 @@ export default async function HomePage() {
           <div className="mb-7 flex flex-col gap-5 rounded-3xl border border-rose-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-7">
             <div className="flex items-start gap-4"><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-rose-100 text-rose-700"><Icon name="heart" className="h-7 w-7" /></span><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-rose-700">Always here when it matters</p><h2 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">রক্ত দিন, জীবন বাঁচান</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Find voluntary blood donors or share a blood request. Blood donation remains highlighted as a key DeshConnect service.</p></div></div>
             <div className="flex shrink-0 flex-wrap gap-3"><Link href="/blood-donation" className="rounded-xl bg-rose-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-rose-700">Find blood donors</Link><Link href="/blood-donation" className="rounded-xl border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-700 hover:bg-rose-50">Request blood</Link></div>
-          </div>
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div><div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-lg font-bold text-slate-950">Ready donors</h3><Link href="/blood-donation" className="text-sm font-bold text-rose-700 hover:text-rose-800">View all donors →</Link></div><div className="grid gap-4 sm:grid-cols-2">{donors.map((donor) => <DonorCard key={donor.id} donor={donor} />)}{donors.length === 0 && <EmptyState title="No donor profiles yet">Donor profiles will appear here when people register.</EmptyState>}</div></div>
-            <div><div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-lg font-bold text-slate-950">Active blood requests</h3><Link href="/blood-donation" className="text-sm font-bold text-rose-700 hover:text-rose-800">View requests →</Link></div><div className="grid gap-4 sm:grid-cols-2">{requests.map((request) => <BloodRequestCard key={request.id} request={request} />)}{requests.length === 0 && <EmptyState title="No active blood requests">Active requests will appear here when submitted.</EmptyState>}</div></div>
           </div>
           <div className="mt-6 flex flex-wrap gap-3"><Link href="/blood-donation" className="rounded-xl bg-rose-600 px-5 py-3 text-sm font-bold text-white hover:bg-rose-700">Register as donor</Link><Link href="/blood-donation" className="rounded-xl border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-700 hover:bg-rose-50">Post a blood request</Link></div>
         </div>
