@@ -119,8 +119,9 @@ revalidateContentCategoryPaths(section);
 return { success: "Category deleted." };
 }
 export async function adminSetNewsStatusAction(id: string, status: "pending_review" | "published" | "rejected" | "archived"): Promise<{ ok: boolean; error?: string }> {
-const user = await guard("news:publish");
 if (!id || !["pending_review", "published", "rejected", "archived"].includes(status)) return { ok: false, error: "Invalid news update." };
+const requiredPermission: PermissionAction = status === "published" ? "news:publish" : status === "pending_review" || status === "rejected" ? "news:approve" : "news:edit";
+const user = await guard(requiredPermission);
 const client = createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").update({ status, updated_at: new Date().toISOString() }).eq("id", id).select("id").maybeSingle();
 if (error) { console.error("News status update failed", { code: error.code, message: error.message }); return { ok: false, error: "Could not update the news status." }; }
@@ -130,7 +131,7 @@ revalidatePath("/admin/news"); revalidatePath("/news");
 return { ok: true }; }
 
 export async function adminUpdateNewsAction(id: string, formData: FormData): Promise<{ ok: boolean; error?: string }> {
-const user = await guard("news:publish");
+const user = await guard("news:edit");
 const parsed = staffNewsSchema.safeParse({
 title: formData.get("title"), excerpt: formData.get("excerpt"), body: formData.get("body"),
 category: formData.get("category"), source: formData.get("source") || undefined,
@@ -152,7 +153,7 @@ revalidatePath("/admin/news"); revalidatePath("/news");
 return { ok: true }; }
 
 export async function adminDeleteNewsAction(id: string): Promise<{ ok: boolean; error?: string }> {
-const user = await guard("news:publish");
+const user = await guard("news:edit");
 if (!id) return { ok: false, error: "Invalid news post." };
 const client = createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").delete().eq("id", id).select("id").maybeSingle();
