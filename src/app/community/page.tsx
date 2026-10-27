@@ -28,16 +28,16 @@ return (
 title="Community"
 description="The community achieves more together. Share, ask questions, and help people nearby."
 />
-<div className="container-x grid gap-8 py-8 lg:grid-cols-3">
-<div className="flex items-center justify-end lg:col-span-3"><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" />Chat now</Link></div>
-<div className="space-y-5 lg:col-span-2">
+<div className="page-theme" data-page-theme="community"><div className="bg-gradient-to-b from-brand-50/80 via-slate-50 to-white"><div className="container-x grid gap-6 py-8 sm:py-10 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.8fr)] lg:gap-8">
+<div className="flex items-center justify-between gap-3 lg:col-span-2"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700">DeshConnect community</p><p className="mt-1 text-sm text-slate-600">Share local updates, ask questions, and connect with people.</p></div><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" />Chat now</Link></div>
+<div className="min-w-0 space-y-5">
 {result.items.length === 0 && (
 <EmptyState title="No posts yet" description="Start a discussion and be our first person." icon={<Icon name="message" className="h-10 w-10" />} />
 )}
 {result.items.map((post, index) => {
 const author = authorById.get(post.authorId);
 return (
-<article key={post.id} className="rounded-2xl border border-slate-200 bg-white p-5">
+<article key={post.id} className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/5 transition hover:shadow-md sm:p-6">
 <div className="flex items-center gap-3">
 <ProfileAvatar name={author?.fullName ?? "Community member"} src={author?.avatar} storageKey={author?.avatarKey} className="h-10 w-10 text-sm" textClassName="text-sm" />
 <div>
@@ -71,7 +71,7 @@ View discussion
 {user ? (
 <PostForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} userId={user.id} />
 ) : (
-<div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+<div className="rounded-3xl border border-brand-100 bg-white p-6 text-sm text-slate-600 shadow-sm"><div className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-700"><Icon name="message" className="h-6 w-6" /></div><h2 className="text-lg font-bold text-slate-900">Join the conversation</h2>
 <p>Log in to join the discussion.</p>
 <Link href="/login" className="mt-2 inline-block font-medium text-brand-700">Login →</Link>
 </div>
