@@ -67,19 +67,6 @@ export default async function HomePage() {
               {!user && <><Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Log in</Link><Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Create account</Link></>}
             </div>
           </div>
-          <div className="mx-auto w-full max-w-lg">
-            <div className="rounded-3xl border border-white/20 bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur sm:p-7">
-              <div className="flex items-start gap-4">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent-50 text-accent-600"><Icon name="heart" className="h-6 w-6" /></span>
-                <div><p className="mt-2 text-sm leading-6 text-slate-600">Discover helpful local information and reach the services and people that matter.</p></div>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <Link href="/blood-donation" className="group rounded-2xl border border-accent-100 bg-accent-50 p-4 transition hover:-translate-y-0.5 hover:border-accent-500"><Icon name="heart" className="h-5 w-5 text-accent-600" /><span className="mt-3 block font-bold text-slate-900">Blood donation</span><span className="mt-1 block text-xs text-slate-600">Find donors & request blood</span><span className="mt-3 block text-sm font-bold text-accent-700">Open blood support →</span></Link>
-                <Link href="/institutions" className="group rounded-2xl border border-brand-100 bg-brand-50 p-4 transition hover:-translate-y-0.5 hover:border-brand-300"><Icon name="landmark" className="h-5 w-5 text-brand-700" /><span className="mt-3 block font-bold text-slate-900">Local services</span><span className="mt-1 block text-xs text-slate-600">Institutions and public help</span><span className="mt-3 block text-sm font-bold text-brand-700">Browse services →</span></Link>
-              </div>
-              <p className="mt-5 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-500">DeshConnect helps people explore information across Bangladesh. Availability of listings depends on published community content.</p>
-            </div>
-          </div>
         </div>
       </section>
 
