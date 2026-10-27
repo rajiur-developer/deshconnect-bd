@@ -41,7 +41,7 @@ return (
 <NavMenu key={isNavGroup(entry) ? entry.label : entry.href} entry={entry} unreadMessages={entry.href === "/messages" ? unreadMessageTotal : 0} initialUnreadMessages={unreadMessages} />
 ))}
 </nav>
-<div className="ml-auto flex items-center gap-2">\n<Link href="/blood-donation" aria-label="Blood donation: find donors or request blood" className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-rose-600 px-3 py-2 text-xs font-bold text-white shadow-sm shadow-rose-900/15 hover:bg-rose-700 sm:px-3.5 sm:text-sm"><Icon name="heart" className="h-4 w-4" /><span className="hidden sm:inline">Blood Donation</span><span className="sm:hidden">Blood</span></Link>
+<div className="ml-auto flex items-center gap-2">
 <form action="/search" className="hidden md:block">
 <div className="relative">
 <Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
