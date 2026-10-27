@@ -77,6 +77,6 @@ View discussion
 </div>
 )}
 </aside>
-</div>
+</div></div></div>
 </>
 ); }
