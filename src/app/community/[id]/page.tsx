@@ -20,9 +20,9 @@ const authorById = new Map(users.map((item) => [item.id, item]));
 const canModerate = user ? can(user.role, "moderation:posts") : false;
 const isOwner = user?.id === post.authorId;
 return (
-<div className="container-x py-8">
+<div className="page-theme" data-page-theme="community"><div className="bg-gradient-to-b from-brand-50/80 via-slate-50 to-white"><div className="container-x py-8 sm:py-10">
 <div className="grid gap-8 lg:grid-cols-3">
-<article className="rounded-2xl border border-slate-200 bg-white p-6 lg:col-span-2">
+<article className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm shadow-slate-900/5 sm:p-8 lg:col-span-2">
 <div className="flex items-center gap-3">
 <ProfileAvatar name={authorById.get(post.authorId)?.fullName ?? "Community member"} src={authorById.get(post.authorId)?.avatar} storageKey={authorById.get(post.authorId)?.avatarKey} className="h-11 w-11 text-sm" textClassName="text-sm" />
 <div>
@@ -42,7 +42,7 @@ return (
 </div>
 </article>
 <aside className="space-y-5">
-<div className="rounded-2xl border border-slate-200 bg-white p-5">
+<div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/5">
 <h2 className="font-semibold text-slate-900">Comments ({comments.length})</h2>
 <div className="mt-4 space-y-4">
 {comments.length === 0 && <p className="text-sm text-slate-600">No comments yet.</p>}
@@ -62,5 +62,5 @@ return (
 <div className="mt-8">
 <Link href="/community" className="text-sm font-medium text-brand-700">← Back to community</Link>
 </div>
-</div>
+</div></div></div>
 ); }
