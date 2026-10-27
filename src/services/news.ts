@@ -19,7 +19,8 @@ export async function insforgeListNews(query: {
   status?: string;
 }) {
   const params: Record<string, string> = {};
-  if (!query.includeAll) params["status"] = "eq.published";
+  if (query.status) params["status"] = `eq.${query.status}`;
+  else if (!query.includeAll) params["status"] = "eq.published";
   if (query.authorId) params["author_id"] = `eq.${query.authorId}`;
   if (query.category) params["category"] = `eq.${query.category}`;
   addTextSearch(params, query.q, ["title", "excerpt", "body"]);
