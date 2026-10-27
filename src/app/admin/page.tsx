@@ -22,12 +22,12 @@ function MetricCard({ item }) {
   const style = metricStyles[item.tone] ?? metricStyles.green;
   return (
     <Link href={item.href} className="group block rounded-2xl focus-ring">
-      <Card className="relative h-full overflow-hidden p-4 sm:p-5 group-hover:-translate-y-0.5 group-hover:border-brand-300 group-hover:shadow-md">
+      <Card className="relative h-full overflow-hidden rounded-2xl border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <span className={`grid h-10 w-10 place-items-center rounded-xl text-sm font-bold ${style.surface} ${style.ink}`} aria-hidden="true">{style.icon}</span>
           <span className="rounded-full bg-slate-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">View</span>
         </div>
-        <p className="mt-4 break-words text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{Number(item.value ?? 0).toLocaleString()}</p>
+        <p className="mt-4 break-words text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{Number(item.value ?? 0).toLocaleString()}</p>
         <p className="mt-1 text-sm font-medium text-slate-600">{item.label}</p>
         <div className={`absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${style.bar}`} />
       </Card>
