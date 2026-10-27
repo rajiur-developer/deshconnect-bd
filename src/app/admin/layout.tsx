@@ -7,31 +7,31 @@ import { getRolePermissionOverrides } from "@/services/role-permissions";
 import { Icon } from "@/components/ui/icons";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard", icon: "layout-dashboard" },
+  { href: "/admin", label: "Dashboard", icon: "home" },
   { href: "/admin/users", label: "Users", icon: "users" },
   { href: "/admin/roles", label: "Roles", icon: "shield" },
-  { href: "/admin/permissions", label: "Permissions", icon: "lock" },
+  { href: "/admin/permissions", label: "Permissions", icon: "shield" },
   { href: "/admin/locations", label: "Locations", icon: "map-pin" },
-  { href: "/admin/places", label: "Places", icon: "map" },
-  { href: "/admin/hospitals", label: "Hospitals", icon: "heart-pulse" },
-  { href: "/admin/institutions", label: "Institutions", icon: "school" },
-  { href: "/admin/categories", label: "Content Categories", icon: "layers" },
-  { href: "/admin/tourism", label: "Tourism", icon: "compass" },
+  { href: "/admin/places", label: "Places", icon: "mountain" },
+  { href: "/admin/hospitals", label: "Hospitals", icon: "heart" },
+  { href: "/admin/institutions", label: "Institutions", icon: "book" },
+  { href: "/admin/categories", label: "Content Categories", icon: "book" },
+  { href: "/admin/tourism", label: "Tourism", icon: "globe" },
   { href: "/admin/businesses", label: "Businesses", icon: "store" },
   { href: "/admin/government-services", label: "Government Services", icon: "landmark" },
-  { href: "/admin/news?view=requests", label: "News Requests", icon: "inbox" },
-  { href: "/admin/news?view=all", label: "News", icon: "newspaper" },
-  { href: "/admin/community", label: "Community", icon: "messages-square" },
+  { href: "/admin/news?view=requests", label: "News Requests", icon: "alert" },
+  { href: "/admin/news?view=all", label: "News", icon: "book" },
+  { href: "/admin/community", label: "Community", icon: "message" },
   { href: "/admin/blood-donors", label: "Blood Donors", icon: "heart" },
   { href: "/admin/blood-requests", label: "Blood Requests", icon: "droplet" },
-  { href: "/admin/blood-alerts", label: "Emergency Alerts", icon: "siren" },
-  { href: "/admin/connections", label: "Connections", icon: "network" },
+  { href: "/admin/blood-alerts", label: "Emergency Alerts", icon: "alert" },
+  { href: "/admin/connections", label: "Connections", icon: "users" },
   { href: "/admin/reports", label: "Reports", icon: "flag" },
   { href: "/admin/reviews", label: "Reviews", icon: "star" },
   { href: "/admin/media", label: "Media", icon: "image" },
   { href: "/admin/notifications", label: "Notifications", icon: "bell" },
-  { href: "/admin/audit-logs", label: "Audit Logs", icon: "clipboard-list" },
-  { href: "/admin/settings", label: "Settings", icon: "settings" },
+  { href: "/admin/audit-logs", label: "Audit Logs", icon: "calendar" },
+  { href: "/admin/settings", label: "Settings", icon: "save" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -46,7 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="container-x flex min-h-16 items-center gap-3">
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-800 text-white"><Icon name="shield" className="h-5 w-5" /></span>
           <div><p className="font-bold text-slate-950">DeshConnect Admin</p><p className="text-xs capitalize text-slate-500">{user.role} workspace</p></div>
-          <Link href="/" className="ml-auto inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:border-brand-300 hover:bg-brand-50"><Icon name="external-link" className="h-4 w-4" /> Visit website</Link>
+          <Link href="/" className="ml-auto inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:border-brand-300 hover:bg-brand-50"><Icon name="external" className="h-4 w-4" /> Visit website</Link>
         </div>
       </div>
       <div className="container-x grid gap-6 py-5 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-8 lg:py-8">
