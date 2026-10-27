@@ -687,3 +687,35 @@ html[lang="bn"] body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+
+/* ── DeshConnect A–Z UI refresh · shared responsive polish ─────── */
+:root { color-scheme: light; }
+::selection { background: #a9edce; color: #093024; }
+:focus-visible { outline-color: #138a58; }
+img { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+.container-x { width: min(100% - 2rem, 80rem); }
+@media (min-width: 640px) { .container-x { width: min(100% - 3rem, 80rem); } }
+@media (min-width: 1024px) { .container-x { width: min(100% - 4rem, 80rem); } }
+main { min-width: 0; }
+main .container-x { position: relative; }
+main section:not(.gradient-hero) { scroll-margin-top: 5.5rem; }
+main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-radius: .75rem;
+}
+main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus {
+  border-color: #138a58;
+  box-shadow: 0 0 0 3px rgb(19 138 88 / .12);
+}
+main :is(.rounded-xl, .rounded-2xl, .rounded-3xl) { background-clip: padding-box; }
+main :is(a, button) { -webkit-tap-highlight-color: transparent; }
+main a:focus-visible, main button:focus-visible { outline: 3px solid rgb(19 138 88 / .45); outline-offset: 2px; }
+@media (max-width: 639px) {
+  main h1 { overflow-wrap: anywhere; }
+  main .container-x { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+  main :is(.grid) { min-width: 0; }
+}

@@ -22,12 +22,12 @@ function MetricCard({ item }) {
   const style = metricStyles[item.tone] ?? metricStyles.green;
   return (
     <Link href={item.href} className="group block rounded-2xl focus-ring">
-      <Card className="relative h-full overflow-hidden p-4 sm:p-5 group-hover:-translate-y-0.5 group-hover:border-brand-300 group-hover:shadow-md">
+      <Card className="relative h-full overflow-hidden rounded-2xl border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <span className={`grid h-10 w-10 place-items-center rounded-xl text-sm font-bold ${style.surface} ${style.ink}`} aria-hidden="true">{style.icon}</span>
           <span className="rounded-full bg-slate-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">View</span>
         </div>
-        <p className="mt-4 break-words text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{Number(item.value ?? 0).toLocaleString()}</p>
+        <p className="mt-4 break-words text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{Number(item.value ?? 0).toLocaleString()}</p>
         <p className="mt-1 text-sm font-medium text-slate-600">{item.label}</p>
         <div className={`absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${style.bar}`} />
       </Card>
@@ -118,6 +118,44 @@ export default async function AdminDashboardPage() {
               <span className="pt-0.5 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-brand-700" aria-hidden="true">↗</span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="blood-center-heading" className="scroll-mt-24">
+        <div className="overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-white to-orange-50 shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-rose-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <div className="flex items-start gap-3">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-rose-100 text-xl text-rose-700" aria-hidden="true">+</span>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 id="blood-center-heading" className="text-lg font-bold text-rose-950 sm:text-xl">Blood Donation Command Center</h2>
+                  <span className="rounded-full bg-rose-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-rose-800">Priority</span>
+                </div>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-rose-900/70">Keep donor records and blood requests within quick reach. Check active requests first and follow up from the existing management pages.</p>
+              </div>
+            </div>
+            <Link href="/blood-donation" className="inline-flex min-h-11 items-center justify-center rounded-xl bg-rose-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-800 focus-ring">Open public blood page ↗</Link>
+          </div>
+          <div className="grid gap-3 p-4 sm:grid-cols-3 sm:p-5">
+            <Link href="/admin/blood-requests" className="group rounded-2xl border border-rose-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-rose-400 hover:shadow-md focus-ring">
+              <div className="flex items-center justify-between gap-2"><span className="text-sm font-semibold text-slate-700">Active blood requests</span><span className="rounded-lg bg-rose-100 px-2 py-1 text-xs font-bold text-rose-800">Requests</span></div>
+              <p className="mt-3 text-3xl font-extrabold tracking-tight text-rose-800">{Number(requests ?? 0).toLocaleString()}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">Review status and follow up on requests.</p>
+              <span className="mt-3 inline-flex text-xs font-bold text-rose-700 group-hover:underline">Manage requests ↗</span>
+            </Link>
+            <Link href="/admin/blood-donors" className="group rounded-2xl border border-rose-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-rose-400 hover:shadow-md focus-ring">
+              <div className="flex items-center justify-between gap-2"><span className="text-sm font-semibold text-slate-700">Donor directory</span><span className="rounded-lg bg-rose-100 px-2 py-1 text-xs font-bold text-rose-800">Donors</span></div>
+              <p className="mt-3 text-3xl font-extrabold tracking-tight text-rose-800">{Number(donors ?? 0).toLocaleString()}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">Manage donor records and visibility with consent safeguards.</p>
+              <span className="mt-3 inline-flex text-xs font-bold text-rose-700 group-hover:underline">Manage donors ↗</span>
+            </Link>
+            <Link href="/admin/blood-alerts" className="group rounded-2xl border border-rose-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-rose-400 hover:shadow-md focus-ring">
+              <div className="flex items-center justify-between gap-2"><span className="text-sm font-semibold text-slate-700">Blood alerts</span><span className="rounded-lg bg-orange-100 px-2 py-1 text-xs font-bold text-orange-800">Alerts</span></div>
+              <p className="mt-3 text-xl font-extrabold tracking-tight text-slate-900">Open alert center</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">Go to the existing alert management screen.</p>
+              <span className="mt-3 inline-flex text-xs font-bold text-rose-700 group-hover:underline">Manage alerts ↗</span>
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -28,7 +28,7 @@ unreadMessages = unreadCounts;
 }
 const unreadMessageTotal = unreadMessages.reduce((total, item) => total + item.count, 0);
 return (
-<header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 shadow-[0_4px_20px_-14px_rgba(11,61,46,0.45)] backdrop-blur">
+<header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_8px_28px_-22px_rgba(11,61,46,0.65)] backdrop-blur-xl">
 {user && <MessageRealtimeNotifications userId={user.id} conversations={messageConversations} pollSince={new Date().toISOString()} initialUnreadMessages={unreadMessages} />}
 <div className="container-x flex h-16 items-center gap-4">
 <Link href="/" className="flex shrink-0 items-center gap-2 font-bold text-brand-700 logoSize">
@@ -41,7 +41,7 @@ return (
 <NavMenu key={isNavGroup(entry) ? entry.label : entry.href} entry={entry} unreadMessages={entry.href === "/messages" ? unreadMessageTotal : 0} initialUnreadMessages={unreadMessages} />
 ))}
 </nav>
-<div className="ml-auto flex items-center gap-2">
+<div className="ml-auto flex items-center gap-2">\n<Link href="/blood-donation" aria-label="Blood donation: find donors or request blood" className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-rose-600 px-3 py-2 text-xs font-bold text-white shadow-sm shadow-rose-900/15 hover:bg-rose-700 sm:px-3.5 sm:text-sm"><Icon name="heart" className="h-4 w-4" /><span className="hidden sm:inline">Blood Donation</span><span className="sm:hidden">Blood</span></Link>
 <form action="/search" className="hidden md:block">
 <div className="relative">
 <Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
