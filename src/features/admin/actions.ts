@@ -49,11 +49,15 @@ revalidatePath("/places");
 revalidatePath("/admin/news");
 revalidatePath("/news");
 revalidatePath("/my-news");
+} else if (section === "hospital") {
+revalidatePath("/admin/hospitals");
+revalidatePath("/hospitals");
+} else if (section === "government-service") {
+revalidatePath("/admin/government-services");
+revalidatePath("/government-services");
 } else {
 revalidatePath("/admin/institutions");
-revalidatePath("/admin/hospitals");
 revalidatePath("/institutions");
-revalidatePath("/hospitals");
 }
 }
 export async function createContentCategoryAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
