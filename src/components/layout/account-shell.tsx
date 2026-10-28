@@ -1,8 +1,9 @@
 // @ts-nocheck
 import Link from "next/link";
-import type { PublicUser } from "@/types/auth"; import { PageHeader } from "@/components/layout/page-header";
+import type { PublicUser } from "@/types/auth";
+import { PageHeader } from "@/components/layout/page-header";
 const NAV = [
-{ href: "/dashboard", label: "Dashboard" },
+{ href: "/dashboard", label: "Overview" },
 { href: "/profile", label: "My Profile" },
 { href: "/profile/edit", label: "Edit Profile" },
 { href: "/settings", label: "Settings" },
@@ -16,44 +17,66 @@ const NAV = [
 { href: "/friend-requests", label: "Friend Requests" },
 { href: "/notifications", label: "Notifications" },
 { href: "/my-blood-requests", label: "My Blood Requests" },
-{ href: "/my-reports", label: "My Reports" }, ];
+{ href: "/my-reports", label: "My Reports" },
+];
 export function AccountShell({
 user,
 title,
 description,
 messagesOnly = false,
-children, }: {
+minimalDashboard = false,
+children,
+}: {
 user: PublicUser;
 title: string;
 description?: string;
 messagesOnly?: boolean;
-children: React.ReactNode; }) {
+minimalDashboard?: boolean;
+children: React.ReactNode;
+}) {
 const navItems = messagesOnly ? NAV.filter((item) => item.href === "/friend-requests") : NAV;
 return (
 <>
 <PageHeader title={title} description={description} variant={messagesOnly ? "messages" : "default"} />
+{minimalDashboard ? (
+<div className="container-x py-5 sm:py-7">
+  <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white/90 p-3 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:p-4">
+    <div className="min-w-0">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Your account</p>
+      <p className="mt-1 truncate text-sm font-semibold text-slate-900">{user.fullName || user.username}</p>
+      <p className="truncate text-xs text-slate-500">@{user.username}</p>
+    </div>
+    <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:justify-end sm:pb-0" aria-label="Account shortcuts">
+      {[
+        { href: "/profile", label: "Profile" },
+        { href: "/messages", label: "Messages" },
+        { href: "/saved", label: "Saved" },
+        { href: "/notifications", label: "Notifications" },
+        { href: "/settings", label: "Settings" },
+      ].map((item) => (
+        <Link key={item.href} href={item.href} className="shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 sm:text-sm">
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  </div>
+  <main className="min-w-0">{children}</main>
+</div>
+) : (
 <div className={`container-x grid gap-8 py-8 ${messagesOnly ? "lg:grid-cols-[12rem_minmax(0,1fr)]" : "lg:grid-cols-4"}`}>
-<aside>
-{!messagesOnly && <>
-<div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4">
-<p className="truncate text-sm font-semibold text-slate-900">{user.fullName}</p>
-<p className="truncate text-xs text-slate-500">@{user.username}</p>
+  <aside>
+    {!messagesOnly && <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4"><p className="truncate text-sm font-semibold text-slate-900">{user.fullName}</p><p className="truncate text-xs text-slate-500">@{user.username}</p></div>}
+    <nav className="rounded-2xl border border-slate-200 bg-white p-2" aria-label="Account">
+      {navItems.map((item) => (
+        <Link key={item.href} href={item.href} aria-current={messagesOnly && item.href === "/friend-requests" ? "page" : undefined} className={`block rounded-lg px-3 py-2 text-sm ${messagesOnly ? "border border-brand-100 bg-brand-50 font-semibold text-brand-800 shadow-sm" : "text-slate-700 hover:bg-slate-100"}`}>
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  </aside>
+  <div className={messagesOnly ? "min-w-0" : "lg:col-span-3"}>{children}</div>
 </div>
-</>}
-<nav className="rounded-2xl border border-slate-200 bg-white p-2" aria-label="Account">
-{navItems.map((item) => (
-<Link
-key={item.href}
-href={item.href}
-aria-current={messagesOnly && item.href === "/friend-requests" ? "page" : undefined}
-className={`block rounded-lg px-3 py-2 text-sm ${messagesOnly ? "border border-brand-100 bg-brand-50 font-semibold text-brand-800 shadow-sm" : "text-slate-700 hover:bg-slate-100"}`}
->
-{item.label}
-</Link>
-))}
-</nav>
-</aside>
-<div className={messagesOnly ? "min-w-0" : "lg:col-span-3"}>{children}</div>
-</div>
+)}
 </>
-); }
+);
+}
