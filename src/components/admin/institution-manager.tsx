@@ -6,6 +6,7 @@ import { Pagination } from "@/components/ui/pagination";
 import type { PageMeta } from "@/lib/utils";
 import { InstitutionForm } from "@/components/admin/institution-form";
 import { RecordActions } from "@/components/admin/record-actions";
+import { BulkActions } from "@/components/admin/bulk-actions";
 import { formatDate } from "@/lib/utils";
 import type { LocationOption, DistrictOption, UpazilaOption } from "@/components/search/directory-filters";
 import type { Institution } from "@/types/content";
@@ -78,6 +79,7 @@ export function InstitutionManager({
           ? "No records found."
           : `Showing ${(meta.page - 1) * meta.pageSize + 1}-${Math.min(meta.page * meta.pageSize, meta.total)} of ${meta.total} records`}
       </p>
+      <BulkActions entity={isHospital ? "hospital" : "institution"} records={managedRecords.map((record) => ({ id: record.id, label: record.name, status: record.status }))} />
       <Card className="overflow-x-auto p-0">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
