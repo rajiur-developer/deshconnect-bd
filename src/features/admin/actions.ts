@@ -37,7 +37,7 @@ return user;
 }
 function categorySectionFromForm(formData: FormData): ContentCategorySection | null {
 const section = formData.get("section");
-return section === "place" || section === "news" || section === "institution" ? section : null;
+return section === "place" || section === "news" || section === "institution" || section === "hospital" || section === "government-service" ? section : null;
 }
 function revalidateContentCategoryPaths(section: ContentCategorySection) {
 revalidatePath("/admin/categories");
@@ -99,7 +99,7 @@ const user = await requireMainAdmin();
 const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 if (!section || !value) return { error: "Invalid category." };
-const table = section === "place" ? "places" : section === "news" ? "news" : "institutions";
+const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "institutions" : section === "government-service" ? "government_services" : "institutions";
 const client = createServerClient({ cookies: await cookies() });
 const { data: uses, error: usesError } = await client.database.from(table).select("id").eq("category", value).limit(1);
 if (usesError) {
