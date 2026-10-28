@@ -143,7 +143,7 @@ function CategoryRow({ category }: { category: ContentCategory }) {
         <div className="space-y-5 pt-2">
           <div className="flex items-start gap-3">
             <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-50 text-red-600">
-              <Icon name="alert-triangle" className="h-5 w-5" />
+              <Icon name="alert" className="h-5 w-5" />
             </div>
             <div className="pr-5">
               <h2 className="text-lg font-semibold text-slate-900">Delete category?</h2>
