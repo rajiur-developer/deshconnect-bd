@@ -17,10 +17,14 @@ export function CategoryManager({
   placeCategories,
   newsCategories,
   institutionCategories,
+  hospitalCategories,
+  governmentServiceCategories,
 }: {
   placeCategories: ContentCategory[];
   newsCategories: ContentCategory[];
   institutionCategories: ContentCategory[];
+  hospitalCategories: ContentCategory[];
+  governmentServiceCategories: ContentCategory[];
 }) {
   return (
     <div className="space-y-8">
