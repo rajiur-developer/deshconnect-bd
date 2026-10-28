@@ -1,15 +1,15 @@
 // @ts-nocheck
 import Link from "next/link";
-import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ServiceForm } from "@/components/admin/service-form"; import { RecordActions } from "@/components/admin/record-actions"; import { serviceCategoryLabel } from "@/components/cards/service-card"; import { formatDate } from "@/lib/utils";
+import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ServiceForm } from "@/components/admin/service-form"; import { RecordActions } from "@/components/admin/record-actions"; import { serviceCategoryLabel } from "@/components/cards/service-card"; import { formatDate } from "@/lib/utils"; import { listContentCategories } from "@/services/content-categories";
 export const metadata = { title: "Government Services" };
 export default async function AdminGovernmentServicesPage() {
-const [{ data }, options] = await Promise.all([insforgeSelectMany("government_services", { order: "updated_at.desc", limit: "500" }), getDirectoryLocationOptions()]);
+const [{ data }, options, categories] = await Promise.all([insforgeSelectMany("government_services", { order: "updated_at.desc", limit: "500" }), getDirectoryLocationOptions(), listContentCategories("government-service")]);
 const services = mapDbRow(data || []);
 return (
 <>
 <PageHeader title="Government Services" description="Manage government-service information." />
 <div className="mb-8">
-<ServiceForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} />
+<ServiceForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} categories={categories} />
 </div>
 <Card className="overflow-x-auto p-0">
 <table className="min-w-full divide-y divide-slate-100 text-sm">
