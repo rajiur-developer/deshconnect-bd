@@ -8,7 +8,7 @@ const [state, formAction, pending] = useActionState<FormState, FormData>(loginAc
 useFormStateToast(state);
 const [showPassword, setShowPassword] = useState(false);
 return (<div>
-<form action={formAction} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+<form action={formAction} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm sm:p-7">
 <input type="hidden" name="next" value={next} />
 <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
 <p className="mt-1 text-sm text-slate-600">Log in to your DeshConnect account.</p>
@@ -44,11 +44,11 @@ aria-label={showPassword ? "Hide password" : "Show password"}
 <div className="mt-6">
 <Button type="submit" className="w-full" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? "Logging in…" : "Log in"}</Button>
 </div>
-<div className="mt-4 flex items-center justify-between text-sm">
+<div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
 <Link href="/forgot-password" className="text-brand-700 hover:text-brand-800">Forgot password?</Link>
 <Link href="/register" className="text-brand-700 hover:text-brand-800">Create an account</Link>
 </div>
 </form>
-<div className="my-4 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200" />or continue with<span className="h-px flex-1 bg-slate-200" /></div>
-<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>
+<div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />or continue with<span className="h-px flex-1 bg-slate-200" /></div>
+<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full rounded-xl border-slate-200 bg-white py-3 font-semibold transition hover:border-brand-200 hover:bg-brand-50/50" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>
 </div>); }
