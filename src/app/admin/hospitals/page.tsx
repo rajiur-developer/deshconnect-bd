@@ -17,12 +17,7 @@ export default async function AdminHospitalsPage({
 }) {
   const params = await searchParams;
   const query = firstParam(params.q)?.trim().slice(0, 100) ?? "";
-  const [{ items, meta }, options, user, allCategories] = await Promise.all([
-    insforgeListAdminInstitutions({
-      categories: ["hospital", "health-centre"],
-      q: query,
-      page: parsePage(firstParam(params.page)),
-    }),
+  const [options, user, allCategories] = await Promise.all([
     getDirectoryLocationOptions(),
     requireUser("/admin/hospitals"),
     Promise.all([listContentCategories("hospital"), listContentCategories("institution")]),
@@ -32,6 +27,11 @@ export default async function AdminHospitalsPage({
     ? hospitalCategories
     : institutionCategories.filter((category) => category.value === "hospital" || category.value === "health-centre"))
     .map((category) => ({ value: category.value, label: category.name }));
+  const { items, meta } = await insforgeListAdminInstitutions({
+    categories: categories.map((category) => category.value),
+    q: query,
+    page: parsePage(firstParam(params.page)),
+  });
 
   return (
     <InstitutionManager
