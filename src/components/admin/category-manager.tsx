@@ -96,8 +96,8 @@ function CategoryRow({ category }: { category: ContentCategory }) {
   const [updateState, updateAction, updating] = useActionState<AdminFormState, FormData>(updateContentCategoryAction, {});
   const [deleteState, deleteAction, deleting] = useActionState<AdminFormState, FormData>(deleteContentCategoryAction, {});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   useFormStateToast(updateState);
-  useFormStateToast(deleteState);
 
   useEffect(() => {
     if (updateState.success) router.refresh();
@@ -106,6 +106,7 @@ function CategoryRow({ category }: { category: ContentCategory }) {
   useEffect(() => {
     if (deleteState.success) {
       setConfirmDelete(false);
+      setDeleteSuccess(true);
       router.refresh();
     }
   }, [deleteState, router]);
@@ -164,6 +165,24 @@ function CategoryRow({ category }: { category: ContentCategory }) {
               {deleting ? "Deleting…" : "Yes, delete category"}
             </Button>
           </form>
+        </div>
+      </AnimatedDialog>
+
+      <AnimatedDialog
+        open={deleteSuccess}
+        onClose={() => setDeleteSuccess(false)}
+        label="Category deleted successfully"
+        panelClassName="max-w-sm"
+      >
+        <div className="flex flex-col items-center px-2 py-4 text-center">
+          <div className="grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-600 ring-8 ring-emerald-50/60">
+            <Icon name="check" className="h-8 w-8" />
+          </div>
+          <h2 className="mt-5 text-xl font-bold text-slate-950">Category deleted!</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            <span className="font-semibold text-slate-900">“{category.name}”</span> was successfully deleted.
+          </p>
+          <Button type="button" className="mt-6 w-full" onClick={() => setDeleteSuccess(false)}>Done</Button>
         </div>
       </AnimatedDialog>
     </>
