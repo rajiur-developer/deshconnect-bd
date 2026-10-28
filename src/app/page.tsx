@@ -54,17 +54,39 @@ export default async function HomePage() {
     <>
       <section className="relative isolate overflow-hidden bg-brand-950">
         <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/95 via-brand-950/75 to-brand-900/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
-        <div className="container-x relative grid min-h-[570px] items-center gap-10 py-14 lg:grid-cols-[1.1fr_.9fr] lg:py-20">
-          <div className="enter-fade max-w-2xl">
-            <Badge tone="accent" className="bg-white/10 text-white ring-white/20">Bangladesh's information & community platform</Badge>
+        <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
+          <div className="enter-fade mx-auto w-full max-w-4xl">
+            <div className="flex justify-center"><Badge tone="accent" className="bg-white/10 text-white ring-white/20">Bangladesh's information & community platform</Badge></div>
             <h1 className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">Discover your Bangladesh.<span className="block text-brand-300">Connect with your community.</span></h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-brand-50 sm:text-lg">Find local places, institutions, public services, news and community support — all in one place.</p>
-            <div className="mt-8"><HeroSearch divisions={divisions} user={user} /></div>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg">Find local places, institutions, public services, news and community support — all in one place.</p>
+            <div className="mx-auto mt-8 w-full max-w-3xl text-left"><HeroSearch divisions={divisions} user={user} /></div>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link href="/places" className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-lg shadow-black/10 hover:bg-brand-50">Explore places <span aria-hidden="true">→</span></Link>
               {!user && <><Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Log in</Link><Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Create account</Link></>}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-x py-8 sm:py-10" aria-labelledby="blood-donation-highlight">
+        <div className="relative overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-white to-red-50 p-6 shadow-sm sm:p-9">
+          <div className="pointer-events-none absolute -right-8 -top-10 h-44 w-44 rounded-full bg-rose-200/40 blur-3xl" />
+          <div className="relative grid items-center gap-7 md:grid-cols-[1fr_auto]">
+            <div className="flex items-start gap-4">
+              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-rose-600 text-white shadow-lg shadow-rose-600/20 sm:h-16 sm:w-16">
+                <Icon name="heart" className="h-8 w-8" />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-rose-700">A little help can save a life</p>
+                <h2 id="blood-donation-highlight" className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Be someone’s reason to hope.</h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">Find voluntary blood donors, explore available donor listings, or register to help someone in need. Your next action could make a real difference.</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+              <Link href="/blood-donation" className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-rose-600/20 transition hover:bg-rose-700"><Icon name="droplet" className="h-4 w-4" /> Find blood donors</Link>
+              <Link href={user ? "/blood-donation" : "/register"} className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-700 transition hover:bg-rose-50">{user ? "Become a donor" : "Join as a donor"} <span aria-hidden="true">→</span></Link>
             </div>
           </div>
         </div>
