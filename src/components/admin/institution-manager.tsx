@@ -47,6 +47,7 @@ export function InstitutionManager({
       <PageHeader title={title} description={description} />
       <div className="mb-8">
         <InstitutionForm
+          isHospital={isHospital}
           divisions={divisions}
           districts={districts}
           upazilas={upazilas}
@@ -113,6 +114,7 @@ export function InstitutionManager({
                 <td className="px-4 py-3">
                   <RecordActions entity={isHospital ? "hospital" : "institution"} id={record.id} status={record.status}>
                     <InstitutionForm
+                      isHospital={isHospital}
                       divisions={divisions}
                       districts={districts}
                       upazilas={upazilas}
