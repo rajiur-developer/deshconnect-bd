@@ -407,7 +407,7 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-if (!(await isContentCategory("institution", parsed.data.category))) return { error: "Please choose a valid institution category." };
+if (!(await isContentCategory("institution", parsed.data.category)) && !(await isContentCategory("hospital", parsed.data.category))) return { error: "Please choose a valid institution or hospital category." };
 if (parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
 return { error: "The selected institution image could not be verified. Please upload it again." };
 }
@@ -741,7 +741,7 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-if (!(await isContentCategory("institution", parsed.data.category))) return { error: "Please choose a valid institution category." };
+if (!(await isContentCategory("institution", parsed.data.category)) && !(await isContentCategory("hospital", parsed.data.category))) return { error: "Please choose a valid institution or hospital category." };
 if (imageChanged && parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
 return { error: "The selected institution image could not be verified. Please upload it again." };
 }
