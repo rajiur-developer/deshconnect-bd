@@ -46,7 +46,7 @@ export default async function DashboardPage() {
           <Link href="/profile" className="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-brand-800 transition hover:bg-brand-50">View profile</Link>
           <Link href="/settings" className="rounded-xl border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">Account settings</Link>
         </div>
-      </div>
+      </div></div>
 
       <div className="mb-4 flex items-center justify-between gap-3">
         <div><h2 className="text-lg font-bold text-slate-950">Your activity</h2><p className="mt-1 text-sm text-slate-500">A quick overview of your account.</p></div>
