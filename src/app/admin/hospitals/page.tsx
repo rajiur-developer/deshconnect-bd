@@ -10,6 +10,11 @@ import type { Institution } from "@/types/content";
 
 export const metadata = { title: "Hospitals" };
 
+const REQUIRED_HOSPITAL_CATEGORIES = [
+  { value: "hospital", label: "Hospital" },
+  { value: "health-centre", label: "Health centre" },
+];
+
 export default async function AdminHospitalsPage({
   searchParams,
 }: {
@@ -22,7 +27,21 @@ export default async function AdminHospitalsPage({
     requireUser("/admin/hospitals"),
     listContentCategories("hospital"),
   ]);
-  const categories = hospitalCategories.map((category) => ({ value: category.value, label: category.name }));
+
+  // Always include the category values used by the public Hospitals directory.
+  // Category configuration may be incomplete, but existing hospital records must
+  // still be visible and manageable in the admin panel.
+  const categoriesByValue = new Map(
+    REQUIRED_HOSPITAL_CATEGORIES.map((category) => [category.value, category]),
+  );
+  for (const category of hospitalCategories) {
+    categoriesByValue.set(category.value, {
+      value: category.value,
+      label: category.name,
+    });
+  }
+  const categories = Array.from(categoriesByValue.values());
+
   const { items, meta } = await insforgeListAdminInstitutions({
     categories: categories.map((category) => category.value),
     q: query,
