@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createContentCategoryAction,
@@ -12,6 +12,8 @@ import type { ContentCategory, ContentCategorySection } from "@/services/content
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { useFormStateToast } from "@/components/ui/toast";
+import { AnimatedDialog } from "@/components/ui/animated-dialog";
+import { Icon } from "@/components/ui/icons";
 
 export function CategoryManager({
   placeCategories,
@@ -93,37 +95,77 @@ function CategoryRow({ category }: { category: ContentCategory }) {
   const router = useRouter();
   const [updateState, updateAction, updating] = useActionState<AdminFormState, FormData>(updateContentCategoryAction, {});
   const [deleteState, deleteAction, deleting] = useActionState<AdminFormState, FormData>(deleteContentCategoryAction, {});
+  const [confirmDelete, setConfirmDelete] = useState(false);
   useFormStateToast(updateState);
   useFormStateToast(deleteState);
 
   useEffect(() => {
-    if (updateState.success || deleteState.success) router.refresh();
-  }, [deleteState, router, updateState]);
+    if (updateState.success) router.refresh();
+  }, [router, updateState]);
+
+  useEffect(() => {
+    if (deleteState.success) {
+      setConfirmDelete(false);
+      router.refresh();
+    }
+  }, [deleteState, router]);
 
   return (
-    <div className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
-      <form action={updateAction} className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-end">
-        <input type="hidden" name="section" value={category.section} />
-        <input type="hidden" name="value" value={category.value} />
-        <Field label="Category name" htmlFor={`category-${category.value}`}>
-          <Input id={`category-${category.value}`} name="name" required maxLength={80} defaultValue={category.name} />
-        </Field>
-        <Button type="submit" variant="secondary" disabled={updating}>
-          {updating ? "Saving…" : "Save"}
+    <>
+      <div className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
+        <form action={updateAction} className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-end">
+          <input type="hidden" name="section" value={category.section} />
+          <input type="hidden" name="value" value={category.value} />
+          <Field label="Category name" htmlFor={`category-${category.value}`}>
+            <Input id={`category-${category.value}`} name="name" required maxLength={80} defaultValue={category.name} />
+          </Field>
+          <Button type="submit" variant="secondary" disabled={updating}>
+            {updating ? "Saving…" : "Save"}
+          </Button>
+        </form>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={deleting}
+          onClick={() => setConfirmDelete(true)}
+          className="text-red-700 hover:text-red-800"
+        >
+          Delete
         </Button>
-      </form>
-      <form
-        action={deleteAction}
-        onSubmit={(event) => {
-          if (!window.confirm(`Delete “${category.name}”?`)) event.preventDefault();
-        }}
+      </div>
+
+      <AnimatedDialog
+        open={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        label="Confirm category deletion"
+        panelClassName="max-w-md"
       >
-        <input type="hidden" name="section" value={category.section} />
-        <input type="hidden" name="value" value={category.value} />
-        <Button type="submit" variant="secondary" disabled={deleting} className="text-red-700 hover:text-red-800">
-          {deleting ? "Deleting…" : "Delete"}
-        </Button>
-      </form>
-    </div>
+        <div className="space-y-5 pt-2">
+          <div className="flex items-start gap-3">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-50 text-red-600">
+              <Icon name="alert-triangle" className="h-5 w-5" />
+            </div>
+            <div className="pr-5">
+              <h2 className="text-lg font-semibold text-slate-900">Delete category?</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                Are you sure you want to delete <span className="font-semibold text-slate-900">“{category.name}”</span>?
+                This action cannot be undone.
+              </p>
+            </div>
+          </div>
+          {deleteState.error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{deleteState.error}</p>}
+          <form action={deleteAction} className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <input type="hidden" name="section" value={category.section} />
+            <input type="hidden" name="value" value={category.value} />
+            <Button type="button" variant="outline" onClick={() => setConfirmDelete(false)} disabled={deleting}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={deleting} className="bg-red-600 text-white hover:bg-red-700">
+              {deleting ? "Deleting…" : "Yes, delete category"}
+            </Button>
+          </form>
+        </div>
+      </AnimatedDialog>
+    </>
   );
 }
