@@ -2,7 +2,7 @@ import "server-only";
 
 import { insforgeSelectMany } from "@/lib/insforge";
 
-export type ContentCategorySection = "place" | "news" | "institution";
+export type ContentCategorySection = "place" | "news" | "institution" | "hospital" | "government-service";
 export type ContentCategory = {
   section: ContentCategorySection;
   value: string;
