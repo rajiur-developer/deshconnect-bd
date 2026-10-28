@@ -30,7 +30,18 @@ export function CategoryManager({
     <div className="space-y-8">
       <CategorySection section="place" title="Place categories" categories={placeCategories} />
       <CategorySection section="news" title="News categories" categories={newsCategories} />
-      <CategorySection section="institution" title="Institution categories" categories={institutionCategories} />
+      <CategorySection
+        section="institution"
+        title="Institution categories"
+        categories={institutionCategories.filter((category) => {
+          const value = category.value.toLowerCase().replace(/[^a-z0-9]/g, "");
+          const name = category.name.toLowerCase();
+          return !(
+            ["hospital", "healthcare", "healthcentre", "healthcenter", "clinic", "diagnosticcenter"].includes(value) ||
+            /hospital|health\s*care|health\s*cent(re|er)|clinic|diagnostic\s*cent(re|er)/i.test(name)
+          );
+        })}
+      />
       <CategorySection section="hospital" title="Hospital categories" categories={hospitalCategories} />
       <CategorySection section="government-service" title="Government Service categories" categories={governmentServiceCategories} />
     </div>
