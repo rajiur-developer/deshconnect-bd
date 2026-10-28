@@ -21,11 +21,12 @@ type Props = {
   districts: DistrictOption[];
   upazilas: UpazilaOption[];
   categories: { value: string; label: string }[];
+  isHospital: boolean;
   userId: string;
   record?: Institution;
 };
 
-export function InstitutionForm({ divisions, districts, upazilas, categories, userId, record }: Props) {
+export function InstitutionForm({ divisions, districts, upazilas, categories, isHospital, userId, record }: Props) {
   const action = record ? adminUpdateInstitutionAction : adminCreateInstitutionAction;
   const [state, formAction, pending] = useActionState<AdminFormState, FormData>(
     action as unknown as (prev: AdminFormState, fd: FormData) => Promise<AdminFormState>,
@@ -49,8 +50,9 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, us
 
   return (
     <form ref={formRef} action={formAction} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
-      <h2 className="font-semibold text-slate-900">{record ? "Update institution" : "Add an institution"}</h2>
+      <h2 className="font-semibold text-slate-900">{record ? (isHospital ? "Update hospital" : "Update institution") : (isHospital ? "Add a hospital" : "Add an institution")}</h2>
       {!record && <p className="text-sm text-slate-600">New listings are published immediately and marked as verified.</p>}
+      <input type="hidden" name="isHospital" value={isHospital ? "true" : "false"} />
       {record && <input type="hidden" name="id" value={record.id} />}
       <input type="hidden" name="imageChanged" value={imageChanged ? "true" : "false"} />
       <div className="grid gap-4 sm:grid-cols-2">
@@ -86,7 +88,7 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, us
       <ImageUpload
         key={`image-${resetKey}`}
         name="image"
-        label="Institution image"
+        label={isHospital ? "Hospital image" : "Institution image"}
         hint="Upload an image, or leave the current image unchanged."
         current={record?.image}
         userId={userId}
@@ -111,7 +113,7 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, us
       {state.error && <p role="alert" className="text-sm text-accent-600">{state.error}</p>}
       {state.success && <p role="status" className="text-sm text-emerald-600">{state.success}</p>}
       <Button type="submit" disabled={pending || imageUploading}>
-        {pending ? "Saving…" : record ? "Save changes" : "Create institution"}
+        {pending ? "Saving…" : record ? "Save changes" : isHospital ? "Create hospital" : "Create institution"}
       </Button>
     </form>
   );
