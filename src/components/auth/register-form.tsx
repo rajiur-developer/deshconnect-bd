@@ -18,7 +18,7 @@ useFormStateToast(verifyState);
 useFormStateToast(resendState);
 if (state.verificationRequired) {
 const fields = ["fullName", "username", "phone", "divisionId", "districtId", "upazilaId", "bloodGroup", "gender", "dateOfBirth", "termsAccepted"] as const;
-return <div><form action={verifyAction} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+return <div><form action={verifyAction} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm sm:p-7">
 <h1 className="text-2xl font-bold text-slate-900">Verify your email</h1>
 <p className="mt-2 text-sm text-slate-600">Enter the 6-digit code we sent to <strong>{state.email}</strong>.</p>
 <input type="hidden" name="email" value={state.email ?? ""} />
@@ -38,7 +38,7 @@ return (<div>
 <form action={formAction} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
 <p className="mt-1 text-sm text-slate-600">Join DeshConnect to take part, save places, and get more out of it.</p>
-<div className="mt-6 grid gap-4 sm:grid-cols-2">
+<div className="grid gap-x-4 gap-y-4 sm:grid-cols-2">
 <Field label="Full name" htmlFor="fullName" required>
 <Input id="fullName" name="fullName" required placeholder="Your full name" />
 </Field>
@@ -59,10 +59,10 @@ return (<div>
 </Field>
 </div>
 <div className="mt-4">
-<p className="mb-1.5 text-sm font-medium text-slate-700">Address</p>
+<p className="mb-2 text-sm font-semibold text-slate-800">Your location <span className="font-normal text-slate-500">(optional)</span></p>
 <LocationFields divisions={divisions} districts={districts} upazilas={upazilas} current={{}} />
 </div>
-<div className="mt-4 grid gap-4 sm:grid-cols-3">
+<div className="mt-5 grid gap-4 sm:grid-cols-3">
 <Field label="Blood group" htmlFor="bloodGroup" hint="Optional">
 <select id="bloodGroup" name="bloodGroup" className={selectClass}>
 <option value="">Select</option>
@@ -84,7 +84,7 @@ return (<div>
 </Field>
 </div>
 <div className="mt-4">
-<label className="flex items-start gap-2 text-sm text-slate-700">
+<label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-sm leading-5 text-slate-700">
 <input type="checkbox" name="termsAccepted" className="mt-1" required />
 <span>
 I agree to the <Link href="/terms" className="text-brand-700">Terms of Use</Link> and{" "}
@@ -100,6 +100,6 @@ I agree to the <Link href="/terms" className="text-brand-700">Terms of Use</Link
 Already have an account? <Link href="/login" className="text-brand-700">Log in</Link>
 </p>
 </form>
-<div className="my-4 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200" />or sign up with<span className="h-px flex-1 bg-slate-200" /></div>
-<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>
+<div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />or sign up with<span className="h-px flex-1 bg-slate-200" /></div>
+<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full rounded-xl border-slate-200 bg-white py-3 font-semibold transition hover:border-brand-200 hover:bg-brand-50/50" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>
 </div>); }
