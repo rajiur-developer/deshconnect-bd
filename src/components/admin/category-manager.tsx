@@ -27,6 +27,8 @@ export function CategoryManager({
       <CategorySection section="place" title="Place categories" categories={placeCategories} />
       <CategorySection section="news" title="News categories" categories={newsCategories} />
       <CategorySection section="institution" title="Institution categories" categories={institutionCategories} />
+      <CategorySection section="hospital" title="Hospital categories" categories={hospitalCategories} />
+      <CategorySection section="government-service" title="Government Service categories" categories={governmentServiceCategories} />
     </div>
   );
 }
