@@ -27,8 +27,10 @@ export default async function AdminHospitalsPage({
     requireUser("/admin/hospitals"),
     Promise.all([listContentCategories("hospital"), listContentCategories("institution")]),
   ]);
-  const categories = allCategories
-    .filter((category) => category.value === "hospital" || category.value === "health-centre")
+  const [hospitalCategories, institutionCategories] = allCategories;
+  const categories = (hospitalCategories.length
+    ? hospitalCategories
+    : institutionCategories.filter((category) => category.value === "hospital" || category.value === "health-centre"))
     .map((category) => ({ value: category.value, label: category.name }));
 
   return (
