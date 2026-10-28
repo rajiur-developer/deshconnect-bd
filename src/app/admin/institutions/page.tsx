@@ -23,7 +23,14 @@ export default async function AdminInstitutionsPage({
     listContentCategories("institution"),
   ]);
   const categories = allCategories
-    .filter((category) => !["hospital", "health-centre"].includes(category.value))
+    .filter((category) => {
+      const value = category.value.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const name = category.name.toLowerCase();
+      return !(
+        ["hospital", "healthcare", "healthcentre", "healthcenter", "clinic", "diagnosticcenter"].includes(value) ||
+        /hospital|health\s*care|health\s*cent(re|er)|clinic|diagnostic\s*cent(re|er)/i.test(name)
+      );
+    })
     .map((category) => ({ value: category.value, label: category.name }));
   const { items, meta } = await insforgeListAdminInstitutions({
     categories: categories.map((category) => category.value),
