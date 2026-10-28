@@ -5,14 +5,6 @@ import {
 adminUpdateServiceAction,
 createGovernmentServiceAction,
 type AdminFormState, } from "@/features/admin/actions"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import type { GovernmentService } from "@/types/content"; import type { ContentCategory } from "@/services/content-categories";
-const CATEGORIES = [
-{ value: "identity", label: "Identity" },
-{ value: "land", label: "Land" },
-{ value: "health", label: "Health" },
-{ value: "education", label: "Education" },
-{ value: "transport", label: "Transport" },
-{ value: "tax", label: "Tax" },
-{ value: "other", label: "Other" }, ];
 const selectClass = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring";
 type Props = {
 divisions: LocationOption[];
