@@ -854,3 +854,43 @@ await audit(actor, "user:update", "user", id);
 revalidatePath("/admin/users");
 return { success: "User updated." };
 }
+
+
+/** Execute a validated bulk operation for admin directory records. */
+export async function adminBulkRecordAction(
+  entity: "place" | "institution" | "hospital" | "service" | "news",
+  ids: string[],
+  operation: "hide" | "unhide" | "delete",
+): Promise<{ ok: boolean; processed: number; errors: string[] }> {
+  const allowedEntities = ["place", "institution", "hospital", "service", "news"];
+  if (!allowedEntities.includes(entity) || !["hide", "unhide", "delete"].includes(operation)) {
+    return { ok: false, processed: 0, errors: ["Invalid bulk action."] };
+  }
+  const uniqueIds = [...new Set((Array.isArray(ids) ? ids : []).filter((id) => typeof id === "string" && id.length > 0 && id.length <= 200))].slice(0, 100);
+  if (!uniqueIds.length) return { ok: false, processed: 0, errors: ["Select at least one record."] };
+  const errors: string[] = [];
+  let processed = 0;
+  for (const id of uniqueIds) {
+    try {
+      let result: any;
+      if (entity === "news") {
+        if (operation === "delete") result = await adminDeleteNewsAction(id);
+        else result = await adminSetNewsStatusAction(id, operation === "hide" ? "archived" : "pending_review");
+      } else if (operation === "delete") {
+        if (entity === "place") result = await adminDeletePlaceAction(id);
+        else if (entity === "service") result = await adminDeleteServiceAction(id);
+        else result = await adminDeleteInstitutionAction(id);
+      } else {
+        const status = operation === "hide" ? "archived" : "published";
+        if (entity === "place") result = await adminSetPlaceStatusAction(id, status);
+        else if (entity === "service") result = await adminSetServiceStatusAction(id, status);
+        else result = await adminSetInstitutionStatusAction(id, status);
+      }
+      if (result && result.ok === false) errors.push(`${id}: ${result.error || "Action failed"}`);
+      else processed++;
+    } catch {
+      errors.push(`${id}: Action failed or permission denied.`);
+    }
+  }
+  return { ok: errors.length === 0, processed, errors };
+}
