@@ -17,16 +17,12 @@ export default async function AdminHospitalsPage({
 }) {
   const params = await searchParams;
   const query = firstParam(params.q)?.trim().slice(0, 100) ?? "";
-  const [options, user, allCategories] = await Promise.all([
+  const [options, user, hospitalCategories] = await Promise.all([
     getDirectoryLocationOptions(),
     requireUser("/admin/hospitals"),
-    Promise.all([listContentCategories("hospital"), listContentCategories("institution")]),
+    listContentCategories("hospital"),
   ]);
-  const [hospitalCategories, institutionCategories] = allCategories;
-  const categories = (hospitalCategories.length
-    ? hospitalCategories
-    : institutionCategories.filter((category) => category.value === "hospital" || category.value === "health-centre"))
-    .map((category) => ({ value: category.value, label: category.name }));
+  const categories = hospitalCategories.map((category) => ({ value: category.value, label: category.name }));
   const { items, meta } = await insforgeListAdminInstitutions({
     categories: categories.map((category) => category.value),
     q: query,
