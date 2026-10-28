@@ -25,7 +25,7 @@ export default async function AdminHospitalsPage({
     }),
     getDirectoryLocationOptions(),
     requireUser("/admin/hospitals"),
-    listContentCategories("institution"),
+    Promise.all([listContentCategories("hospital"), listContentCategories("institution")]),
   ]);
   const categories = allCategories
     .filter((category) => category.value === "hospital" || category.value === "health-centre")
