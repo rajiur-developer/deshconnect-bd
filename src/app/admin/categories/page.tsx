@@ -10,22 +10,26 @@ export default async function AdminCategoriesPage() {
   const user = await requireUser("/admin/categories");
   if (user.role !== "admin") redirect("/admin");
 
-  const [placeCategories, newsCategories, institutionCategories] = await Promise.all([
+  const [placeCategories, newsCategories, institutionCategories, hospitalCategories, governmentServiceCategories] = await Promise.all([
     listContentCategories("place"),
     listContentCategories("news"),
     listContentCategories("institution"),
+    listContentCategories("hospital"),
+    listContentCategories("government-service"),
   ]);
 
   return (
     <>
       <PageHeader
         title="Content categories"
-        description="Manage the categories available in Places, News and Institutions."
+        description="Manage categories for Places, News, Institutions, Hospitals and Government Services."
       />
       <CategoryManager
         placeCategories={placeCategories}
         newsCategories={newsCategories}
         institutionCategories={institutionCategories}
+        hospitalCategories={hospitalCategories}
+        governmentServiceCategories={governmentServiceCategories}
       />
     </>
   );
