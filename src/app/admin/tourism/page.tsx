@@ -1,6 +1,6 @@
 // @ts-nocheck
 import Link from "next/link";
-import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { PlaceForm } from "@/components/admin/place-form"; import { RecordActions } from "@/components/admin/record-actions";
+import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { PlaceForm } from "@/components/admin/place-form"; import { RecordActions } from "@/components/admin/record-actions"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "Tourism" };
 export default async function AdminTourismPage() {
 const [{ data }, options, categories] = await Promise.all([insforgeSelectMany("places", { order: "rating.desc", limit: "500" }), getDirectoryLocationOptions(), listContentCategories("place")]);
@@ -9,6 +9,7 @@ const categoryNames = new Map(categories.map((category) => [category.value, cate
 return (
 <>
 <PageHeader title="Tourism" description="Manage the tourism directory and destination content." />
+<BulkActions entity="place" records={places.map((place) => ({ id: place.id, label: place.name, status: place.status }))} />
 <Card className="overflow-x-auto p-0">
 <table className="min-w-full divide-y divide-slate-100 text-sm">
 <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
