@@ -858,11 +858,11 @@ return { success: "User updated." };
 
 /** Execute a validated bulk operation for admin directory records. */
 export async function adminBulkRecordAction(
-  entity: "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor",
+  entity: "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor" | "review",
   ids: string[],
   operation: "hide" | "unhide" | "delete",
 ): Promise<{ ok: boolean; processed: number; errors: string[] }> {
-  const allowedEntities = ["place", "institution", "hospital", "service", "news", "business", "post", "donor"];
+  const allowedEntities = ["place", "institution", "hospital", "service", "news", "business", "post", "donor", "review"];
   if (!allowedEntities.includes(entity) || !["hide", "unhide", "delete"].includes(operation)) {
     return { ok: false, processed: 0, errors: ["Invalid bulk action."] };
   }
@@ -882,6 +882,18 @@ export async function adminBulkRecordAction(
       } else if (entity === "donor") {
         if (operation === "delete") result = await adminDeleteBloodDonorAction(id);
         else result = await adminSetBloodDonorVisibilityAction(id, operation === "unhide");
+      } else if (entity === "review") {
+        const actor = await guard("moderation:reviews");
+        if (operation === "delete") {
+          const deleted = await deleteAdminRow("reviews", id);
+          if (!deleted) result = { ok: false, error: "Review not found." };
+          else { await audit(actor, "review:delete", "review", id); revalidatePath("/admin/reviews"); revalidatePath("/places"); result = { ok: true }; }
+        } else {
+          await setReviewStatus(id, operation === "hide" ? "hidden" : "visible");
+          await audit(actor, `review:${operation === "hide" ? "hidden" : "visible"}`, "review", id);
+          revalidatePath("/admin/reviews"); revalidatePath("/places");
+          result = { ok: true };
+        }
       } else if (entity === "post") {
         const actor = await guard("moderation:posts");
         if (operation === "delete") {
