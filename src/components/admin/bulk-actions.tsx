@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { adminBulkRecordAction } from "@/features/admin/actions";
 
 type Item = { id: string; label: string; status?: string };
-type Entity = "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor";
+type Entity = "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor" | "review";
 
 export function BulkActions({ entity, records }: { entity: Entity; records: Item[] }) {
   const [selected, setSelected] = useState<string[]>([]);
