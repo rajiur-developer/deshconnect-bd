@@ -44,7 +44,8 @@ export function BulkActions({ entity, records }: { entity: Entity; records: Item
       </select>
       <button type="button" disabled={pending || !selected.length} onClick={run} className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">{pending ? "Working…" : "Bulk Actions"}</button>
     </div>
-    {entity === "donor" && <p className="mt-2 text-xs text-amber-700">Restoring a donor record does not restore public listing consent. The donor must have valid consent to appear publicly.</p>}\n    <div className="mt-3 max-h-44 overflow-y-auto border-t border-slate-200 pt-2">
+    {entity === "donor" && <p className="mt-2 text-xs text-amber-700">Restoring a donor record does not restore public listing consent. The donor must have valid consent to appear publicly.</p>}
+    <div className="mt-3 max-h-44 overflow-y-auto border-t border-slate-200 pt-2">
       {records.map((record) => <label key={record.id} className="flex items-center gap-2 py-1 text-sm text-slate-700">
         <input type="checkbox" checked={selected.includes(record.id)} onChange={(e) => setSelected((current) => e.target.checked ? [...current, record.id] : current.filter((id) => id !== record.id))} />
         <span>{record.label}</span>{record.status ? <span className="text-xs text-slate-500">({record.status})</span> : null}
