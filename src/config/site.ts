@@ -19,7 +19,7 @@ tagline: "Bangladesh's places, Blood Find, Services and people all in one place.
 description:
 "DeshConnect is an Information and Community platform for finding Tourist Spots,Blood donors, Educational institutions, Hospitals, Businesses, Government services, News and local activity across Bangladesh.",
 get url() {
-return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+return process.env.NEXT_PUBLIC_SITE_URL ?? "https://deshconnect-3857.vercel.app";
 },
 locale: "en-BD",
 twitter: "@deshconnect", } as const;
