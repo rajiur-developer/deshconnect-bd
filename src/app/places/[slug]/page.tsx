@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next"; import Image from "next/image"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
 import { getPlaceBySlug, getReviewsForPlace, isPlaceSaved } from "@/services/places"; import { formatLocation } from "@/services/locations"; import { listUsers } from "@/services/users"; import { getCurrentUser } from "@/lib/auth/current-user"; import { formatDate, relativeTime } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { MapPreview } from "@/components/maps/map-preview"; import { SaveButton } from "@/components/places/save-button"; import { ReviewForm } from "@/components/places/review-form";
 type Props = { params: Promise<{ slug: string }> };

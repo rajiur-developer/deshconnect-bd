@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { DEFAULT_ROLE_PERMISSIONS, type PermissionAction } from "@/config/permissions"; import type { Role } from "@/types/auth";
 const KNOWN_ACTIONS = new Set<string>(Object.values(DEFAULT_ROLE_PERMISSIONS).flat());
 /**

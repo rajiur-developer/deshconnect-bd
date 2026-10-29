@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { listAdminUsers } from "@/services/users"; import { formatDate } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { UserActions } from "@/components/admin/user-form"; import { getCurrentUser } from "@/lib/auth/current-user";
 export const metadata = { title: "Users" };
 export default async function AdminUsersPage() {

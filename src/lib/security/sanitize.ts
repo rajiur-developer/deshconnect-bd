@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
 * Input normalisation helpers. These are deliberately small: the server-side
 * Zod schemas do real validation, this layer only removes control characters

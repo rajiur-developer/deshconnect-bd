@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ReactNode } from "react";
 import { Icon } from "@/components/ui/icons";
 export function PageHeader({

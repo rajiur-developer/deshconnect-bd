@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { beforeAll, describe, expect, it } from "vitest";
 import { sessionCookieOptions, encodeSession, decodeSession } from "../src/lib/auth/session";
 

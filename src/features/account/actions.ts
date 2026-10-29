@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -14,6 +13,7 @@ getOrCreateConversation,
 requestConnection,
 respondToConnection,
 sendMessage, } from "@/services/messaging"; import { markAllNotificationsRead, markNotificationRead } from "@/services/notifications"; import { deletePost } from "@/services/community"; import { formatZodError, profileSchema } from "@/lib/validation/schemas"; import { sanitizeText } from "@/lib/security/sanitize"; import { recordAudit } from "@/services/audit"; import type { PublicUser } from "@/types/auth";
+import type { Message } from "@/types/community";
 export type AccountFormState = { error?: string; success?: string };
 export async function updateProfileAction(_prev: AccountFormState, formData: FormData): Promise<AccountFormState> {
 const user = await requireUser();
@@ -135,7 +135,7 @@ export async function sendMessageAction(
 conversationId: string,
 body: string,
 attachment?: { key: string; url: string; mimeType: string; type: "image" | "audio" },
-replyToMessageId?: string | null ): Promise<{ ok: boolean; error?: string; message?: { id: string; conversationId: string; senderId: string; body: string; attachmentKey: string | null; attachmentUrl: string | null; attachmentMimeType: string | null; attachmentType: "image" | "audio" | null; replyToMessageId: string | null; createdAt: string; readBy: string[]; reactions: Array<{ userId: string; emoji: string }> } }> {
+replyToMessageId?: string | null ): Promise<{ ok: boolean; error?: string; message?: { id: string; conversationId: string; senderId: string; body: string; attachmentKey: string | null; attachmentUrl: string | null; attachmentMimeType: string | null; attachmentType: "image" | "audio" | null; replyToMessageId: string | null; createdAt: string; readBy: string[]; deliveredTo: string[]; editedAt: string | null; reactions: Array<{ userId: string; emoji: string }> } }> {
 const user = await requireUser();
 const { data: conv } = await insforge.database
 .from("conversations")

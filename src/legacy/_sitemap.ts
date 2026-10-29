@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { MetadataRoute } from "next";
 import { SITE } from "@/config/site"; import { getDatabase } from "@/lib/db/store";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

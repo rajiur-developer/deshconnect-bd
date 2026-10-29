@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useActionState, useState } from "react";
 import { addLocationAction, type AdminFormState } from "@/features/admin/actions"; import { LOCATION_IMAGES } from "@/lib/constants"; import { Button } from "@/components/ui/button"; import { Field, Input } from "@/components/ui/input";

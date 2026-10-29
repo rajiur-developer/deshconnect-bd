@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { PublicUser, User } from "@/types/auth";
 /** Merge conditional class names; falsy values are dropped. */ export function cn(...parts: Array<string | false | null | undefined>): string {
 return parts.filter(Boolean).join(" "); }

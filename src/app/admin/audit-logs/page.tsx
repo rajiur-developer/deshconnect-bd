@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { listAuditLogs } from "@/services/audit"; import { formatDate } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header";
 export const metadata = { title: "Audit Logs" };
 export default async function AdminAuditLogsPage() {

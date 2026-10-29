@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Review } from "./content"; import type { BloodDonor, BloodRequest } from "./blood"; import type { Comment, Connection, Conversation, Message, Notification, Post, Report } from "./community";
 export interface AuditLog {
 id: string;

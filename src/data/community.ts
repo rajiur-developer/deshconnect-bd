@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
 * Static seed data for accounts, blood donation, community, and platform state.
 * Passwords are plain here only for seeding; the seeder hashes them before the

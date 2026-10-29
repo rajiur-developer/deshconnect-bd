@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ReactNode, SVGProps } from "react";
 export type IconName =
 | "search"

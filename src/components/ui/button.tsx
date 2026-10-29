@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from "react"; import Link from "next/link";
 import { cn } from "@/lib/utils";
 type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger" | "accent"; type Size = "sm" | "md" | "lg";

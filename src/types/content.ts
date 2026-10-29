@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { LocationRef } from "./location";
 export type PublishStatus =
 | "draft"
@@ -32,6 +31,8 @@ lastCheckedAt?: string;
 createdAt: string;
 updatedAt: string; }
 export type InstitutionCategory = string;
+export type HospitalCategory = string;
+export type Hospital = Institution;
 export interface Institution extends LocationRef {
 id: string;
 slug: string;

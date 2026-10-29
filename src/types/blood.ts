@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { BloodGroup } from "./auth"; import type { LocationRef } from "./location";
 export type DonorAvailability = "available" | "busy" | "unavailable"; export type ContactMethod = "phone" | "sms" | "email" | "in-app";
 export type BloodRequestStatus =

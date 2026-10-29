@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { PublicDonor } from "@/types/blood";
 import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { BloodGroupBadge } from "./blood-group-badge";
 const AVAILABILITY_TONE: Record<PublicDonor["availability"], "success" | "amber" | "neutral"> = {

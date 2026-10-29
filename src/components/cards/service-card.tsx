@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { GovernmentService } from "@/types/content"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 const SERVICE_LABELS: Record<string, string> = {

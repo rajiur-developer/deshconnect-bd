@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { listAdminReports } from "@/services/community"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ReportResolveButtons } from "@/components/admin/admin-client"; import { relativeTime } from "@/lib/utils";
 export const metadata = { title: "Reports" };
 const TONE: Record<string, "accent" | "info" | "success" | "neutral"> = {

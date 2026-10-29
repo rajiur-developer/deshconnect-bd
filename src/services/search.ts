@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Business, GovernmentService, Institution, News, Place } from "@/types/content"; import type { Post } from "@/types/community";
 import { listPlaces } from "@/services/places";
 import { listInstitutions } from "@/services/institutions";

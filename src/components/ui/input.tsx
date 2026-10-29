@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 const baseField =

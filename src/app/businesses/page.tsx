@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listBusinesses } from "@/services/businesses"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { BusinessCard } from "@/components/cards/business-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
 const CATEGORIES = [

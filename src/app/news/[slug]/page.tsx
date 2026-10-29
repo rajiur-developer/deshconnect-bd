@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
 import { getNewsBySlug } from "@/services/news"; import { listUsers } from "@/services/users"; import { formatDate } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { RecordImage } from "@/components/ui/record-image"; import { newsCategoryLabelBn } from "@/components/cards/news-card";
 type Props = { params: Promise<{ slug: string }> };

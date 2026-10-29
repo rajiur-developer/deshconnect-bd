@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { listUserBloodRequests } from "@/services/blood"; import { formatDate } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { CancelRequestButton } from "@/components/blood/donor-actions";
 export const metadata = { title: "My blood requests", robots: { index: false, follow: false } };

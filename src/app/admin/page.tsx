@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge";
 import { listAdminUsers } from "@/services/users";

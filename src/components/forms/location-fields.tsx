@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useState } from "react";
 import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next"; import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
 import { firstParam } from "@/lib/query"; import { ResetPasswordForm } from "@/components/auth/reset-password-form";

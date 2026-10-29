@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { PageMeta } from "@/lib/utils"; import { cn } from "@/lib/utils"; import { buttonClasses } from "./button";
 function pageList(current: number, total: number): (number | "…")[] {

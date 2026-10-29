@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { z } from "zod";
 import { getDonationEligibility, isValidBloodDonationDate } from "@/lib/blood-donation";
 
@@ -91,8 +89,12 @@ export const bloodRequestSchema = z.object({
 
 export const donorSchema = z.object({
   bloodGroup: z.string().min(1, "Blood group is required"),
-  availability: z.enum(["available", "busy", "unavailable"], "Choose a valid availability"),
-  preferredContact: z.enum(["phone", "sms", "email", "in-app"], "Choose a preferred contact method"),
+  availability: z.enum(["available", "busy", "unavailable"], {
+    errorMap: () => ({ message: "Choose a valid availability" }),
+  }),
+  preferredContact: z.enum(["phone", "sms", "email", "in-app"], {
+    errorMap: () => ({ message: "Choose a preferred contact method" }),
+  }),
   contactValue: z.string().trim().min(1, "Other contact information is required").max(200),
   phone: phoneNumberSchema,
   whatsapp: phoneNumberSchema,

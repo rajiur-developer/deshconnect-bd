@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import type { ReactNode } from "react";
 export type BannerMedia = { src: string; type?: "video" | "image" };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /** Convert Postgres rows (snake_case) into the app's camelCase record shape. */
 export function mapDbRow<T = any>(value: any): T {
   if (Array.isArray(value)) return value.map((item) => mapDbRow(item)) as T;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { requireUser } from "@/lib/auth/current-user"; import { listPendingRequests, listSentRequests } from "@/services/messaging"; import { listUsers } from "@/services/users"; import { formatDate } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { CancelRequestButton, RespondButtons } from "@/components/account/account-actions";
 export const metadata = { title: "Friend requests", robots: { index: false, follow: false } };
 export default async function FriendRequestsPage() {

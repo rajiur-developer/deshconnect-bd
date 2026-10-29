@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { formatDate } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { NewsSubmitForm } from "@/components/news/news-forms"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons";
 const STATUS_TONE: Record<string, "success" | "accent" | "amber" | "neutral"> = {

@@ -1,15 +1,16 @@
-// @ts-nocheck
-import Image from "next/image"; import Link from "next/link";
+import Link from "next/link";
+import { RecordImage } from "@/components/ui/record-image";
 import type { Place } from "@/types/content"; import { PLACE_CATEGORIES } from "@/lib/constants"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 /** English labels — kept for the admin directory table. */ export function placeCategoryLabel(category: string): string {
 return PLACE_CATEGORIES.find((item) => item.value === category)?.label ?? category; }
 /** Bengali labels for public-facing cards and filters. */ export function placeCategoryLabelBn(category: string): string {
 return PLACE_CATEGORIES.find((c) => c.value === category)?.label ?? category; }
 export function PlaceCard({ place, locationLabel }: { place: Place; locationLabel?: string }) {
+  const placeSlug = (place.slug && place.slug.trim()) ? place.slug.trim() : `place-${place.id.slice(0, 8)}`;
 return (
 <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-brand-300 hover:shadow-xl">
 <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-<Image
+<RecordImage
 src={place.image}
 alt={place.name}
 fill
@@ -27,7 +28,7 @@ className="object-cover transition-transform duration-500 ease-out group-hover:s
 </div>
 <div className="flex flex-1 flex-col p-4">
 <h3 className="text-base font-semibold text-slate-900 group-hover:text-brand-700">
-<Link href={`/places/${place.slug}`}>{place.name}</Link>
+<Link href={`/places/${placeSlug}`}>{place.name}</Link>
 </h3>
 {locationLabel && (
 <p className="mt-1 flex items-center gap-1 text-xs text-slate-500">
@@ -43,7 +44,7 @@ className="object-cover transition-transform duration-500 ease-out group-hover:s
 <span className="text-xs font-normal text-slate-400">({place.reviewCount})</span>
 </span>
 <Link
-href={`/places/${place.slug}`}
+href={`/places/${placeSlug}`}
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-brand-500 hover:text-brand-700"
 >
 View place

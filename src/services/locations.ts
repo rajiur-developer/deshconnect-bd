@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "server-only";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 export async function insforgeListDivisions() {

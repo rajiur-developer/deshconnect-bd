@@ -4,11 +4,17 @@ import { createClient } from "@insforge/sdk";
 import { cookies } from "next/headers";
 import { getDatabase, saveDatabase } from "@/lib/db/store";
 
-const INSFORGE_URL = process.env.NEXT_PUBLIC_INSFORGE_URL;
-const ANON_KEY = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY;
+// Trailing slashes must be stripped: paths below already start with "/", so
+// "https://host/" would produce "https://host//api/..." which InsForge answers
+// with a 404 HTML page instead of JSON.
+const INSFORGE_URL = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\/+$/, "");
+const ANON_KEY = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY?.trim();
 
 if (!INSFORGE_URL || !ANON_KEY) {
-  throw new Error("NEXT_PUBLIC_INSFORGE_URL and NEXT_PUBLIC_INSFORGE_ANON_KEY are required.");
+  throw new Error(
+    "NEXT_PUBLIC_INSFORGE_URL and NEXT_PUBLIC_INSFORGE_ANON_KEY are required. " +
+      "Set them in .env.local (see .env.example); the URL must not end with a slash.",
+  );
 }
 
 async function currentAccessToken(): Promise<string | null> {
@@ -31,7 +37,7 @@ export const insforge = createClient({
 
 const LOCAL_TABLES: Record<string, string> = {
   profiles: "users", divisions: "divisions", districts: "districts", upazilas: "upazilas",
-  places: "places", institutions: "institutions", businesses: "businesses",
+  places: "places", institutions: "institutions", hospitals: "hospitals", businesses: "businesses",
   government_services: "governmentServices", news: "news", reviews: "reviews", posts: "posts",
   public_blood_donors: "donors",
   comments: "comments", reports: "reports", connections: "connections", conversations: "conversations",
@@ -207,7 +213,8 @@ export async function insforgeSelectOne(table: string, params: Record<string, st
     return arr[0] ?? null;
   } catch (error) {
     if (process.env.NODE_ENV !== "development") throw error;
-    return (await localRows(table, { ...params, limit: "1" }))[0] ?? null;
+    const { data } = await localRows(table, { ...params, limit: "1" });
+    return data[0] ?? null;
   }
 }
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it } from "vitest";
 import { rateLimit } from "../../src/lib/security/rate-limit";
 

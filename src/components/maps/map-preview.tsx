@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { DEFAULT_MAPS_LINK } from "@/lib/constants"; import { Icon } from "@/components/ui/icons";
 /**

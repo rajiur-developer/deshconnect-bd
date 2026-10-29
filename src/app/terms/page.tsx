@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header"; import { Prose } from "@/components/layout/prose";
 export const metadata: Metadata = { title: "Terms of Use" };

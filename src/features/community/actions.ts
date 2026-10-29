@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use server";
 import { revalidatePath } from "next/cache";
 import { COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
@@ -51,7 +50,6 @@ status: "visible",
 if (error) {
 console.error("Community post insert failed", {
 code: error.code,
-status: error.status,
 message: error.message,
 details: error.details,
 hint: error.hint,

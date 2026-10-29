@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "server-only";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 import { addTextSearch, makePageMeta } from "@/lib/insforge-query";
@@ -82,8 +81,8 @@ meta: makePageMeta(count, page, pageSize),
 }; }
 export const listInstitutions = insforgeListInstitutions;
 export const getInstitutionBySlug = insforgeGetInstitutionBySlug;
-export const getHospitalBySlug = insforgeGetInstitutionBySlug;
-export async function listHospitals(query: any = {}) {
+export { listHospitals, getHospitalBySlug } from "@/services/hospitals";
+
   const { category, ...rest } = query;
   const result = await insforgeListInstitutions({
     ...rest,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import Link from "next/link"; import { useSyncExternalStore, useState } from "react"; import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icons"; import { isNavGroup, isNavPathActive, type NavEntry } from "@/config/site";
@@ -11,7 +10,7 @@ const useHydratedPathname = () => useSyncExternalStore(subscribeToHydration, () 
 const [open, setOpen] = useState(false);
 const routeReady = useHydratedPathname();
 const pathname = usePathname();
-const unreadTotal = useUnreadMessageTotal(entry.href === "/messages" ? initialUnreadMessages : []);
+const unreadTotal = useUnreadMessageTotal(!isNavGroup(entry) && entry.href === "/messages" ? initialUnreadMessages : []);
 if (!isNavGroup(entry)) {
 const isBloodDonation = entry.href === "/blood-donation";
 const isActive = routeReady && isNavPathActive(pathname, entry.href);

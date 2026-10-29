@@ -1,9 +1,8 @@
-// @ts-nocheck
 import Link from "next/link";
-import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { PlaceForm } from "@/components/admin/place-form"; import { RecordActions } from "@/components/admin/record-actions"; import { BulkActions } from "@/components/admin/bulk-actions";
+import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { PlaceForm } from "@/components/admin/place-form"; import { RecordActions } from "@/components/admin/record-actions"; import { BulkActions } from "@/components/admin/bulk-actions"; import { requireUser } from "@/lib/auth/current-user";
 export const metadata = { title: "Tourism" };
 export default async function AdminTourismPage() {
-const [{ data }, options, categories] = await Promise.all([insforgeSelectMany("places", { order: "rating.desc", limit: "500" }), getDirectoryLocationOptions(), listContentCategories("place")]);
+const [{ data }, options, categories, user] = await Promise.all([insforgeSelectMany("places", { order: "rating.desc", limit: "500" }), getDirectoryLocationOptions(), listContentCategories("place"), requireUser("/admin/tourism")]);
 const places = mapDbRow(data || []);
 const categoryNames = new Map(categories.map((category) => [category.value, category.name]));
 return (
@@ -38,6 +37,7 @@ districts={options.districts}
 upazilas={options.upazilas}
 categories={categories}
 record={place}
+userId={user.id}
 />
 </RecordActions>
 </td>

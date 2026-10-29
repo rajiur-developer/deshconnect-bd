@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useActionState, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";

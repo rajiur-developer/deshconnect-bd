@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { listPosts } from "@/services/community"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ModeratePostButtons } from "@/components/community/community-actions"; import { relativeTime } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "Community Moderation" };

@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { describe, expect, it } from "vitest";
 import { seedDatabase } from "../src/data/seed";
 import { slugify } from "../src/lib/utils";
 
 describe("seed", () => {
   it("creates seed data with expected structure", () => {
-    const db = seedDatabase();
+    const db = seedDatabase() as unknown as Record<string, { length: number }>;
     expect(db.divisions.length).toBeGreaterThan(0);
     expect(db.districts.length).toBeGreaterThan(0);
     expect(db.upazilas.length).toBeGreaterThan(0);

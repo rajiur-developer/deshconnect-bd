@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useActionState, useState, useTransition } from "react"; import { useRouter } from "next/navigation";
 import { adminDeleteUserAction, adminSetUserStatusAction, adminUpdateUserAction, type AdminFormState } from "@/features/admin/actions"; import { Button } from "@/components/ui/button"; import { Field, Input } from "@/components/ui/input"; import { useFormStateToast, useToast } from "@/components/ui/toast"; import type { User } from "@/types/auth";

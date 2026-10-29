@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"; import { translateToBengali } from "@/lib/i18n/bengali";
 type Locale = "en" | "bn"; type LanguageContextValue = {

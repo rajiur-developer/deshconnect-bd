@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { listPlaces } from "@/services/places"; import { relativeTime } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons";
 export const metadata = { title: "My reviews", robots: { index: false, follow: false } };

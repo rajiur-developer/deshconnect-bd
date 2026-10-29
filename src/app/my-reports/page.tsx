@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { listUserReports } from "@/services/community"; import { relativeTime } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; export const metadata = { title: "My reports", robots: { index: false, follow: false } };
 const STATUS_TONE: Record<string, "accent" | "success" | "neutral" | "amber" | "info"> = {

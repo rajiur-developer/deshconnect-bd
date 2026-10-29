@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { BloodGroup, Gender } from "@/types/auth"; import type { InstitutionCategory } from "@/types/content";
 export const BLOOD_GROUPS: BloodGroup[] = [
 "A+",

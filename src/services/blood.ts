@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "server-only";
 
 import { insforge } from "@/lib/insforge";

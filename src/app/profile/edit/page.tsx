@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { requireUser } from "@/lib/auth/current-user"; import { getUserById } from "@/services/users"; import { getDirectoryLocationOptions } from "@/services/locations"; import { AccountShell } from "@/components/layout/account-shell"; import { ProfileEditForm } from "@/components/account/account-forms"; import { cookies } from "next/headers"; import { createServerClient } from "@insforge/sdk/ssr"; import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
 export const metadata = { title: "Edit profile", robots: { index: false, follow: false } };
 export default async function ProfileEditPage() {

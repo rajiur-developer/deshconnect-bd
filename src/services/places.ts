@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "server-only";
 
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeDeleteWhere, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
@@ -35,7 +34,7 @@ export async function insforgeListPlaces(query: {
   return {
     items: (data || []).map((r: any) => ({
       id: r.id,
-      slug: r.slug,
+      slug: (r.slug && r.slug.trim()) ? r.slug.trim() : `place-${r.id.slice(0, 8)}`,
       name: r.name,
       category: r.category,
       categoryName: categoryNames.get(r.category) ?? r.category,
@@ -66,13 +65,17 @@ export async function insforgeListPlaces(query: {
 }
 
 export async function insforgeGetPlaceBySlug(slug: string) {
-  const data = await insforgeSelectOne("places", { slug: `eq.${slug}`, status: "eq.published" });
+  let data = await insforgeSelectOne("places", { slug: `eq.${slug}`, status: "eq.published" });
+  if (!data && slug.startsWith("place-")) {
+    const idPrefix = slug.replace(/^place-/, "");
+    data = await insforgeSelectOne("places", { id: `ilike.${idPrefix}%`, status: "eq.published" });
+  }
   if (!data) return null;
   const categories = await listContentCategories("place");
   const categoryName = categories.find((category) => category.value === data.category)?.name ?? data.category;
   return {
     id: data.id,
-    slug: data.slug,
+    slug: (data.slug && data.slug.trim()) ? data.slug.trim() : slug,
     name: data.name,
     category: data.category,
     categoryName,
@@ -147,5 +150,5 @@ export async function listSavedPlaces(userId: string) {
   const places = await Promise.all(data.map((row: any) => insforgeSelectOne("places", { id: `eq.${row.place_id}`, status: "eq.published" }).catch(() => null)));
   const categories = await listContentCategories("place");
   const categoryNames = new Map(categories.map((category) => [category.value, category.name]));
-  return places.filter(Boolean).map((row: any) => ({ id: row.id, slug: row.slug, name: row.name, category: row.category, categoryName: categoryNames.get(row.category) ?? row.category, summary: row.summary, description: row.description, address: row.address, image: row.image, rating: row.rating, reviewCount: row.review_count, divisionId: row.division_id, districtId: row.district_id, upazilaId: row.upazila_id }));
+  return places.filter(Boolean).map((row: any) => ({ id: row.id, slug: row.slug, name: row.name, category: row.category, categoryName: categoryNames.get(row.category) ?? row.category, summary: row.summary, description: row.description, address: row.address, image: row.image, rating: row.rating, reviewCount: row.review_count, divisionId: row.division_id, districtId: row.district_id, upazilaId: row.upazila_id, status: row.status, verification: row.verification, createdAt: row.created_at, updatedAt: row.updated_at }));
 }

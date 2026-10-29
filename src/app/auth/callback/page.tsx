@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next"; import { cookies } from "next/headers"; import { redirect } from "next/navigation";
 import { firstParam } from "@/lib/query"; import { SESSION_COOKIE } from "@/lib/constants"; import { decodeSession, sessionCookieOptions } from "@/lib/auth/session";
 export const metadata: Metadata = { title: "Auth callback", robots: { index: false, follow: false } };

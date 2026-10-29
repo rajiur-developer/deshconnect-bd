@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { PublicUser } from "@/types/auth";
 import { PageHeader } from "@/components/layout/page-header";

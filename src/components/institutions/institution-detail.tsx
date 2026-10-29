@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Image from "next/image"; import Link from "next/link";
 import type { Institution } from "@/types/content"; import { formatLocation } from "@/services/locations"; import { formatDate } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { MapPreview } from "@/components/maps/map-preview"; import { institutionCategoryLabel } from "@/components/cards/institution-card";
 export async function InstitutionDetail({ institution }: { institution: Institution }) {

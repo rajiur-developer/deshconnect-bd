@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
 import type { Metadata } from "next";
 import { CommunityPostImage } from "@/components/community/community-post-image";

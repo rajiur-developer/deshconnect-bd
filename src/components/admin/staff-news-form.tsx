@@ -1,9 +1,8 @@
-// @ts-nocheck
 "use client";
 import { useActionState } from "react";
 import { createNewsAction, type AdminFormState } from "@/features/admin/actions"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { ImageUpload } from "@/components/forms/image-upload"; import { useFormStateToast } from "@/components/ui/toast";
 import type { ContentCategory } from "@/services/content-categories";
-export function StaffNewsForm({ categories }: { categories: ContentCategory[] }) {
+export function StaffNewsForm({ categories, userId }: { categories: ContentCategory[]; userId?: string }) {
 const [state, formAction, pending] = useActionState<AdminFormState, FormData>(
 createNewsAction as unknown as (prev: AdminFormState, fd: FormData) => Promise<AdminFormState>,
 {}
@@ -30,7 +29,7 @@ return (
 <Field label="Article" htmlFor="staff-body" required>
 <Textarea id="staff-body" name="body" className="min-h-[160px]" required />
 </Field>
-<ImageUpload name="image" label="Article image" hint="Optional — upload an image from your device (max 5 MB)" />
+<ImageUpload name="image" label="Article image" hint="Optional — upload an image from your device (max 5 MB)" userId={userId} storageFolder="news" />
 <Field label="Source (optional)" htmlFor="staff-source">
 <Input id="staff-source" name="source" placeholder="e.g. Prothom Alo" />
 </Field>

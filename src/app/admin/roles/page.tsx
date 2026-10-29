@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { getRolePermissionOverrides } from "@/services/role-permissions"; import { rolePermissions } from "@/lib/auth/permissions"; import { ALL_ACTIONS, ROLE_LABELS } from "@/config/permissions"; import { Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import type { Role } from "@/types/auth";
 export const metadata = { title: "Roles" };
 export default async function AdminRolesPage() {

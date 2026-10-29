@@ -1,4 +1,3 @@
-// @ts-nocheck
 export interface NavItem {
 label: string;
 href: string;
@@ -19,7 +18,7 @@ tagline: "Bangladesh's places, Blood Find, Services and people all in one place.
 description:
 "DeshConnect is an Information and Community platform for finding Tourist Spots,Blood donors, Educational institutions, Hospitals, Businesses, Government services, News and local activity across Bangladesh.",
 get url() {
-return process.env.NEXT_PUBLIC_SITE_URL ?? "https://deshconnect-bd.vercel.app";
+return process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "https://deshconnect.vercel.app";
 },
 locale: "en-BD",
 twitter: "@deshconnect", } as const;

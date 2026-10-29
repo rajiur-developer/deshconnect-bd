@@ -59,7 +59,8 @@ See [`.env.example`](.env.example). Set these InsForge variables in `.env.local`
 
 - `NEXT_PUBLIC_SITE_URL` — canonical site URL.
 - `NEXT_PUBLIC_APP_URL` — app origin used for the InsForge OAuth callback.
-- `NEXT_PUBLIC_INSFORGE_URL` / `NEXT_PUBLIC_INSFORGE_ANON_KEY` — user-scoped InsForge connection. Get the URL from `.insforge/project.json` and the anon key with `npx -y @insforge/cli secrets get ANON_KEY`. Never put an admin/API key in a `NEXT_PUBLIC_` variable.
+- `NEXT_PUBLIC_INSFORGE_URL` / `NEXT_PUBLIC_INSFORGE_ANON_KEY` — user-scoped InsForge connection. Get the URL from `.insforge/project.json` and the anon key with `npx -y @insforge/cli secrets get ANON_KEY`. Never put an admin/API key in a `NEXT_PUBLIC_` variable. **The URL must not end with a slash** — paths are appended as `/api/...`, and a trailing slash produces `//api/...`, which InsForge answers with a 404 HTML page instead of JSON.
+- `AUTH_SECRET` — signs the local session cookie. Required outside development and must be at least 32 characters; the app throws at runtime without it. Generate with `openssl rand -base64 48`.
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — enables embedded maps; without it the map falls back to an
   external Google Maps link.
 - `LIBRETRANSLATE_URL` / `LIBRETRANSLATE_API_KEY` — optional self-hosted LibreTranslate endpoint
@@ -149,6 +150,22 @@ Tests cover the utilities, composable query filters, role-based permissions and 
 - `/sitemap.xml` includes public, indexable routes; `/robots.txt` disallows private areas.
 - Semantic landmarks, one `<h1>` per page, labelled form controls, keyboard-focusable controls and a
   skip link.
+
+---
+
+## Production checklist
+
+Before deploying, confirm each item:
+
+- [ ] `NEXT_PUBLIC_INSFORGE_URL` has **no trailing slash** and `NEXT_PUBLIC_INSFORGE_ANON_KEY` is set.
+- [ ] `AUTH_SECRET` is set to at least 32 characters (a build or page render fails without it).
+- [ ] `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_APP_URL` point at the production origin.
+- [ ] The production `/api/auth/callback` URL is listed in `insforge.toml` → `allowed_redirect_urls`
+      and has been pushed with the InsForge CLI.
+- [ ] SMTP is configured in InsForge (`[auth.smtp] enabled = true`) **or** `require_email_verification`
+      is turned off; with verification enabled and SMTP disabled, registration cannot complete
+      because the 6-digit code is never delivered.
+- [ ] `npm run typecheck`, `npm test` and `npm run build` all pass.
 
 ---
 

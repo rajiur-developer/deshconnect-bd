@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useRouter } from "next/navigation"; import { useState } from "react";
 import type { PublicUser } from "@/types/auth"; import { Icon } from "@/components/ui/icons";

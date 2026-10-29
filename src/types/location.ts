@@ -1,4 +1,3 @@
-// @ts-nocheck
 /** Geographic hierarchy: Division → District → Upazila → Union. */
 export interface Division {
 id: string;

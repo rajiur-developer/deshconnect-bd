@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import Link from "next/link"; import { useActionState } from "react";
 import { requestPasswordResetAction, type FormState } from "@/features/auth/actions"; import { Button } from "@/components/ui/button"; import { Field, Input } from "@/components/ui/input"; import { useFormStateToast } from "@/components/ui/toast";

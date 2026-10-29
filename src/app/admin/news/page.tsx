@@ -1,5 +1,5 @@
-// @ts-nocheck
 import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { NewsStatusButtons } from "@/components/admin/admin-client"; import { StaffNewsForm } from "@/components/admin/staff-news-form"; import { formatDate } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "News" };
 const TONE: Record<string, "success" | "amber" | "accent" | "neutral"> = {
@@ -10,7 +10,7 @@ draft: "neutral",
 archived: "neutral", };
 export default async function AdminNewsPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
 const params = await searchParams;
-const [result, categories] = await Promise.all([listNews({ includeAll: true, page: 1, pageSize: 500, sort: "newest" }), listContentCategories("news")]);
+const [result, categories, user] = await Promise.all([listNews({ includeAll: true, page: 1, pageSize: 500, sort: "newest" }), listContentCategories("news"), getCurrentUser()]);
 const allNews = result.items;
 const categoryNames = new Map(categories.map((category) => [category.value, category.name]));
 const requests = allNews.filter((article) => article.status === "pending_review");
@@ -23,7 +23,7 @@ title="News"
 description="Review, approve, publish and edit news. Submissions stay private until approved."
 />
 <div className="mb-8">
-<StaffNewsForm categories={categories} />
+<StaffNewsForm categories={categories} userId={user?.id} />
 </div>
 <div className="mb-4 flex flex-wrap gap-2" aria-label="News management views">
 <Link href="/admin/news?view=requests" aria-current={view === "requests" ? "page" : undefined} className={`rounded-lg px-4 py-2 text-sm font-medium ${view === "requests" ? "bg-brand-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"}`}>Post requests ({requests.length})</Link>

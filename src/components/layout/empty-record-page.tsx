@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { PageBanner } from "@/components/layout/page-banner";
 import { EmptyState } from "@/components/ui/empty-state";

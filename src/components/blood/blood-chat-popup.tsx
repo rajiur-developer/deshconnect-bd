@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRealtimeConversation } from "@/components/messaging/use-realtime-conversation";

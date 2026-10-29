@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { getDonorForUser } from "@/services/blood"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge";
 export const metadata = { title: "Settings", robots: { index: false, follow: false } };

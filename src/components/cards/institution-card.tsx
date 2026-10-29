@@ -1,5 +1,5 @@
-// @ts-nocheck
-import Image from "next/image"; import Link from "next/link";
+import Link from "next/link";
+import { RecordImage } from "@/components/ui/record-image";
 import type { Institution } from "@/types/content"; import { INSTITUTION_CATEGORIES } from "@/lib/constants"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 export function institutionCategoryLabel(category: string, categoryName?: string): string {
 return categoryName ?? INSTITUTION_CATEGORIES.find((item) => item.value === category)?.label ?? category; }
@@ -10,7 +10,7 @@ const href = institution.category === "hospital" || institution.category === "he
 return (
 <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-brand-300 hover:shadow-xl">
 <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
-<Image
+<RecordImage
 src={institution.image}
 alt={institution.name}
 fill

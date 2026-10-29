@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useRef, useState } from "react";
  import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";

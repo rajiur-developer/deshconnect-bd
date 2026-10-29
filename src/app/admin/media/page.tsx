@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header";
 export const metadata = { title: "Media" };
 export default async function AdminMediaPage() {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 export type Role = "user" | "moderator" | "admin"; export type AccountStatus = "active" | "suspended" | "pending"; export type BloodGroup =
 | "A+"
 | "A-"
@@ -16,7 +15,7 @@ fullName: string;
 email: string;
 phone?: string;
 /** scrypt hash — never returned to the client layer. */
-passwordHash: string;
+passwordHash?: string;
 avatar: string;
 avatarKey?: string;
 bio?: string;

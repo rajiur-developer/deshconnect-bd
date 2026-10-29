@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { PageHeader } from "@/components/layout/page-header"; import { EmergencyAlertForm } from "@/components/admin/emergency-alert-form"; import { Badge, Card } from "@/components/ui/badge"; import { formatDate } from "@/lib/utils";
 export const metadata = { title: "Emergency Blood Alerts" };
 export default async function AdminBloodAlertsPage() {

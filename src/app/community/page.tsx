@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CommunityPostImage } from "@/components/community/community-post-image";

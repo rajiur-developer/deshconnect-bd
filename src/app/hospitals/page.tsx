@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { buildHref, firstParam, parseSort } from "@/lib/query";
 import { parsePage } from "@/lib/utils";

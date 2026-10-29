@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useActionState } from "react";
 import { createReviewAction, type ReviewFormState } from "@/features/places/actions"; import { Button } from "@/components/ui/button"; import { Input, Textarea } from "@/components/ui/input"; import { useFormStateToast } from "@/components/ui/toast";

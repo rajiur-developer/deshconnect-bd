@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/current-user";
 import { getConversationForUser } from "@/services/messaging";

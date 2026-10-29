@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createHmac, timingSafeEqual } from "node:crypto"; import { cookies } from "next/headers";
 import { SESSION_COOKIE, SESSION_TTL_DAYS } from "@/lib/constants"; import type { Session } from "@/types/auth";
 type CookiePayload = Session & { exp: number };

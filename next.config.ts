@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const storageBaseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL;
+const storageBaseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\/+$/, "");
 const storageImagePattern = storageBaseUrl
   ? (() => {
       const url = new URL(storageBaseUrl);

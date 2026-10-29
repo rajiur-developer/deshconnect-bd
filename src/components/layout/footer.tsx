@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { FOOTER_LINKS, SITE } from "@/config/site";
 import MainLogo from "../../../public/logo/Main-Logo.webp";

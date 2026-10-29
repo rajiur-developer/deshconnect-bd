@@ -1,12 +1,11 @@
-// @ts-nocheck
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { can } from "@/lib/auth/permissions";
 import { getRolePermissionOverrides } from "@/services/role-permissions";
-import { Icon } from "@/components/ui/icons";
+import { Icon, type IconName } from "@/components/ui/icons";
 
-const NAV = [
+const NAV: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin", label: "Dashboard", icon: "home" },
   { href: "/admin/users", label: "Users", icon: "users" },
   { href: "/admin/roles", label: "Roles", icon: "shield" },

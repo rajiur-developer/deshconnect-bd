@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useState, useTransition } from "react"; import { useRouter } from "next/navigation";
 import { deleteOwnPostAction, moderatePostAction, reactToPostAction } from "@/features/community/actions"; import { Icon } from "@/components/ui/icons";

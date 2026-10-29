@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { formatZodError, reviewSchema } from "@/lib/validation/schemas"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants";

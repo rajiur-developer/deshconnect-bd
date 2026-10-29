@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it } from "vitest";
 import { formatDate, relativeTime, initials, excerpt, toPublicUser, paginate, slugify } from "../src/lib/utils";
 import { formatDayFirstDate, parseDayFirstDate } from "../src/lib/date-input";

@@ -1,5 +1,6 @@
 [auth]
 allowed_redirect_urls = [
+  "https://deshconnect.vercel.app/api/auth/callback",
   "http://localhost:3000/api/auth/callback",
   "http://localhost:3100/api/auth/callback",
   "http://localhost:3101/api/auth/callback",

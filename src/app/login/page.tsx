@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { firstParam } from "@/lib/query"; import { LoginForm } from "@/components/auth/login-form";

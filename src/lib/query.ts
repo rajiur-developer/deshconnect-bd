@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { LocationRef } from "@/types/location";
 export type Sort = "relevance" | "newest" | "name" | "rating";
 export type DirectoryQuery = {

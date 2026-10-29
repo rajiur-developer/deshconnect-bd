@@ -1,5 +1,5 @@
-// @ts-nocheck
-import Image from "next/image"; import Link from "next/link";
+import Link from "next/link";
+import { RecordImage } from "@/components/ui/record-image";
 import type { Business } from "@/types/content"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 const BUSINESS_LABELS: Record<string, string> = {
 hotel: "Hotel",
@@ -16,7 +16,7 @@ export function BusinessCard({ business, locationLabel }: { business: Business; 
 return (
 <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-brand-300 hover:shadow-xl">
 <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
-<Image
+<RecordImage
 src={business.image}
 alt={business.name}
 fill

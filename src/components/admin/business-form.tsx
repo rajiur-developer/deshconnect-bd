@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useActionState } from "react";
 import {
@@ -17,8 +16,9 @@ type Props = {
 divisions: LocationOption[];
 districts: DistrictOption[];
 upazilas: UpazilaOption[];
+userId?: string;
 record?: Business; };
-export function BusinessForm({ divisions, districts, upazilas, record }: Props) {
+export function BusinessForm({ divisions, districts, upazilas, userId, record }: Props) {
 const action = record ? adminUpdateBusinessAction : createBusinessAction;
 const [state, formAction, pending] = useActionState<AdminFormState, FormData>(
 action as unknown as (prev: AdminFormState, fd: FormData) => Promise<AdminFormState>,
@@ -59,7 +59,7 @@ districtId: record?.districtId ?? undefined,
 upazilaId: record?.upazilaId ?? undefined,
 }}
 />
-<ImageUpload name="image" label="Business image" hint="Upload an image from your device, or leave as is" current={record?.image} />
+<ImageUpload name="image" label="Business image" hint="Upload an image from your device, or leave as is" current={record?.image} userId={userId} storageFolder="businesses" />
 <div className="grid gap-4 sm:grid-cols-2">
 <Field label="Phone" htmlFor="business-phone" hint="Optional">
 <Input id="business-phone" name="phone" defaultValue={record?.phone ?? ""} placeholder="031-000000" />

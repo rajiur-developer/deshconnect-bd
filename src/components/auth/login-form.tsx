@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import Link from "next/link"; import { useActionState, useState } from "react";
 import { googleOAuthAction, loginAction, type FormState } from "@/features/auth/actions"; import { Button } from "@/components/ui/button"; import { Field, Input } from "@/components/ui/input"; import { Icon } from "@/components/ui/icons"; import { useFormStateToast } from "@/components/ui/toast";

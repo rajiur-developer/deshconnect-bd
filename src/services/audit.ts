@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { AuditLog } from "@/types/admin";
 import { insforgeAuditLog } from "@/services/users";
 import { insforgeSelectMany } from "@/lib/insforge";

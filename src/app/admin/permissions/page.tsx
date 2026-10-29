@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { getRolePermissionOverrides } from "@/services/role-permissions"; import { PageHeader } from "@/components/layout/page-header"; import { PermissionsForm } from "@/components/admin/admin-client";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";

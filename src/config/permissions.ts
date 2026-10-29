@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Role } from "@/types/auth";
 export type PermissionAction =
 | "places:create"

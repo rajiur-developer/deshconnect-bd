@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { NewsCard } from "@/components/cards/news-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { Icon } from "@/components/ui/icons"; import { getDirectoryLocationOptions } from "@/services/locations";
 export const metadata: Metadata = { title: "News" };

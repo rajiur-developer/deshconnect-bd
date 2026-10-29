@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { NavItem } from "@/config/site"; import { Icon, type IconName } from "@/components/ui/icons";
 export function CategoryCard({ item }: { item: NavItem & { icon: string; blurb: string } }) {

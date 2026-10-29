@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icons";
@@ -25,6 +24,18 @@ function ContactActions({
 }) {
   const callNumber = internationalNumber(phone);
   const whatsappNumber = internationalNumber(whatsapp || phone);
+  if (chat.targetType === "donor" && !viewerId) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href="/login?next=%2Fblood-donation"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-800 hover:bg-rose-100"
+        >
+          <Icon name="phone" className="h-3.5 w-3.5" /> Log in to view contact
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-wrap gap-2">
       {whatsappNumber && (

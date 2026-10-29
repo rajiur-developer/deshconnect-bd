@@ -1,15 +1,15 @@
-// @ts-nocheck
 import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { BusinessForm } from "@/components/admin/business-form"; import { RecordActions } from "@/components/admin/record-actions"; import { businessCategoryLabel } from "@/components/cards/business-card"; import { formatDate } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "Businesses" };
 export default async function AdminBusinessesPage() {
-const [{ data }, options] = await Promise.all([insforgeSelectMany("businesses", { order: "updated_at.desc", limit: "500" }), getDirectoryLocationOptions()]);
+const [{ data }, options, user] = await Promise.all([insforgeSelectMany("businesses", { order: "updated_at.desc", limit: "500" }), getDirectoryLocationOptions(), getCurrentUser()]);
 const businesses = mapDbRow(data || []);
 return (
 <>
 <PageHeader title="Businesses" description="Manage business listings." />
 <div className="mb-8">
-<BusinessForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} />
+<BusinessForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} userId={user?.id} />
 </div>
 <BulkActions entity="business" records={businesses.map((business) => ({ id: business.id, label: business.name, status: business.status }))} />
 <Card className="overflow-x-auto p-0">
@@ -40,6 +40,7 @@ return (
 divisions={options.divisions}
 districts={options.districts}
 upazilas={options.upazilas}
+userId={user?.id}
 record={business}
 />
 </RecordActions>

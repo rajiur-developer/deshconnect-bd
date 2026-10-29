@@ -1,4 +1,3 @@
-// @ts-nocheck
 export function ErrorMessage({
 title = "Something went wrong",
 message, }: {

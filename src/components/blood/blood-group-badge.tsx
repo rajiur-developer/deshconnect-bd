@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { bloodGroupTone } from "@/lib/utils"; import { cn } from "@/lib/utils";
 export function BloodGroupBadge({ group, className }: { group: string; className?: string }) {
 return (

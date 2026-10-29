@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link"; import { requireUser } from "@/lib/auth/current-user"; import { getUserById } from "@/services/users"; import { formatLocation } from "@/services/locations"; import { formatDate } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { ProfileAvatar } from "@/components/ui/profile-avatar";
 export const metadata = { title: "My profile", robots: { index: false, follow: false } };
 export default async function ProfilePage() {

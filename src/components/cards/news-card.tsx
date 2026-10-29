@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { News } from "@/types/content"; import { formatDate } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { RecordImage } from "@/components/ui/record-image";
 const NEWS_LABELS: Record<string, string> = {

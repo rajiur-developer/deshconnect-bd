@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
 * Static directory seed data. Locations are referenced by name and resolved to
 * stable IDs by the seeder in src/data/seed.ts. Anything not listed is simply

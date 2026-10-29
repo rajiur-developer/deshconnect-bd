@@ -1,4 +1,9 @@
 // @ts-nocheck
+// Dev-only fixture: this module emits raw Postgres-shaped rows (snake_case
+// columns, plural table names) for the local file-backed store in
+// src/lib/db/store.ts. That deliberately differs from the camelCase `Database`
+// domain model, so it is excluded from strict type checking. It is never
+// executed in production (see the NODE_ENV guards in src/lib/insforge.ts).
 import "server-only";
 import { hashPassword } from "@/lib/auth/password"; import { slugify } from "@/lib/utils"; import type { BloodRequest, BloodDonor } from "@/types/blood"; import type { Post, Comment, Connection, Conversation, Message, Notification, Report } from "@/types/community"; import type { Database } from "@/types/admin"; import type { LocationRef } from "@/types/location"; import type { District, Division, Upazila } from "@/types/location";
 import { LOCATION_SEED } from "./locations"; import {

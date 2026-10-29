@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { listAdminReviews } from "@/services/community"; import { listPlaces } from "@/services/places"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ReviewStatusButton } from "@/components/admin/admin-client"; import { relativeTime } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "Reviews" };

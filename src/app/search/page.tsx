@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { Metadata } from "next";
 import { firstParam } from "@/lib/query"; import { globalSearch } from "@/services/search"; import { BusinessCard } from "@/components/cards/business-card"; import { InstitutionCard } from "@/components/cards/institution-card"; import { NewsCard } from "@/components/cards/news-card"; import { PlaceCard } from "@/components/cards/place-card"; import { ServiceCard } from "@/components/cards/service-card"; import { EmptyState } from "@/components/ui/empty-state"; import { PageHeader } from "@/components/layout/page-header"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
 * Banner media for pages. Files live in /public/images/banner.
 * Routes that are not listed fall back to DEFAULT_BANNER.

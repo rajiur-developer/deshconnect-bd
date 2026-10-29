@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { listSavedPlaces } from "@/services/places"; import { AccountShell } from "@/components/layout/account-shell"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { PlaceCard } from "@/components/cards/place-card"; import { ListGrid } from "@/components/layout/list-grid";
 export const metadata = { title: "Saved places", robots: { index: false, follow: false } };

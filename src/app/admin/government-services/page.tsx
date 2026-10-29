@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { BulkActions } from "@/components/admin/bulk-actions"; import { ServiceForm } from "@/components/admin/service-form"; import { RecordActions } from "@/components/admin/record-actions"; import { serviceCategoryLabel } from "@/components/cards/service-card"; import { formatDate } from "@/lib/utils"; import { listContentCategories } from "@/services/content-categories";
 export const metadata = { title: "Government Services" };
@@ -38,6 +37,7 @@ return (
 divisions={options.divisions}
 districts={options.districts}
 upazilas={options.upazilas}
+categories={categories}
 record={service}
 />
 </RecordActions>

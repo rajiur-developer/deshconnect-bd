@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use server";
 import { revalidatePath } from "next/cache";
 import { getDonationEligibility } from "@/lib/blood-donation";
@@ -283,7 +282,7 @@ if (error) {
 console.error("Could not load blood chat messages:", error);
 return { error: "Could not load messages. Please try again." };
 }
-return { messages: (messages ?? []).map((message: any) => ({ id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, createdAt: message.created_at })) }; }
+return { messages: (messages ?? []).map((message: any) => ({ id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, createdAt: message.created_at, readBy: message.read_by ?? [] })) }; }
 export async function sendBloodChatMessageAction(conversationId: string, body: string) {
 const user = await requireUser();
 const { data: conversation, error: conversationError } = await insforge.database.from("conversations").select("id").eq("id", conversationId).eq("conversation_type", "blood").filter("participant_ids", "cs", `{${user.id}}`).maybeSingle();
@@ -309,4 +308,4 @@ if (error || !message) {
 console.error("Could not send blood chat message:", error);
 return { error: "Could not send your message. Please try again." };
 }
-return { message: { id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, createdAt: message.created_at } }; }
+return { message: { id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, createdAt: message.created_at, readBy: message.read_by ?? [] } }; }

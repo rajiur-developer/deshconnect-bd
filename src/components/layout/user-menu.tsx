@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import Link from "next/link"; import { usePathname } from "next/navigation"; import { useEffect, useRef, useState } from "react";
 import type { PublicUser } from "@/types/auth"; import { Icon } from "@/components/ui/icons"; import { ProfileAvatar } from "@/components/ui/profile-avatar"; import { signOutAction } from "@/features/auth/actions";

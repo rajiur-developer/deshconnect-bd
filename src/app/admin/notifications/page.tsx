@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { listAdminUsers } from "@/services/users"; import { Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { relativeTime } from "@/lib/utils";
 export const metadata = { title: "Notifications" };
 export default async function AdminNotificationsPage() {

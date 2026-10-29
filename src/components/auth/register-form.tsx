@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import Link from "next/link";
@@ -126,20 +125,25 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
     );
   }
 
-  function goToDetails(event) {
+  function goToDetails(event: React.FormEvent<HTMLButtonElement>) {
     event.preventDefault();
     const form = event.currentTarget.form;
-    const requiredFields = Array.from(form.querySelectorAll("[data-step-one] input[required]"));
+    if (!form) return;
+    const requiredFields = Array.from(
+      form.querySelectorAll<HTMLInputElement>("[data-step-one] input[required]"),
+    );
     const invalid = requiredFields.find((field) => !field.checkValidity());
     if (invalid) { invalid.reportValidity(); invalid.focus(); return; }
     if (password !== confirmPassword) {
-      const confirm = form.querySelector("#confirmPassword");
-      confirm.setCustomValidity("Passwords do not match.");
-      confirm.reportValidity();
-      confirm.focus();
+      const confirm = form.querySelector<HTMLInputElement>("#confirmPassword");
+      if (confirm) {
+        confirm.setCustomValidity("Passwords do not match.");
+        confirm.reportValidity();
+        confirm.focus();
+      }
       return;
     }
-    form.querySelector("#confirmPassword")?.setCustomValidity("");
+    form.querySelector<HTMLInputElement>("#confirmPassword")?.setCustomValidity("");
     setStep(2);
   }
 
@@ -150,7 +154,9 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
         noValidate
         onSubmit={(event) => {
           const form = event.currentTarget;
-          const requiredFields = Array.from(form.querySelectorAll("[data-final-required]"));
+          const requiredFields = Array.from(
+            form.querySelectorAll<HTMLInputElement>("[data-final-required]"),
+          );
           const invalid = requiredFields.find((field) => !field.checkValidity());
           if (invalid) {
             event.preventDefault();
@@ -163,7 +169,8 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             event.preventDefault();
             setStep(1);
             requestAnimationFrame(() => {
-              const field = form.querySelector("#confirmPassword");
+              const field = form.querySelector<HTMLInputElement>("#confirmPassword");
+              if (!field) return;
               field.setCustomValidity("Passwords do not match.");
               field.reportValidity();
               field.focus();

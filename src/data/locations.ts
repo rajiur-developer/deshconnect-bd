@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
 * Static Bangladesh geographic hierarchy used to seed the location tables.
 *

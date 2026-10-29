@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { SITE } from "@/config/site"; import { PageHeader } from "@/components/layout/page-header"; import { Prose } from "@/components/layout/prose";
 export const metadata: Metadata = { title: "About DeshConnect" };

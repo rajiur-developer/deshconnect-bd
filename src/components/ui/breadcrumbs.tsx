@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 export type Crumb = { label: string; href?: string };
 export function Breadcrumbs({ items, dark = false }: { items: Crumb[]; dark?: boolean }) {

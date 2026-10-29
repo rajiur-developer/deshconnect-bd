@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user"; import { listNotifications } from "@/services/notifications"; import { relativeTime } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { MarkAllReadButton, MarkReadButton } from "@/components/account/account-actions";
 export const metadata = { title: "Notifications", robots: { index: false, follow: false } };

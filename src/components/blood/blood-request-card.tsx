@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import type { BloodRequest } from "@/types/blood"; import { DEFAULT_MAPS_LINK } from "@/lib/constants"; import { formatDate } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { BloodGroupBadge } from "./blood-group-badge";
 const STATUS_TONE: Record<BloodRequest["status"], "success" | "accent" | "amber" | "info" | "neutral"> = {

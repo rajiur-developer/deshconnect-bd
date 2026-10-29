@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { insforgeSelectOne } from "@/lib/insforge"; import { PageHeader } from "@/components/layout/page-header"; import { SettingsForm } from "@/components/admin/admin-client";
 export const metadata = { title: "Admin Settings" };
 export default async function AdminSettingsPage() {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NextRequest, NextResponse } from "next/server";
 import { listDistricts, listDivisions, listUpazilas } from "@/services/locations";
 export const dynamic = "force-dynamic";

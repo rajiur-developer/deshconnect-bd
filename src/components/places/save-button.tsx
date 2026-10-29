@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useState, useTransition } from "react";
 import { toggleSaveAction } from "@/features/places/actions"; import { Icon } from "@/components/ui/icons"; import { cn } from "@/lib/utils";

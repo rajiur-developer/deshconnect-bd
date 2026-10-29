@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Link from "next/link";
 import { listDivisions, listDistricts, listUpazilas } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { LocationAddForm } from "@/components/admin/location-form";
 export const metadata = { title: "Locations" };
@@ -33,7 +32,7 @@ return (
 <li key={division.id} className="flex items-center justify-between py-3">
 <div>
 <p className="font-medium text-slate-900">{division.name}</p>
-<p className="text-xs text-slate-500">{division.bnName} · capital {division.capital}</p>
+<p className="text-xs text-slate-500">Capital {division.capital}</p>
 </div>
 <div className="flex gap-2">
 <Badge tone="neutral">{divisionDistricts.length} districts</Badge>

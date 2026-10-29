@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { useLanguage } from "./language-provider";
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
