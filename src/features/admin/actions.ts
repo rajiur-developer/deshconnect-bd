@@ -858,11 +858,11 @@ return { success: "User updated." };
 
 /** Execute a validated bulk operation for admin directory records. */
 export async function adminBulkRecordAction(
-  entity: "place" | "institution" | "hospital" | "service" | "news",
+  entity: "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor" | "review",
   ids: string[],
   operation: "hide" | "unhide" | "delete",
 ): Promise<{ ok: boolean; processed: number; errors: string[] }> {
-  const allowedEntities = ["place", "institution", "hospital", "service", "news"];
+  const allowedEntities = ["place", "institution", "hospital", "service", "news", "business", "post", "donor", "review"];
   if (!allowedEntities.includes(entity) || !["hide", "unhide", "delete"].includes(operation)) {
     return { ok: false, processed: 0, errors: ["Invalid bulk action."] };
   }
@@ -876,6 +876,36 @@ export async function adminBulkRecordAction(
       if (entity === "news") {
         if (operation === "delete") result = await adminDeleteNewsAction(id);
         else result = await adminSetNewsStatusAction(id, operation === "hide" ? "archived" : "pending_review");
+      } else if (entity === "business") {
+        if (operation === "delete") result = await deleteBusinessAction(id);
+        else result = await adminSetBusinessStatusAction(id, operation === "hide" ? "archived" : "published");
+      } else if (entity === "donor") {
+        if (operation === "delete") result = await adminDeleteBloodDonorAction(id);
+        else result = await adminSetBloodDonorVisibilityAction(id, operation === "unhide");
+      } else if (entity === "review") {
+        const actor = await guard("moderation:reviews");
+        if (operation === "delete") {
+          const deleted = await deleteAdminRow("reviews", id);
+          if (!deleted) result = { ok: false, error: "Review not found." };
+          else { await audit(actor, "review:delete", "review", id); revalidatePath("/admin/reviews"); revalidatePath("/places"); result = { ok: true }; }
+        } else {
+          await setReviewStatus(id, operation === "hide" ? "hidden" : "visible");
+          await audit(actor, `review:${operation === "hide" ? "hidden" : "visible"}`, "review", id);
+          revalidatePath("/admin/reviews"); revalidatePath("/places");
+          result = { ok: true };
+        }
+      } else if (entity === "post") {
+        const actor = await guard("moderation:posts");
+        if (operation === "delete") {
+          const deleted = await deleteAdminRow("posts", id);
+          if (!deleted) result = { ok: false, error: "Post not found." };
+          else { await audit(actor, "post:delete", "post", id); revalidatePath("/admin/community"); revalidatePath("/community"); result = { ok: true }; }
+        } else {
+          await setPostStatus(id, operation === "hide" ? "hidden" : "visible");
+          await audit(actor, `post:${operation === "hide" ? "hidden" : "visible"}`, "post", id);
+          revalidatePath("/admin/community"); revalidatePath("/community");
+          result = { ok: true };
+        }
       } else if (operation === "delete") {
         if (entity === "place") result = await adminDeletePlaceAction(id);
         else if (entity === "service") result = await adminDeleteServiceAction(id);

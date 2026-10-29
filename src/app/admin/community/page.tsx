@@ -1,6 +1,6 @@
 // @ts-nocheck
 import Link from "next/link";
-import { listPosts } from "@/services/community"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ModeratePostButtons } from "@/components/community/community-actions"; import { relativeTime } from "@/lib/utils";
+import { listPosts } from "@/services/community"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { ModeratePostButtons } from "@/components/community/community-actions"; import { relativeTime } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
 export const metadata = { title: "Community Moderation" };
 const TONE: Record<string, "success" | "amber" | "neutral" | "accent"> = {
 visible: "success",
@@ -12,6 +12,7 @@ const { items: posts } = await listPosts({ includeNonPublic: true, page: 1, page
 return (
 <>
 <PageHeader title="Community Moderation" description="Review posts and take action on rule violations." />
+<BulkActions entity="post" records={posts.map((post) => ({ id: post.id, label: post.body.slice(0, 100) || "Community post", status: post.status }))} />
 <Card className="overflow-x-auto p-0">
 <table className="min-w-full divide-y divide-slate-100 text-sm">
 <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">

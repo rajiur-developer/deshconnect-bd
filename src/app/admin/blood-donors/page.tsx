@@ -5,7 +5,7 @@ import { listAdminUsers } from "@/services/users";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { can } from "@/lib/auth/permissions";
 import { getRolePermissionOverrides } from "@/services/role-permissions";
-import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { BloodDonorActions } from "@/components/admin/admin-client";
+import { Badge, Card } from "@/components/ui/badge"; import { BulkActions } from "@/components/admin/bulk-actions"; import { PageHeader } from "@/components/layout/page-header"; import { BloodDonorActions } from "@/components/admin/admin-client";
 
 export const metadata = { title: "Blood Donors" };
 
@@ -24,7 +24,8 @@ export default async function AdminBloodDonorsPage() {
         title="Blood Donors"
         description="Manage donor records within authorised limits. Full contact numbers are visible to authorised blood-donation staff."
       />
-      <Card className="overflow-x-auto p-0">
+      <BulkActions entity="donor" records={donors.map((donor) => ({ id: donor.id, label: `${userById.get(donor.userId)?.fullName ?? donor.userId} — ${donor.bloodGroup}`, status: donor.archivedAt ? "Archived" : (!donor.consentListed || !donor.consentContact ? "Hidden" : "Active") }))} />
+<Card className="overflow-x-auto p-0">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
             <tr>
