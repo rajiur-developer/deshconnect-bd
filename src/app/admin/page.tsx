@@ -42,7 +42,7 @@ export default async function AdminDashboardPage() {
     listNews({ includeAll: true, status: "pending_review", page: 1, pageSize: 1 }),
     insforgeSelectMany("places", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("institutions", { category: "in.(school,college,madrasah)", limit: "1" }).then((r) => r.count),
-    insforgeSelectMany("institutions", { category: "in.(hospital,health-centre)", limit: "1" }).then((r) => r.count),
+    insforgeSelectMany("hospitals", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("businesses", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("reports", { status: "eq.open", limit: "1" }).then((r) => r.count),
     insforgeSelectMany("blood_donors", { limit: "1" }).then((r) => r.count),
@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="mt-7 grid grid-cols-2 gap-3 border-t border-white/15 pt-5 sm:grid-cols-4">
           <div><p className="text-xs text-brand-100/75">Users in admin list</p><p className="mt-1 text-xl font-bold">{users.length.toLocaleString()}</p></div>
-          <div><p className="text-xs text-brand-100/75">Content records</p><p className="mt-1 text-xl font-bold">{(Number(places ?? 0) + Number(institutions ?? 0) + Number(businesses ?? 0) + Number(newsTotal ?? 0)).toLocaleString()}</p></div>
+          <div><p className="text-xs text-brand-100/75">Content records</p><p className="mt-1 text-xl font-bold">{(Number(places ?? 0) + Number(institutions ?? 0) + Number(hospitals ?? 0) + Number(businesses ?? 0) + Number(newsTotal ?? 0)).toLocaleString()}</p></div>
           <div><p className="text-xs text-brand-100/75">Pending news</p><p className="mt-1 text-xl font-bold">{Number(pendingNewsTotal ?? 0).toLocaleString()}</p></div>
           <div><p className="text-xs text-brand-100/75">Open reports</p><p className="mt-1 text-xl font-bold">{Number(reports ?? 0).toLocaleString()}</p></div>
         </div>
