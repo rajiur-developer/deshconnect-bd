@@ -52,12 +52,12 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-brand-950">
+      <section className="dc-home-hero relative isolate overflow-hidden bg-brand-950">
         <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
         <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
-          <div className="enter-fade mx-auto w-full max-w-4xl">
+          <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
             <div className="flex justify-center"><Badge tone="accent" className="bg-white/10 text-white ring-white/20">Bangladesh's information & community platform</Badge></div>
             <h1 className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">Discover your Bangladesh.<span className="block text-brand-300">Connect with your community.</span></h1>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg">Find local places, institutions, public services, news and community support — all in one place.</p>
@@ -70,7 +70,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container-x py-8 sm:py-10" aria-labelledby="blood-donation-highlight">
+      <section className="dc-home-blood container-x py-8 sm:py-10" aria-labelledby="blood-donation-highlight">
         <div className="relative overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-white to-red-50 p-6 shadow-sm sm:p-9">
           <div className="pointer-events-none absolute -right-8 -top-10 h-44 w-44 rounded-full bg-rose-200/40 blur-3xl" />
           <div className="relative grid items-center gap-7 md:grid-cols-[1fr_auto]">
