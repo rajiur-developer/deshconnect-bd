@@ -87,7 +87,7 @@ export async function Header({
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_8px_28px_-22px_rgba(11,61,46,0.65)] backdrop-blur-xl">
+    <header className="dc-header sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 shadow-[0_8px_28px_-22px_rgba(11,61,46,0.65)] backdrop-blur-xl">
       {user && (
         <MessageRealtimeNotifications
           userId={user.id}
@@ -97,10 +97,10 @@ export async function Header({
         />
       )}
 
-      <div className="container-x flex h-16 items-center gap-4">
+      <div className="dc-header-inner container-x flex h-[4.5rem] items-center gap-4">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 font-bold text-brand-700 logoSize"
+          className="dc-header-logo flex shrink-0 items-center gap-2 font-bold text-brand-700 logoSize"
         >
           <span className="grid h-14 w-14 place-items-center rounded-lg text-white">
             <img
@@ -141,7 +141,7 @@ export async function Header({
                 name="q"
                 placeholder="Search places and services…"
                 aria-label="Search DeshConnect"
-                className="w-52 rounded-full border border-slate-300 bg-slate-50 py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus-ring lg:w-64"
+                className="dc-header-search w-52 rounded-full border border-slate-300 bg-slate-50 py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus-ring lg:w-64"
               />
             </div>
           </form>
