@@ -102,7 +102,7 @@ const user = await requireMainAdmin();
 const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 if (!section || !value) return { error: "Invalid category." };
-const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "institutions" : section === "government-service" ? "government_services" : "institutions";
+const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "hospitals" : section === "government-service" ? "government_services" : "institutions";
 const client = createServerClient({ cookies: await cookies() });
 const { data: uses, error: usesError } = await client.database.from(table).select("id").eq("category", value).limit(1);
 if (usesError) {
@@ -277,11 +277,13 @@ if (!deleted) return { ok: false, error: "Place not found." };
 await audit(user, "place:delete", "place", id);
 revalidatePath("/admin/places");
 revalidatePath("/places"); }
-export async function adminDeleteInstitutionAction(id: string) {
+export async function adminDeleteInstitutionAction(id: string, entity: "institution" | "hospital" = "institution") {
 const user = await guard("institutions:edit");
-const deleted = await deleteAdminRow("institutions", id);
-if (!deleted) return { ok: false, error: "Institution not found." };
-await audit(user, "institution:delete", "institution", id);
+const table = entity === "hospital" ? "hospitals" : "institutions";
+const label = entity === "hospital" ? "Hospital" : "Institution";
+const deleted = await deleteAdminRow(table, id);
+if (!deleted) return { ok: false, error: `${label} not found.` };
+await audit(user, `${entity}:delete`, entity, id);
 revalidatePath("/admin/institutions");
 revalidatePath("/admin/hospitals");
 revalidatePath("/institutions");
@@ -410,14 +412,16 @@ const isHospital = formData.get("isHospital") === "true";
 if (!(await isContentCategory(isHospital ? "hospital" : "institution", parsed.data.category))) {
 return { error: isHospital ? "Please choose a valid hospital category." : "Please choose a valid institution category." };
 }
-if (parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
-return { error: "The selected institution image could not be verified. Please upload it again." };
+const table = isHospital ? "hospitals" : "institutions";
+const entity = isHospital ? "hospital" : "institution";
+if (parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, isHospital ? "hospitals" : "institutions")) {
+return { error: "The selected image could not be verified. Please upload it again." };
 }
-const slug = `${slugify(parsed.data.name) || "institution"}-${createId("institution").slice(-8)}`;
+const slug = `${slugify(parsed.data.name) || entity}-${createId(entity).slice(-8)}`;
 const client = createServerClient({ cookies: await cookies() });
 let created;
 try {
-const result = await client.database.from("institutions").insert([{
+const result = await client.database.from(table).insert([{
 slug,
 name: sanitizeText(parsed.data.name, 200),
 category: parsed.data.category,
@@ -445,7 +449,7 @@ return { error: "Institution could not be saved. Please try again." };
 }
 if (!created?.id) return { error: "Institution could not be saved because the database returned no record." };
 try {
-await audit(user, "institution:create", "institution", created.id);
+await audit(user, `${entity}:create`, entity, created.id);
 } catch (error) {
 console.error("Institution was created but audit logging failed", error);
 }
@@ -453,7 +457,7 @@ revalidatePath("/admin/institutions");
 revalidatePath("/admin/hospitals");
 revalidatePath("/institutions");
 revalidatePath("/hospitals");
-return { success: "Institution created and published." };
+return { success: `${isHospital ? "Hospital" : "Institution"} created and published.` };
 }
 /** Publish a news article directly. Available to admins and moderators. */ export async function createNewsAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
 const user = await guard("news:publish");
@@ -657,11 +661,13 @@ revalidatePath("/admin/places");
 revalidatePath("/admin/tourism");
 revalidatePath("/places"); }
 /** Hide (archive) or restore an institution. Admin and moderators with institution access. */
-export async function adminSetInstitutionStatusAction(id: string, status: "published" | "archived") {
+export async function adminSetInstitutionStatusAction(id: string, status: "published" | "archived", entity: "institution" | "hospital" = "institution") {
 const user = await guard("institutions:edit");
-const updated = await updateAdminRow("institutions", id, { status });
-if (!updated) return { ok: false, error: "Institution not found." };
-await audit(user, `institution:${status}`, "institution", id);
+const table = entity === "hospital" ? "hospitals" : "institutions";
+const label = entity === "hospital" ? "Hospital" : "Institution";
+const updated = await updateAdminRow(table, id, { status });
+if (!updated) return { ok: false, error: `${label} not found.` };
+await audit(user, `${entity}:${status}`, entity, id);
 revalidatePath("/admin/institutions");
 revalidatePath("/admin/hospitals");
 revalidatePath("/institutions");
@@ -747,8 +753,10 @@ const isHospital = formData.get("isHospital") === "true";
 if (!(await isContentCategory(isHospital ? "hospital" : "institution", parsed.data.category))) {
 return { error: isHospital ? "Please choose a valid hospital category." : "Please choose a valid institution category." };
 }
-if (imageChanged && parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, "institutions")) {
-return { error: "The selected institution image could not be verified. Please upload it again." };
+const table = isHospital ? "hospitals" : "institutions";
+const entity = isHospital ? "hospital" : "institution";
+if (imageChanged && parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.id, isHospital ? "hospitals" : "institutions")) {
+return { error: "The selected image could not be verified. Please upload it again." };
 }
 let updated;
 try {
@@ -766,23 +774,23 @@ division_id: parsed.data.divisionId ?? null,
 district_id: parsed.data.districtId ?? null,
 upazila_id: parsed.data.upazilaId ?? null,
 };
-if (process.env.NODE_ENV === "development" && id.startsWith("inst_")) {
-const result = await insforgeUpdate("institutions", id, values);
+if (process.env.NODE_ENV === "development" && (id.startsWith("inst_") || id.startsWith("hospital_"))) {
+const result = await insforgeUpdate(table, id, values);
 updated = result.data?.[0] ? { id: result.data[0].id } : null;
 } else {
-updated = await updateAdminRow("institutions", id, values);
+updated = await updateAdminRow(table, id, values);
 }
 } catch (error) {
 console.error("Institution update failed.", error instanceof Error ? error.message : "Unknown error");
 return { error: "Could not save this institution. Please try again." };
 }
 if (!updated) return { error: "Institution not found." };
-await audit(user, "institution:update", "institution", id);
+await audit(user, `${entity}:update`, entity, id);
 revalidatePath("/admin/institutions");
 revalidatePath("/admin/hospitals");
 revalidatePath("/institutions");
 revalidatePath("/hospitals");
-return { success: "Institution updated." };
+return { success: `${isHospital ? "Hospital" : "Institution"} updated.` };
 }
 /** Update an existing business. Admin and moderators. */ export async function adminUpdateBusinessAction(_prev: AdminFormState, formData: FormData): Promise<AdminFormState> {
 const user = await guard("businesses:edit");
@@ -908,12 +916,12 @@ export async function adminBulkRecordAction(
       } else if (operation === "delete") {
         if (entity === "place") result = await adminDeletePlaceAction(id);
         else if (entity === "service") result = await adminDeleteServiceAction(id);
-        else result = await adminDeleteInstitutionAction(id);
+        else result = await adminDeleteInstitutionAction(id, entity === "hospital" ? "hospital" : "institution");
       } else {
         const status = operation === "hide" ? "archived" : "published";
         if (entity === "place") result = await adminSetPlaceStatusAction(id, status);
         else if (entity === "service") result = await adminSetServiceStatusAction(id, status);
-        else result = await adminSetInstitutionStatusAction(id, status);
+        else result = await adminSetInstitutionStatusAction(id, status, entity === "hospital" ? "hospital" : "institution");
       }
       if (result && result.ok === false) errors.push(`${id}: ${result.error || "Action failed"}`);
       else processed++;

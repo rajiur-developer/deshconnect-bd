@@ -1,6 +1,7 @@
 import type { Business, GovernmentService, Institution, News, Place } from "@/types/content"; import type { Post } from "@/types/community";
 import { listPlaces } from "@/services/places";
 import { listInstitutions } from "@/services/institutions";
+import { listHospitals } from "@/services/hospitals";
 import { listBusinesses } from "@/services/businesses";
 import { listGovernmentServices } from "@/services/government-services";
 import { listNews } from "@/services/news";
@@ -26,12 +27,13 @@ const needles = buildNeedles(query);
 if (!needles.length) {
 return { places: [], institutions: [], businesses: [], governmentServices: [], news: [], posts: [] };
 }
-const [places, institutions, businesses, governmentServices, news, postRows] = await Promise.all([
+const [places, institutions, hospitals, businesses, governmentServices, news, postRows] = await Promise.all([
 listPlaces({ q: query, page: 1, pageSize: limit }),
 listInstitutions({ q: query, page: 1, pageSize: limit }),
+listHospitals({ q: query, page: 1, pageSize: limit }),
 listBusinesses({ q: query, page: 1, pageSize: limit }),
 listGovernmentServices({ q: query, page: 1, pageSize: limit }),
 listNews({ q: query, page: 1, pageSize: limit }),
 insforgeSelectMany("posts", { status: "eq.visible", body: `ilike.*${query.trim().replace(/[(),%_*]/g, " ").replace(/\s+/g, " ")}*`, order: "created_at.desc", limit: String(limit) }),
 ]);
-return { places: places.items, institutions: institutions.items, businesses: businesses.items, governmentServices: governmentServices.items, news: news.items, posts: mapDbRow(postRows.data || []) }; }
+return { places: places.items, institutions: [...institutions.items, ...hospitals.items], businesses: businesses.items, governmentServices: governmentServices.items, news: news.items, posts: mapDbRow(postRows.data || []) }; }

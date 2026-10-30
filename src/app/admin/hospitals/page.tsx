@@ -3,10 +3,10 @@ import { mapDbRow } from "@/lib/db/insforge";
 import { firstParam } from "@/lib/query";
 import { parsePage } from "@/lib/utils";
 import { requireUser } from "@/lib/auth/current-user";
-import { insforgeListAdminInstitutions } from "@/services/institutions";
+import { insforgeListAdminHospitals } from "@/services/hospitals";
 import { getDirectoryLocationOptions } from "@/services/locations";
 import { listContentCategories } from "@/services/content-categories";
-import type { Institution } from "@/types/content";
+import type { Hospital } from "@/types/content";
 
 export const metadata = { title: "Hospitals" };
 
@@ -42,7 +42,7 @@ export default async function AdminHospitalsPage({
   }
   const categories = Array.from(categoriesByValue.values());
 
-  const { items, meta } = await insforgeListAdminInstitutions({
+  const { items, meta } = await insforgeListAdminHospitals({
     categories: categories.map((category) => category.value),
     q: query,
     page: parsePage(firstParam(params.page)),
@@ -53,7 +53,7 @@ export default async function AdminHospitalsPage({
       title="Hospitals"
       description="Create and manage hospitals, clinics and health centres."
       isHospital
-      records={mapDbRow<Institution[]>(items)}
+      records={mapDbRow<Hospital[]>(items)}
       adminPath="/admin/hospitals"
       query={query}
       meta={meta}

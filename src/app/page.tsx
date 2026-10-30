@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { CATEGORY_SHORTCUTS, SITE } from "@/config/site";
 import { listGovernmentServices } from "@/services/government-services";
 import { listInstitutions } from "@/services/institutions";
+import { listHospitals } from "@/services/hospitals";
 import { featuredPlaces } from "@/services/places";
 import { listDivisions } from "@/services/locations";
 import { listNews } from "@/services/news";
@@ -41,10 +42,11 @@ function SectionHeading({ eyebrow, title, description }: { eyebrow: string; titl
 
 export default async function HomePage() {
   const user = await loadOr(getCurrentUser(), null);
-  const [divisions, featured, institutions, services, posts, news] = await Promise.all([
+  const [divisions, featured, institutions, hospitals, services, posts, news] = await Promise.all([
     loadOr(listDivisions(), []),
     loadOr(featuredPlaces(6), []),
-    loadOr(listInstitutions({ page: 1, pageSize: 4 }).then((result) => result.items.slice(0, 4)), []),
+    loadOr(listInstitutions({ page: 1, pageSize: 2 }).then((result) => result.items), []),
+    loadOr(listHospitals({ page: 1, pageSize: 2 }).then((result) => result.items), []),
     loadOr(listGovernmentServices({ page: 1, pageSize: 4 }).then((result) => result.items.slice(0, 4)), []),
     loadOr(listPosts({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
     loadOr(listNews({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
@@ -101,7 +103,7 @@ export default async function HomePage() {
 
       <section className="bg-white"><Section title="Find your next favorite place" description="Selected destinations across the country." action={<Link href="/places" className="text-sm font-bold text-brand-700 hover:text-brand-800">View all places →</Link>}><ListGrid>{featured.map((place) => <PlaceCard key={place.id} place={place} locationLabel={(place.address ?? "").split(",").slice(-2).join(",").trim()} />)}{featured.length === 0 && <EmptyState title="Places are being prepared">Place listings will appear here once content is available.</EmptyState>}</ListGrid></Section></section>
 
-      <Section title="Local institutions & services" description="Schools, hospitals, health centers and government offices near you." action={<Link href="/institutions" className="text-sm font-bold text-brand-700 hover:text-brand-800">View institutions →</Link>}><ListGrid>{institutions.map((institution) => <InstitutionCard key={institution.id} institution={institution} />)}{institutions.length === 0 && <EmptyState title="Institution listings are coming soon">Local institutions will appear here as listings are added.</EmptyState>}</ListGrid></Section>
+      <Section title="Institutions & healthcare" description="Schools, colleges, hospitals and health centres near you." action={<div className="flex gap-3 text-sm font-bold"><Link href="/institutions" className="text-brand-700 hover:text-brand-800">Institutions →</Link><Link href="/hospitals" className="text-brand-700 hover:text-brand-800">Hospitals →</Link></div>}><ListGrid>{[...institutions, ...hospitals].slice(0, 4).map((institution) => <InstitutionCard key={institution.id} institution={institution} />)}{institutions.length + hospitals.length === 0 && <EmptyState title="Directory listings are coming soon">Local institutions and healthcare facilities will appear here as listings are added.</EmptyState>}</ListGrid></Section>
 
       <section className="bg-white"><Section title="Government services" description="Government offices and required documents." action={<Link href="/government-services" className="text-sm font-bold text-brand-700 hover:text-brand-800">All services →</Link>}><ListGrid>{services.map((service) => <Link key={service.id} href={`/government-services/${service.slug}`} className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-700"><Icon name="landmark" className="h-5 w-5" /></span><div><h3 className="font-semibold text-slate-900 group-hover:text-brand-700">{service.name}</h3><p className="text-sm text-slate-500">{service.officeAddress}</p></div></div></Link>)}{services.length === 0 && <EmptyState title="Government service guides are coming soon">Published service details will appear here.</EmptyState>}</ListGrid></Section></section>
 
