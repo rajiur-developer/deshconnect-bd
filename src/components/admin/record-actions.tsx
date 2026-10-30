@@ -50,7 +50,7 @@ entity === "place"
 ? adminSetBusinessStatusAction(id, next)
 : entity === "service"
 ? adminSetServiceStatusAction(id, next)
-: adminSetInstitutionStatusAction(id, next);
+: adminSetInstitutionStatusAction(id, next, entity === "hospital" ? "hospital" : "institution");
 run(promise, hidden ? "Record restored." : "Record hidden.");
 };
 const remove = () => {
@@ -61,7 +61,7 @@ entity === "place"
 ? deleteBusinessAction(id)
 : entity === "service"
 ? adminDeleteServiceAction(id)
-: adminDeleteInstitutionAction(id);
+: adminDeleteInstitutionAction(id, entity === "hospital" ? "hospital" : "institution");
 run(promise, "Record deleted.");
 };
 return (
