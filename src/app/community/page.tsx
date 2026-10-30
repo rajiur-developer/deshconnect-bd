@@ -36,7 +36,7 @@ description="The community achieves more together. Share, ask questions, and hel
 {result.items.map((post, index) => {
 const author = authorById.get(post.authorId);
 return (
-<article key={post.id} className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/5 transition hover:shadow-md sm:p-6">
+<article key={post.id} className="dc-community-post rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/5 transition hover:shadow-md sm:p-6">
 <div className="flex items-center gap-3">
 <ProfileAvatar name={author?.fullName ?? "Community member"} src={author?.avatar} storageKey={author?.avatarKey} className="h-10 w-10 text-sm" textClassName="text-sm" />
 <div>
@@ -66,7 +66,7 @@ View discussion
 })}
 <Pagination meta={result.meta} hrefFor={(next) => buildHref("/community", params, { page: next })} />
 </div>
-<aside>
+<aside className="dc-community-aside lg:sticky lg:top-24 lg:self-start">
 {user ? (
 <PostForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} userId={user.id} />
 ) : (
