@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CATEGORY_SHORTCUTS } from "@/config/site";
+import type { listDivisions } from "@/services/locations";
 import { listGovernmentServices } from "@/services/government-services";
 import { listInstitutions } from "@/services/institutions";
 import { listHospitals } from "@/services/hospitals";
