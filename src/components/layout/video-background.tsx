@@ -6,10 +6,10 @@ export function VideoBackground({ src, className = "" }: { src: string; classNam
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="none"
       aria-hidden="true"
     >
-      <source src={src} type="video/mp4" />
+      <source src={src} type="video/mp4" media="(min-width: 768px)" />
     </video>
   );
 }
