@@ -1039,3 +1039,43 @@ main :is(a, button, [role="button"]) {
     transform: none;
   }
 }
+
+
+/* ── Professional messaging workspace ───────────────────────── */
+.dc-messaging-shell { isolation: isolate; }
+.dc-chat-sidebar { background: linear-gradient(180deg,#fff 0%,#fbfdfb 100%); }
+.dc-chat-sidebar-head { background: rgb(255 255 255 / .94); }
+.dc-chat-sidebar-head input { min-height: 2.85rem; border-radius: .95rem; }
+.dc-chat-list { scrollbar-gutter: stable; }
+.dc-chat-list-item { min-height: 4.65rem; border: 1px solid transparent; }
+.dc-chat-list-item[aria-current="true"] { border-color: #ccebd9; background: linear-gradient(110deg,#effaf3,#f8fcf9); }
+.dc-chat-list-item:hover { border-color: #e2eee6; }
+.dc-chat-header { min-height: 5rem; background: rgb(255 255 255 / .96); }
+.dc-chat-transcript {
+  background-color: #f7faf8;
+  background-image: radial-gradient(circle at 1px 1px, rgb(19 138 88 / .055) 1px, transparent 0);
+  background-size: 22px 22px;
+  scrollbar-gutter: stable;
+}
+.dc-chat-transcript > div { margin-block: .35rem; }
+.dc-chat-composer { background: rgb(255 255 255 / .97); }
+.dc-chat-composer form { border: 1px solid #e1eae4; border-radius: 1.15rem; background: #f8fbf9; padding: .55rem; box-shadow: 0 8px 25px -22px rgb(7 46 32 / .55); }
+.dc-chat-composer form:focus-within { border-color: #8bc9a6; box-shadow: 0 0 0 3px rgb(19 138 88 / .09); }
+.dc-chat-composer textarea,
+.dc-chat-composer input:not([type="file"]) { background: transparent; border: 0; box-shadow: none; min-height: 2.65rem; }
+.dc-chat-composer textarea:focus,
+.dc-chat-composer input:not([type="file"]):focus { border: 0; box-shadow: none; }
+.dc-chat-panel { min-height: 0; }
+.mobile-conversation { padding-bottom: env(safe-area-inset-bottom); }
+@media (max-width: 767px) {
+  .dc-messaging-shell { height: min(76dvh, 48rem); min-height: 34rem; border-radius: 1.35rem; }
+  .dc-chat-sidebar-head { padding: 1rem; }
+  .dc-chat-list { padding: .55rem; }
+  .dc-chat-header { min-height: 4.35rem; padding: .7rem .85rem; }
+  .dc-chat-transcript { padding: .85rem; }
+  .dc-chat-composer { padding: .75rem; }
+  .dc-chat-list-item { min-height: 4.2rem; padding: .7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-chat-list-item { transition: none; }
+}
