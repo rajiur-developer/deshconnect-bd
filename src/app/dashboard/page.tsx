@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
   return (
     <AccountShell user={user} title="Dashboard" description="Your DeshConnect activity, saved places and community updates in one place." minimalDashboard>
-      <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-950 via-brand-800 to-brand-600 p-6 text-white shadow-lg shadow-brand-900/15 sm:p-8">
+      <div className="dc-dashboard-hero relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-950 via-brand-800 to-brand-600 p-6 text-white shadow-lg shadow-brand-900/15 sm:p-8">
         <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-brand-300/15 blur-3xl" /><div aria-hidden="true" className="pointer-events-none absolute -bottom-20 left-1/3 h-44 w-44 rounded-full bg-emerald-300/10 blur-3xl" /><div className="relative"><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-100">Your personal space</p>
         <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Welcome back, {user.fullName || user.username}!</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-brand-50 sm:text-base">Keep track of your activity, discover useful places and stay connected with your community.</p>
@@ -51,9 +51,9 @@ export default async function DashboardPage() {
         <div><h2 className="text-lg font-bold text-slate-950">Your activity</h2><p className="mt-1 text-sm text-slate-500">A quick overview of your account.</p></div>
         <Badge tone="brand">{unreadCount} unread</Badge>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="dc-dashboard-stats grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((stat) => (
-          <Link key={stat.label} href={stat.href} className="group rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition duration-200 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg hover:shadow-brand-900/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+          <Link key={stat.label} href={stat.href} className="dc-dashboard-stat group rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition duration-200 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg hover:shadow-brand-900/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
             <div className="flex items-start justify-between gap-3">
               <span className={`grid h-11 w-11 place-items-center rounded-xl ${stat.tint}`}><Icon name={stat.icon} className="h-5 w-5" /></span>
               <Icon name="arrow-right" className="h-4 w-4 text-slate-300 transition group-hover:translate-x-1 group-hover:text-brand-700" />
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <Card className="mt-7 border border-slate-200/80 p-5 shadow-sm sm:p-6">
+      <Card className="dc-dashboard-quick mt-7 border border-slate-200/80 p-5 shadow-sm sm:p-6">
         <div className="flex items-start justify-between gap-3"><div><h2 className="font-bold text-slate-950">Quick access</h2><p className="mt-1 text-sm text-slate-500">Jump to the tools you use most.</p></div><span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-brand-700"><Icon name="arrow-right" className="h-4 w-4" /></span></div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {quickLinks.map((link) => (
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
         </div>
       </Card>
 
-      <Card className="mt-6 border border-slate-200/80 p-5 shadow-sm sm:p-6">
+      <Card className="dc-dashboard-notifications mt-6 border border-slate-200/80 p-5 shadow-sm sm:p-6">
         <div className="flex items-center justify-between gap-3">
           <div><h2 className="font-bold text-slate-950">Recent notifications</h2><p className="mt-1 text-sm text-slate-500">Your latest account and community updates.</p></div>
           <Link href="/notifications" className="shrink-0 text-sm font-bold text-brand-700 hover:text-brand-800">View all →</Link>

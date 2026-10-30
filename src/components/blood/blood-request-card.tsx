@@ -20,7 +20,7 @@ request: BloodRequest;
 locationLabel?: string;
 action?: React.ReactNode; }) {
 return (
-<Card className="flex h-full flex-col p-4">
+<Card className="dc-blood-request-card flex h-full flex-col rounded-2xl border border-rose-100 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-rose-200 hover:shadow-lg">
 <div className="flex items-start gap-3">
 <BloodGroupBadge group={request.bloodGroup} />
 <div className="min-w-0">
