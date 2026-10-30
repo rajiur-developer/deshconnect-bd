@@ -32,9 +32,8 @@ return (
 <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-slate-500 sm:flex-row">
 <p>© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
 <div className="flex gap-4">
-<Link href="/privacy-policy" className="hover:text-brand-700">Privacy Policy</Link>
-<Link href="/terms" className="hover:text-brand-700">Terms of Use</Link>
-<Link href="/about" className="hover:text-brand-700">About</Link>
+<Link href="/privacy-policy" className="hover:text-brand-700">Designed & Developed by </Link>
+<Link href="https://rajiur-portfolio.netlify.app/" className="hover:text-brand-700">Rajiur Rahman</Link>
 </div>
 </div>
 </div>
