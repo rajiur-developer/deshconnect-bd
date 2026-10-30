@@ -157,16 +157,9 @@ export const placeSchema = z.object({
 });
 export const institutionSchema = z.object({
   name: z.string().trim().min(2).max(200),
-  category: z.enum([
-    "school",
-    "college",
-    "madrasah",
-    "university",
-    "kindergarten",
-    "education-centre",
-    "hospital",
-    "health-centre",
-  ]),
+  // Category values are managed dynamically in Admin → Content categories.
+  // The server action validates the submitted value against the correct section.
+  category: z.string().trim().min(1, "Category is required"),
   description: z.string().trim().min(1).max(10000),
   address: z.string().trim().min(1).max(300),
   phone: z.string().trim().max(50).optional(),
