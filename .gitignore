@@ -6,6 +6,10 @@ coverage/
 *.tsbuildinfo
 next-env.d.ts
 
+# Local build/server logs (never commit)
+.build*.log
+*.log
+
 # Local file-backed database (never commit user data)
 .data/
 
