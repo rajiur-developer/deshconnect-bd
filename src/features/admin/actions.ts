@@ -102,7 +102,7 @@ const user = await requireMainAdmin();
 const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 if (!section || !value) return { error: "Invalid category." };
-const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "institutions" : section === "government-service" ? "government_services" : "institutions";
+const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "hospitals" : section === "government-service" ? "government_services" : "institutions";
 const client = createServerClient({ cookies: await cookies() });
 const { data: uses, error: usesError } = await client.database.from(table).select("id").eq("category", value).limit(1);
 if (usesError) {
