@@ -74,7 +74,7 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-w-0 space-y-6 pb-8 sm:space-y-8">
+    <div className="dc-admin-dashboard min-w-0 space-y-6 pb-8 sm:space-y-8">
       <section className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-brand-950 via-brand-800 to-brand-700 px-5 py-7 text-white shadow-lg shadow-brand-950/10 sm:px-8 sm:py-9">
         <div className="pointer-events-none absolute -right-12 -top-20 -z-10 h-64 w-64 rounded-full bg-brand-400/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 -z-10 h-48 w-48 rounded-full bg-emerald-300/10 blur-3xl" />
@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section aria-labelledby="quick-actions-heading">
+      <section className="dc-admin-quick-actions" aria-labelledby="quick-actions-heading">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <div><h2 id="quick-actions-heading" className="text-lg font-bold text-slate-900 sm:text-xl">Quick actions</h2><p className="mt-1 text-sm text-slate-500">Jump straight to the tasks that need attention.</p></div>
           <span className="text-xs font-medium text-slate-400">ADMIN SHORTCUTS</span>
@@ -158,7 +158,7 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section aria-labelledby="metrics-heading">
+      <section className="dc-admin-metrics" aria-labelledby="metrics-heading">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <div><h2 id="metrics-heading" className="text-lg font-bold text-slate-900 sm:text-xl">Platform at a glance</h2><p className="mt-1 text-sm text-slate-500">Select any card to open its management page.</p></div>
           <Badge tone="brand">11 key metrics</Badge>
@@ -190,7 +190,7 @@ export default async function AdminDashboardPage() {
         </Card>
       </section>
 
-      <section aria-labelledby="activity-heading">
+      <section className="dc-admin-activity" aria-labelledby="activity-heading">
         <Card className="overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
             <div><h2 id="activity-heading" className="font-bold text-slate-900">Recent admin activity</h2><p className="mt-1 text-sm text-slate-500">Latest recorded administrative actions.</p></div>
