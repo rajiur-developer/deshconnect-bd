@@ -31,7 +31,23 @@ async function load(): Promise<Database> {
   globalStore.__deshconnectDbPromise = (async () => {
     try {
       const raw = await fs.promises.readFile(DB_PATH, "utf8");
-      globalStore.__deshconnectDb = JSON.parse(raw) as Database;
+      const db = JSON.parse(raw) as Database;
+      const existingHospitals = Array.isArray(db.hospitals) ? db.hospitals : [];
+      const legacyHospitals = (db.institutions ?? []).filter(
+        (record) => record.category === "hospital" || record.category === "health-centre",
+      );
+      const hospitalIds = new Set(existingHospitals.map((record) => record.id));
+      db.hospitals = [
+        ...existingHospitals,
+        ...legacyHospitals.filter((record) => !hospitalIds.has(record.id)),
+      ];
+      db.institutions = (db.institutions ?? []).filter(
+        (record) => record.category !== "hospital" && record.category !== "health-centre",
+      );
+      globalStore.__deshconnectDb = db;
+      if (legacyHospitals.length || !Array.isArray((JSON.parse(raw) as Partial<Database>).hospitals)) {
+        await persist(db);
+      }
     } catch {
       const db = seedDatabase();
       await persist(db);
