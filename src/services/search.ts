@@ -35,4 +35,4 @@ listGovernmentServices({ q: query, page: 1, pageSize: limit }),
 listNews({ q: query, page: 1, pageSize: limit }),
 insforgeSelectMany("posts", { status: "eq.visible", body: `ilike.*${query.trim().replace(/[(),%_*]/g, " ").replace(/\s+/g, " ")}*`, order: "created_at.desc", limit: String(limit) }),
 ]);
-return { places: places.items, institutions: [...institutions.items, ...hospitals.items].slice(0, limit), businesses: businesses.items, governmentServices: governmentServices.items, news: news.items, posts: mapDbRow(postRows.data || []) }; }
+return { places: places.items, institutions: [...institutions.items, ...hospitals.items], businesses: businesses.items, governmentServices: governmentServices.items, news: news.items, posts: mapDbRow(postRows.data || []) }; }
