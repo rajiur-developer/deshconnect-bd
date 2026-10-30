@@ -110,8 +110,19 @@ last_checked_at: daysAgo(12),
 created_at: daysAgo(260),
 updated_at: daysAgo(12),
 }));
-const institutions = INSTITUTION_SEED.map((seed) => ({
+const hospitalSeeds = INSTITUTION_SEED.filter((seed) => seed.category === "hospital" || seed.category === "health-centre");
+const institutionSeeds = INSTITUTION_SEED.filter((seed) => seed.category !== "hospital" && seed.category !== "health-centre");
+const institutions = institutionSeeds.map((seed) => ({
 id: `inst_${slugify(seed.slug)}`,
+...seed,
+...resolveLocation(INSTITUTION_LOCATIONS[seed.slug]),
+status: "published",
+last_checked_at: daysAgo(18),
+created_at: daysAgo(240),
+updated_at: daysAgo(18),
+}));
+const hospitals = hospitalSeeds.map((seed) => ({
+id: `hospital_${slugify(seed.slug)}`,
 ...seed,
 ...resolveLocation(INSTITUTION_LOCATIONS[seed.slug]),
 status: "published",
@@ -271,6 +282,7 @@ upazilas,
 unions: [],
 places,
 institutions,
+hospitals,
 businesses,
 government_services,
 news,
