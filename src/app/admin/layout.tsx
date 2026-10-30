@@ -8,6 +8,7 @@ import { Icon, type IconName } from "@/components/ui/icons";
 const NAV_GROUPS: { title: string; items: { href: string; label: string; icon: IconName }[] }[] = [
   { title: "Overview", items: [
     { href: "/admin", label: "Dashboard", icon: "home" },
+    { href: "/admin/analytics", label: "Website Analytics", icon: "globe" },
     { href: "/admin/audit-logs", label: "Audit Logs", icon: "calendar" },
   ]},
   { title: "People & access", items: [
