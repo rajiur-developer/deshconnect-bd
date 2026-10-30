@@ -45,8 +45,8 @@ export default async function HomePage() {
   const [divisions, featured, institutions, hospitals, services, posts, news] = await Promise.all([
     loadOr(listDivisions(), []),
     loadOr(featuredPlaces(6), []),
-    loadOr(listInstitutions({ page: 1, pageSize: 4 }).then((result) => result.items), []),
-    loadOr(listHospitals({ page: 1, pageSize: 4 }).then((result) => result.items), []),
+    loadOr(listInstitutions({ page: 1, pageSize: 2 }).then((result) => result.items), []),
+    loadOr(listHospitals({ page: 1, pageSize: 2 }).then((result) => result.items), []),
     loadOr(listGovernmentServices({ page: 1, pageSize: 4 }).then((result) => result.items.slice(0, 4)), []),
     loadOr(listPosts({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
     loadOr(listNews({ page: 1, pageSize: 3 }).then((result) => result.items.slice(0, 3)), []),
