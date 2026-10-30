@@ -30,6 +30,7 @@ return { places: [], institutions: [], businesses: [], governmentServices: [], n
 const [places, institutions, hospitals, businesses, governmentServices, news, postRows] = await Promise.all([
 listPlaces({ q: query, page: 1, pageSize: limit }),
 listInstitutions({ q: query, page: 1, pageSize: limit }),
+listHospitals({ q: query, page: 1, pageSize: limit }),
 listBusinesses({ q: query, page: 1, pageSize: limit }),
 listGovernmentServices({ q: query, page: 1, pageSize: limit }),
 listNews({ q: query, page: 1, pageSize: limit }),
