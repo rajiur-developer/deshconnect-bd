@@ -13,7 +13,7 @@ return NEWS_LABELS[category] ?? category; }
 return NEWS_LABELS[category] ?? category; }
 export function NewsCard({ news }: { news: News }) {
 return (
-<Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-brand-300 hover:shadow-xl">
+<Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg focus-within:border-brand-300 focus-within:shadow-lg">
 <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
 <RecordImage
 src={news.image}
