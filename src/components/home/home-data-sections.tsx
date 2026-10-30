@@ -43,7 +43,7 @@ export function HomeSectionsFallback() {
   </div>;
 }
 
-export async function HomeDataSections() {
+export async function HomeDataSections({ isAuthenticated }: { isAuthenticated: boolean }) {
   const [divisions, featured, institutions, hospitals, services, posts, news] = await Promise.all([
     loadOr(listDivisions(), []),
     loadOr(featuredPlaces(6), []),
@@ -63,7 +63,7 @@ export async function HomeDataSections() {
             <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-rose-600 text-white shadow-lg shadow-rose-600/20 sm:h-16 sm:w-16"><Icon name="heart" className="h-8 w-8" /></div>
             <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-rose-700">A little help can save a life</p><h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Be someone’s reason to hope.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">Find voluntary blood donors, explore available donor listings, or register to help someone in need. Your next action could make a real difference.</p></div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row md:flex-col"><Link href="/blood-donation" className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-rose-600/20 transition hover:bg-rose-700"><Icon name="droplet" className="h-4 w-4" /> Find blood donors</Link><Link href="/register" className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-700 transition hover:bg-rose-50">Join as a donor <span aria-hidden="true">→</span></Link></div>
+          <div className="flex flex-col gap-3 sm:flex-row md:flex-col"><Link href="/blood-donation" className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-3 text-sm font-bold text-white shadow-md shadow-rose-600/20 transition hover:bg-rose-700"><Icon name="droplet" className="h-4 w-4" /> Find blood donors</Link><Link href={isAuthenticated ? "/blood-donation" : "/register"} className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-700 transition hover:bg-rose-50">{isAuthenticated ? "Become a donor" : "Join as a donor"} <span aria-hidden="true">→</span></Link></div>
         </div>
       </div>
     </section>
