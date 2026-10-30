@@ -92,7 +92,7 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, is
         hint="Upload an image, or leave the current image unchanged."
         current={record?.image}
         userId={userId}
-        storageFolder="institutions"
+        storageFolder={isHospital ? "hospitals" : "institutions"}
         onValueChange={() => setImageChanged(true)}
         onUploadingChange={setImageUploading}
       />
