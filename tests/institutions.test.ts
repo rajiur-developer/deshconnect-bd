@@ -13,9 +13,10 @@ vi.mock("../src/lib/insforge", () => ({
   insforgeSelectMany: mockInsforgeSelectMany,
 }));
 
-import { insforgeListAdminInstitutions, listHospitals } from "../src/services/institutions";
+import { insforgeListAdminInstitutions } from "../src/services/institutions";
+import { insforgeListAdminHospitals, listHospitals } from "../src/services/hospitals";
 
-describe("institution listings", () => {
+describe("institution and hospital listings", () => {
   beforeEach(() => {
     mockInsforgeSelectMany.mockReset();
     mockInsforgeSelectMany.mockResolvedValue({
@@ -56,6 +57,17 @@ describe("institution listings", () => {
       expect.objectContaining({
         category: "in.(hospital,health-centre)",
         status: "eq.published",
+      }),
+    );
+  });
+
+  it("loads hospital admin records from the dedicated hospitals table", async () => {
+    await insforgeListAdminHospitals({ categories: ["hospital", "health-centre"] });
+
+    expect(mockInsforgeSelectMany).toHaveBeenCalledWith(
+      "hospitals",
+      expect.objectContaining({
+        category: "in.(hospital,health-centre)",
       }),
     );
   });
