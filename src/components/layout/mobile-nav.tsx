@@ -65,7 +65,7 @@ export function MobileNav({
         <Icon name={open ? "close" : "menu"} className="h-5 w-5" />
       </button>
       {open && (
-        <div className="absolute inset-x-0 top-16 z-40 border-b border-slate-200 bg-white shadow-lg">
+        <div className="dc-mobile-menu absolute inset-x-0 top-16 z-40 border-b border-slate-200 bg-white shadow-lg">
           <nav className="container-x flex flex-col gap-1 py-4">
             {PRIMARY_NAV.filter((entry) => isNavGroup(entry) || (entry.href !== "/blood-donation" && entry.href !== "/messages")).map((entry) => {
               if (isNavGroup(entry)) {
