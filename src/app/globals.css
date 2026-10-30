@@ -777,3 +777,130 @@ main a:focus-visible, main button:focus-visible { outline: 3px solid rgb(19 138 
 @media (prefers-reduced-motion: reduce) {
   .dc-header-logo img { transition: none; }
 }
+
+
+/* ── DeshConnect UI/UX polish · consistent surfaces and controls ── */
+:root {
+  --dc-shadow-soft: 0 12px 32px -28px rgb(11 61 46 / 0.42);
+  --dc-shadow-hover: 0 18px 38px -26px rgb(11 61 46 / 0.3);
+}
+body {
+  background-image: radial-gradient(ellipse at 50% 0%, rgb(53 201 130 / 0.045), transparent 42rem);
+  background-repeat: no-repeat;
+}
+main :is(.rounded-xl, .rounded-2xl, .rounded-3xl).border {
+  border-color: rgb(222 231 225 / 0.92);
+}
+main :is(.rounded-2xl, .rounded-3xl).bg-white {
+  box-shadow: var(--dc-shadow-soft);
+}
+main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  min-height: 2.75rem;
+  border-color: #d5e0d8;
+  background-color: #fff;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+main textarea {
+  min-height: 7rem;
+  padding-block: 0.75rem;
+}
+main :is(input, select, textarea):disabled {
+  cursor: not-allowed;
+  background-color: #f1f5f2;
+  color: #829087;
+}
+main table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+main table thead {
+  background: #f5f9f6;
+}
+main table th {
+  color: #526157;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+main table :is(th, td) {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  vertical-align: middle;
+}
+main table tbody tr {
+  transition: background-color 150ms ease;
+}
+main table tbody tr:hover {
+  background-color: rgb(237 251 244 / 0.62);
+}
+main :is(.overflow-x-auto, .overflow-auto) {
+  scrollbar-color: #b8c9bd transparent;
+  scrollbar-width: thin;
+}
+main :is(a, button, [role="button"]) {
+  -webkit-tap-highlight-color: transparent;
+}
+.dc-footer {
+  background:
+    radial-gradient(ellipse at 10% 0%, rgb(53 201 130 / 0.07), transparent 32rem),
+    #fff;
+}
+.dc-footer-inner {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+.dc-footer-blood {
+  box-shadow: 0 16px 34px -28px rgb(190 18 60 / 0.5);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.dc-footer-blood:hover {
+  border-color: #fda4af;
+  box-shadow: 0 18px 38px -25px rgb(190 18 60 / 0.55);
+  transform: translateY(-1px);
+}
+.dc-footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+}
+.dc-footer-bottom {
+  background: rgb(247 250 247 / 0.72);
+}
+@media (max-width: 639px) {
+  main table :is(th, td) {
+    padding: 0.7rem 0.75rem;
+  }
+  .dc-footer-inner {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-footer-blood:hover {
+    transform: none;
+  }
+}
+
+
+/* Community feed: keep the composer visible while browsing the feed. */
+.dc-community-post {
+  border-color: rgb(222 231 225 / 0.9);
+  box-shadow: 0 12px 32px -28px rgb(11 61 46 / 0.38);
+}
+.dc-community-post:hover {
+  border-color: rgb(118 224 180 / 0.8);
+  box-shadow: 0 18px 38px -28px rgb(11 61 46 / 0.34);
+}
+.dc-community-post :is(p, a) {
+  overflow-wrap: anywhere;
+}
+.dc-community-aside {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .dc-community-aside {
+    max-height: calc(100vh - 7rem);
+  }
+}

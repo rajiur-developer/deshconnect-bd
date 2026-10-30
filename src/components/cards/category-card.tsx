@@ -5,7 +5,7 @@ const isBloodDonation = item.href === "/blood-donation";
 return (
 <Link
 href={item.href}
-className={`group relative flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-xl ${         isBloodDonation           ? "blood-category-card border-accent-300 ring-2 ring-accent-200 hover:border-accent-500 hover:ring-accent-400"           : "border-slate-200 hover:border-brand-400"       }`}
+className={`dc-category-card group relative flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ${         isBloodDonation           ? "blood-category-card border-accent-300 ring-2 ring-accent-200 hover:border-accent-500 hover:ring-accent-400"           : "border-slate-200 hover:border-brand-400"       }`}
 >
 {isBloodDonation && (
 <span className="absolute right-3 top-3 rounded-full bg-accent-600 px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-sm">
