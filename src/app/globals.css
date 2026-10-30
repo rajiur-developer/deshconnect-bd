@@ -1413,3 +1413,175 @@ main :is(a, button, [role="button"]) {
   .dc-analytics-metric:hover { transform:none; }
   .dc-analytics-progress > span { transition:none; }
 }
+
+
+/* ── DeshConnect site-wide premium motion system ─────────────────────
+   Shared motion language for public pages, member tools and admin areas.
+   Keeps animations transform/opacity-led for smooth, low-cost rendering.
+*/
+:root {
+  --dc-motion-fast: 160ms;
+  --dc-motion-base: 240ms;
+  --dc-motion-smooth: cubic-bezier(.2,.75,.25,1);
+  --dc-motion-enter: cubic-bezier(.16,1,.3,1);
+}
+@keyframes dc-site-enter {
+  from { opacity: 0; transform: translate3d(0, 16px, 0) scale(.992); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes dc-site-soft-enter {
+  from { opacity: 0; transform: translate3d(0, 9px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes dc-site-image-enter {
+  from { opacity: .65; transform: scale(1.025); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Page-level entrances: stagger only the main content blocks, not every node. */
+.page-theme > :is(section, article, form, aside),
+.page-theme > div > :is(section, article, form, aside),
+.page-theme > main > :is(section, article, form, aside) {
+  animation: dc-site-enter 620ms var(--dc-motion-enter) both;
+}
+.page-theme > :is(section, article, form, aside):nth-child(2),
+.page-theme > div > :is(section, article, form, aside):nth-child(2),
+.page-theme > main > :is(section, article, form, aside):nth-child(2) { animation-delay: 55ms; }
+.page-theme > :is(section, article, form, aside):nth-child(3),
+.page-theme > div > :is(section, article, form, aside):nth-child(3),
+.page-theme > main > :is(section, article, form, aside):nth-child(3) { animation-delay: 105ms; }
+.page-theme > :is(section, article, form, aside):nth-child(4),
+.page-theme > div > :is(section, article, form, aside):nth-child(4),
+.page-theme > main > :is(section, article, form, aside):nth-child(4) { animation-delay: 150ms; }
+
+/* Consistent tactile response for controls throughout the product. */
+main :is(button, [role="button"]) {
+  transition:
+    color var(--dc-motion-fast) ease,
+    background-color var(--dc-motion-fast) ease,
+    border-color var(--dc-motion-fast) ease,
+    box-shadow var(--dc-motion-base) var(--dc-motion-smooth),
+    transform var(--dc-motion-fast) var(--dc-motion-smooth),
+    opacity var(--dc-motion-fast) ease;
+}
+main :is(button, [role="button"]):not(:disabled):not([aria-disabled="true"]):hover {
+  transform: translateY(-1px);
+}
+main :is(button, [role="button"]):not(:disabled):not([aria-disabled="true"]):active {
+  transform: translateY(0) scale(.975);
+}
+main a {
+  text-decoration-thickness: from-font;
+  text-underline-offset: .18em;
+  transition:
+    color var(--dc-motion-fast) ease,
+    background-color var(--dc-motion-fast) ease,
+    border-color var(--dc-motion-fast) ease,
+    box-shadow var(--dc-motion-base) var(--dc-motion-smooth);
+}
+main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  transition:
+    border-color var(--dc-motion-fast) ease,
+    box-shadow var(--dc-motion-base) var(--dc-motion-smooth),
+    background-color var(--dc-motion-fast) ease,
+    transform var(--dc-motion-fast) var(--dc-motion-smooth);
+}
+main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus {
+  transform: translateY(-1px);
+}
+
+/* Shared card language for directory, community, donor, analytics and admin surfaces. */
+main :is(
+  article,
+  .dc-community-post,
+  .dc-donor-card,
+  .dc-blood-request-card,
+  .dc-analytics-metric,
+  .dc-analytics-panel,
+  [data-motion="card"]
+) {
+  transition:
+    transform 260ms var(--dc-motion-smooth),
+    box-shadow 260ms var(--dc-motion-smooth),
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+main :is(
+  article,
+  .dc-community-post,
+  .dc-donor-card,
+  .dc-blood-request-card,
+  .dc-analytics-metric,
+  .dc-analytics-panel,
+  [data-motion="card"]
+):hover {
+  border-color: rgb(19 138 88 / .24);
+  box-shadow: 0 18px 38px -28px rgb(11 61 46 / .32);
+}
+main :is(.dc-community-post, .dc-donor-card, .dc-blood-request-card, [data-motion="card"]):hover {
+  transform: translateY(-3px);
+}
+
+/* Image treatment: restrained zoom inside common media/card wrappers. */
+main :is(article, [data-motion="card"], .dc-community-post, .dc-donor-card, .dc-blood-request-card) img {
+  transition: transform 420ms var(--dc-motion-smooth), filter 320ms ease;
+}
+main :is(article, [data-motion="card"], .dc-community-post, .dc-donor-card, .dc-blood-request-card):hover img {
+  filter: saturate(1.035);
+}
+main :is(article, [data-motion="card"], .dc-community-post, .dc-donor-card, .dc-blood-request-card):hover img.object-cover {
+  transform: scale(1.025);
+}
+
+/* Header, navigation and footer share the same interaction rhythm. */
+.dc-header { transition: box-shadow 240ms ease, background-color 240ms ease; }
+.dc-header nav a,
+.dc-footer a,
+.dc-header-logo {
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms var(--dc-motion-smooth);
+}
+.dc-header nav a:hover,
+.dc-footer-links a:hover { transform: translateX(2px); }
+.dc-header nav a[aria-current="page"] { box-shadow: inset 0 -2px 0 rgb(19 138 88 / .42); }
+.dc-footer-links a:focus-visible,
+.dc-header nav a:focus-visible { border-radius: .45rem; }
+
+/* Menus and dialogs feel connected rather than abruptly appearing. */
+[role="dialog"], [role="menu"], [data-state="open"] {
+  transform-origin: top center;
+}
+[role="dialog"]:not([hidden]) { animation: dc-site-soft-enter 220ms var(--dc-motion-enter) both; }
+
+/* Table rows and list items get a quiet interactive response. */
+main tbody tr { transition: background-color 170ms ease, box-shadow 170ms ease; }
+main tbody tr:hover { box-shadow: inset 3px 0 0 rgb(19 138 88 / .35); }
+main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range) {
+  transition: transform 180ms var(--dc-motion-smooth), box-shadow 220ms ease, background-color 180ms ease;
+}
+main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active {
+  transform: scale(.985);
+}
+
+/* Avoid motion for keyboard users who request reduced motion or on low-motion settings. */
+@media (prefers-reduced-motion: reduce) {
+  .page-theme > :is(section, article, form, aside),
+  .page-theme > div > :is(section, article, form, aside),
+  .page-theme > main > :is(section, article, form, aside),
+  [role="dialog"]:not([hidden]) {
+    animation: none !important;
+  }
+  main :is(button, [role="button"], a, article, .dc-community-post, .dc-donor-card, .dc-blood-request-card, .dc-analytics-metric, .dc-analytics-panel, [data-motion="card"]),
+  main :is(input, select, textarea),
+  main img,
+  .dc-header,
+  .dc-footer a {
+    transition: none !important;
+  }
+  main :is(button, [role="button"]):hover,
+  main :is(button, [role="button"]):active,
+  main :is(.dc-community-post, .dc-donor-card, .dc-blood-request-card, [data-motion="card"]):hover,
+  .dc-header nav a:hover,
+  .dc-footer-links a:hover {
+    transform: none !important;
+  }
+}
