@@ -916,12 +916,12 @@ export async function adminBulkRecordAction(
       } else if (operation === "delete") {
         if (entity === "place") result = await adminDeletePlaceAction(id);
         else if (entity === "service") result = await adminDeleteServiceAction(id);
-        else result = await adminDeleteInstitutionAction(id);
+        else result = await adminDeleteInstitutionAction(id, entity === "hospital" ? "hospital" : "institution");
       } else {
         const status = operation === "hide" ? "archived" : "published";
         if (entity === "place") result = await adminSetPlaceStatusAction(id, status);
         else if (entity === "service") result = await adminSetServiceStatusAction(id, status);
-        else result = await adminSetInstitutionStatusAction(id, status);
+        else result = await adminSetInstitutionStatusAction(id, status, entity === "hospital" ? "hospital" : "institution");
       }
       if (result && result.ok === false) errors.push(`${id}: ${result.error || "Action failed"}`);
       else processed++;
