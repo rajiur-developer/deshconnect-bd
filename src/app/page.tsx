@@ -47,7 +47,7 @@ export default async function HomePage() {
       </div>
     </section>
     <Suspense fallback={<HomeSectionsFallback />}>
-      <HomeDataSections isAuthenticated={Boolean(user)} />
+      <HomeDataSections isAuthenticated={Boolean(user)} divisions={divisions} />
     </Suspense>
   </>;
 }
