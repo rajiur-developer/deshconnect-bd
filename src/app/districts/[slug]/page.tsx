@@ -1,5 +1,5 @@
 import type { Metadata } from "next"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
-import { getDivisionById, getDistrictBySlug, listUpazilas } from "@/services/locations"; import { listInstitutions } from "@/services/institutions"; import { listBusinesses } from "@/services/businesses"; import { listPlaces } from "@/services/places"; import { Icon } from "@/components/ui/icons"; import { BusinessCard } from "@/components/cards/business-card"; import { InstitutionCard } from "@/components/cards/institution-card"; import { PlaceCard } from "@/components/cards/place-card"; import { ListGrid } from "@/components/layout/list-grid";
+import { getDivisionById, getDistrictBySlug, listUpazilas } from "@/services/locations"; import { listInstitutions } from "@/services/institutions"; import { listHospitals } from "@/services/hospitals"; import { listBusinesses } from "@/services/businesses"; import { listPlaces } from "@/services/places"; import { Icon } from "@/components/ui/icons"; import { BusinessCard } from "@/components/cards/business-card"; import { InstitutionCard } from "@/components/cards/institution-card"; import { PlaceCard } from "@/components/cards/place-card"; import { ListGrid } from "@/components/layout/list-grid";
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const { slug } = await params;
@@ -15,11 +15,12 @@ export default async function DistrictPage({ params }: Props) {
 const { slug } = await params;
 const district = await getDistrictBySlug(slug);
 if (!district) return <EmptyRecordPage title="District guide" description="Explore local places, institutions and services across this district." media="/images/banner/Gram_place.webp" backHref="/" backLabel="Explore DeshConnect" />;
-const [division, upazilas, places, institutions, businesses] = await Promise.all([
+const [division, upazilas, places, institutions, hospitals, businesses] = await Promise.all([
 getDivisionById(district.divisionId),
 listUpazilas(district.id),
 listPlaces({ districtId: district.id, page: 1 }).then((result) => result.items),
 listInstitutions({ districtId: district.id, page: 1 }).then((result) => result.items),
+listHospitals({ districtId: district.id, page: 1 }).then((result) => result.items),
 listBusinesses({ districtId: district.id, page: 1 }).then((result) => result.items),
 ]);
 return (
@@ -61,6 +62,16 @@ className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-
 <ListGrid className="mt-4">
 {institutions.map((institution) => (
 <InstitutionCard key={institution.id} institution={institution} />
+))}
+</ListGrid>
+</section>
+)}
+{hospitals.length > 0 && (
+<section className="mt-12">
+<h2 className="text-xl font-semibold text-slate-900">Hospitals & health centres</h2>
+<ListGrid className="mt-4">
+{hospitals.map((hospital) => (
+<InstitutionCard key={hospital.id} institution={hospital} />
 ))}
 </ListGrid>
 </section>
