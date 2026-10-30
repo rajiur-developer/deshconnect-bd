@@ -43,7 +43,7 @@ export function HomeSectionsFallback() {
   </div>;
 }
 
-export async function HomeDataSections({ isAuthenticated }: { isAuthenticated: boolean }) {
+export async function HomeDataSections({ isAuthenticated, divisions }: { isAuthenticated: boolean; divisions: Awaited<ReturnType<typeof listDivisions>> }) {
   const [divisions, featured, institutions, hospitals, services, posts, news] = await Promise.all([
     loadOr(listDivisions(), []),
     loadOr(featuredPlaces(6), []),
