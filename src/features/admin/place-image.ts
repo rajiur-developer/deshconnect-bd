@@ -1,6 +1,6 @@
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
 
-export function isValidAdminDirectoryImageUrl(imageUrl: string, userId: string, folder: "places" | "institutions"): boolean {
+export function isValidAdminDirectoryImageUrl(imageUrl: string, userId: string, folder: "places" | "institutions" | "hospitals"): boolean {
   try {
     const url = new URL(imageUrl);
     const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL;
