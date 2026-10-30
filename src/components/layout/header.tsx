@@ -87,7 +87,7 @@ export async function Header({
   );
 
   return (
-    <header className="dc-header sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 shadow-[0_8px_28px_-22px_rgba(11,61,46,0.65)] backdrop-blur-xl">
+    <header className="dc-header sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
       {user && (
         <MessageRealtimeNotifications
           userId={user.id}
