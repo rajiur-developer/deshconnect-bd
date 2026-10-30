@@ -5,7 +5,6 @@ import { listGovernmentServices } from "@/services/government-services";
 import { listInstitutions } from "@/services/institutions";
 import { listHospitals } from "@/services/hospitals";
 import { featuredPlaces } from "@/services/places";
-import { listDivisions } from "@/services/locations";
 import { listNews } from "@/services/news";
 import { listPosts } from "@/services/community";
 import { Badge, Section } from "@/components/ui/badge";
@@ -44,8 +43,7 @@ export function HomeSectionsFallback() {
 }
 
 export async function HomeDataSections({ isAuthenticated, divisions }: { isAuthenticated: boolean; divisions: Awaited<ReturnType<typeof listDivisions>> }) {
-  const [divisions, featured, institutions, hospitals, services, posts, news] = await Promise.all([
-    loadOr(listDivisions(), []),
+  const [featured, institutions, hospitals, services, posts, news] = await Promise.all([
     loadOr(featuredPlaces(6), []),
     loadOr(listInstitutions({ page: 1, pageSize: 2 }).then((result) => result.items), []),
     loadOr(listHospitals({ page: 1, pageSize: 2 }).then((result) => result.items), []),
