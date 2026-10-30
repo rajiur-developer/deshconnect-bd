@@ -28,8 +28,8 @@ title="Community"
 description="The community achieves more together. Share, ask questions, and help people nearby."
 />
 <div className="page-theme" data-page-theme="community"><div className="bg-gradient-to-b from-brand-50/80 via-slate-50 to-white"><div className="container-x grid gap-6 py-8 sm:py-10 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.8fr)] lg:gap-8">
-<div className="flex items-center justify-between gap-3 lg:col-span-2"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700">DeshConnect community</p><p className="mt-1 text-sm text-slate-600">Share local updates, ask questions, and connect with people.</p></div><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" />Chat now</Link></div>
-<div className="min-w-0 space-y-5">
+<div className="dc-community-heading flex items-center justify-between gap-3 lg:col-span-2"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700">DeshConnect community</p><p className="mt-1 text-sm text-slate-600">Share local updates, ask questions, and connect with people.</p></div><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" />Chat now</Link></div>
+<div className="dc-community-feed order-2 min-w-0 space-y-5 lg:order-1 lg:col-start-1">
 {result.items.length === 0 && (
 <EmptyState title="No posts yet" description="Start a discussion and be our first person." icon={<Icon name="message" className="h-10 w-10" />} />
 )}
@@ -66,7 +66,7 @@ View discussion
 })}
 <Pagination meta={result.meta} hrefFor={(next) => buildHref("/community", params, { page: next })} />
 </div>
-<aside className="dc-community-aside lg:sticky lg:top-24 lg:self-start">
+<aside className="dc-community-aside order-1 lg:order-2 lg:col-start-2 lg:row-start-2 lg:sticky lg:top-24 lg:self-start">
 {user ? (
 <PostForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} userId={user.id} />
 ) : (
