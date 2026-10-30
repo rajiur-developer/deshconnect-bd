@@ -49,10 +49,10 @@ describe("institution listings", () => {
   });
 
   it("includes health centres alongside hospitals in the hospital listing", async () => {
-    await listHospitals({});
+    await listHospitals({ categories: ["hospital", "health-centre"] });
 
     expect(mockInsforgeSelectMany).toHaveBeenCalledWith(
-      "institutions",
+      "hospitals",
       expect.objectContaining({
         category: "in.(hospital,health-centre)",
         status: "eq.published",
