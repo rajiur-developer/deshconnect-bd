@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge";
-import { listAdminUsers } from "@/services/users";
+import { insforgeListUsers } from "@/services/users";
 import { listAuditLogs } from "@/services/audit";
 import { listNews } from "@/services/news";
 import { formatDate } from "@/lib/utils";
@@ -26,7 +26,7 @@ function MetricCard({ item }) {
           <span className={`grid h-10 w-10 place-items-center rounded-xl text-sm font-bold ${style.surface} ${style.ink}`} aria-hidden="true">{style.icon}</span>
           <span className="rounded-full bg-slate-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">View</span>
         </div>
-        <p className="mt-4 break-words text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{Number(item.value ?? 0).toLocaleString()}</p>
+        <p className="mt-4 break-words text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{typeof item.value === "number" ? item.value.toLocaleString() : item.value ?? "—"}</p>
         <p className="mt-1 text-sm font-medium text-slate-600">{item.label}</p>
         <div className={`absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${style.bar}`} />
       </Card>
@@ -36,8 +36,8 @@ function MetricCard({ item }) {
 
 export default async function AdminDashboardPage() {
   const [users, logs, newsResult, pendingNewsResult, places, institutions, hospitals, businesses, reports, donors, requests] = await Promise.all([
-    listAdminUsers(),
-    listAuditLogs(10),
+    insforgeListUsers({ page: 1, pageSize: 500 }),
+    listAuditLogs(10).catch(() => []),
     listNews({ includeAll: true, page: 1, pageSize: 1 }),
     listNews({ includeAll: true, status: "pending_review", page: 1, pageSize: 1 }),
     insforgeSelectMany("places", { limit: "1" }).then((r) => r.count),
@@ -52,9 +52,10 @@ export default async function AdminDashboardPage() {
   const newsTotal = newsResult.meta.total;
   const pendingNewsTotal = pendingNewsResult.meta.total;
   const moderators = users.filter((item) => item.role === "moderator");
+  const moderatorCount = users.some((item) => Boolean(item.role)) ? moderators.length : null;
   const metrics = [
     { label: "Total users", value: users.length, href: "/admin/users", tone: "green" },
-    { label: "Moderators", value: moderators.length, href: "/admin/users", tone: "violet" },
+    { label: "Moderators", value: moderatorCount ?? "—", href: "/admin/users", tone: "violet" },
     { label: "Places", value: places, href: "/admin/places", tone: "teal" },
     { label: "Institutions", value: institutions, href: "/admin/institutions", tone: "blue" },
     { label: "Hospitals & health centres", value: hospitals, href: "/admin/hospitals", tone: "red" },

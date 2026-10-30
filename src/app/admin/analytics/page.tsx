@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge";
 import { listAuditLogs } from "@/services/audit";
-import { listAdminUsers } from "@/services/users";
 
 export const metadata = { title: "Website Analytics | DeshConnect Admin" };
 export const dynamic = "force-dynamic";
@@ -55,10 +54,9 @@ export default async function WebsiteAnalyticsPage({ searchParams }: { searchPar
   start.setHours(0, 0, 0, 0);
   start.setDate(start.getDate() - (days - 1));
 
-  const [usersResult, users, logs, places, institutions, hospitals, businesses, news, posts, comments, messages, donors, requests] = await Promise.all([
-    insforgeSelectMany("profiles", { select: "id,created_at", order: "created_at.desc", limit: "1000" }),
-    listAdminUsers(),
-    listAuditLogs(1000),
+  const [usersResult, logs, places, institutions, hospitals, businesses, news, posts, comments, messages, donors, requests] = await Promise.all([
+    insforgeSelectMany("public_profiles", { select: "id,created_at", order: "created_at.desc", limit: "1000" }),
+    listAuditLogs(1000).catch(() => []),
     countRecords("places"),
     countRecords("institutions"),
     countRecords("hospitals"),
@@ -103,7 +101,7 @@ export default async function WebsiteAnalyticsPage({ searchParams }: { searchPar
   ];
   const knownFeatures = featureRows.filter((item) => item.value !== null);
   const maxFeature = Math.max(1, ...knownFeatures.map((item) => item.value ?? 0));
-  const totalUsers = usersResult.count ?? users.length;
+  const totalUsers = usersResult.count ?? registrationRows.length;
 
   return (
     <main className="min-w-0 space-y-6 pb-10">
