@@ -35,6 +35,7 @@ upazilas: import("./location").Upazila[];
 unions: import("./location").Union[];
 places: import("./content").Place[];
 institutions: import("./content").Institution[];
+hospitals: import("./content").Hospital[];
 businesses: import("./content").Business[];
 governmentServices: import("./content").GovernmentService[];
 news: import("./content").News[];
