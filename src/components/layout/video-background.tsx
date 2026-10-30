@@ -3,20 +3,26 @@
 import { useEffect, useState } from "react";
 
 export function VideoBackground({ src, className = "" }: { src: string; className?: string }) {
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
 
   useEffect(() => {
+    // Give the page and its data requests a head start before downloading the video.
+    const startTimer = window.setTimeout(() => setShouldLoad(true), 1800);
     // Do not leave an endless loader on slow or unsupported mobile connections.
-    const timeout = window.setTimeout(() => setHasFailed(true), 15000);
-    return () => window.clearTimeout(timeout);
+    const fallbackTimer = window.setTimeout(() => setHasFailed(true), 16800);
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(fallbackTimer);
+    };
   }, []);
 
   return (
     <>
       <video
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${className} ${isReady ? "opacity-100" : "opacity-0"}`}
-        src={src}
+        src={shouldLoad ? src : undefined}
         autoPlay
         muted
         loop
