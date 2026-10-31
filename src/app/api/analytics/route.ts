@@ -1,6 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { insforgeInsert } from "@/lib/insforge";
 import { rateLimit } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
@@ -90,23 +89,38 @@ export async function POST(request: NextRequest) {
   response.cookies.set(SESSION_COOKIE, sessionToken, { ...cookieBase, maxAge: COOKIE_SESSION });
 
   try {
-    await insforgeInsert("visitor_events", {
-      visitor_key: visitorKey,
-      session_key: sessionKey,
-      path: payload.path.split("?")[0].split("#")[0],
-      referrer_host: referrerHost,
-      device_type: deviceType(userAgent),
-      country_code: country && /^[A-Z]{2}$/.test(country) ? country : null,
-      region: region ? region.slice(0, 100) : null,
+    const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\\/+$/, "");
+    const anonKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY?.trim();
+    if (!baseUrl || !anonKey) throw new Error("InsForge public database configuration is missing");
+    const stored = await fetch(`${baseUrl}/api/database/records/visitor_events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        visitor_key: visitorKey,
+        session_key: sessionKey,
+        path: payload.path.split("?")[0].split("#")[0],
+        referrer_host: referrerHost,
+        device_type: deviceType(userAgent),
+        country_code: country && /^[A-Z]{2}$/.test(country) ? country : null,
+        region: region ? region.slice(0, 100) : null,
+      }),
+      cache: "no-store",
     });
-  } catch (error) {
-    // A repeated visit to the same route within one minute is deduplicated by
-    // the database. Other analytics failures must not affect the visitor.
-    const message = error instanceof Error ? error.message : String(error);
-    if (!/23505|duplicate key|unique constraint/i.test(message)) {
-      console.error("Anonymous analytics event could not be stored:", message);
-      return NextResponse.json({ ok: false }, { status: 503 });
+    // A repeated visit to the same route within one minute is deduplicated.
+    if (!stored.ok && stored.status !== 409) {
+      const detail = await stored.text();
+      throw new Error(`InsForge visitor event insert failed: ${stored.status} ${detail}`);
     }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Anonymous analytics event could not be stored:", message);
+    return NextResponse.json({ ok: false }, { status: 503 });
   }
 
   return response;
