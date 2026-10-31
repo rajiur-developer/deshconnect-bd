@@ -61,6 +61,41 @@ return { error: "You have already reviewed this place." };
 }
 return { error: dbError.message || "Your review could not be published. Please try again." };
 }
+
+// Keep the place's aggregate rating in sync with its own visible reviews.
+// Every listing/card reads these two fields from the places record.
+const { data: visibleReviews, error: aggregateError } = await insforge.database
+.from("reviews")
+.select("rating")
+.eq("place_id", placeId)
+.eq("status", "visible");
+
+if (!aggregateError) {
+const ratings = (visibleReviews || [])
+.map((review: { rating: number | string }) => Number(review.rating))
+.filter((rating: number) => Number.isFinite(rating) && rating >= 1 && rating <= 5);
+const reviewCount = ratings.length;
+const averageRating = reviewCount
+? Number((ratings.reduce((sum: number, rating: number) => sum + rating, 0) / reviewCount).toFixed(2))
+: 0;
+
+const { error: placeUpdateError } = await insforge.database
+.from("places")
+.update({ rating: averageRating, review_count: reviewCount })
+.eq("id", placeId);
+
+if (placeUpdateError) {
+console.error("Review saved, but place rating could not be synchronized", {
+placeId,
+message: placeUpdateError.message,
+});
+}
+} else {
+console.error("Review saved, but visible reviews could not be counted", {
+placeId,
+message: aggregateError.message,
+});
+}
 } catch (error) {
 const dbError = error as { code?: string; message?: string };
 if (dbError.code === "23505") {
@@ -68,7 +103,7 @@ return { error: "You have already reviewed this place." };
 }
 return { error: dbError.message || "Your review could not be published. Please try again." };
 }
-revalidatePath(`/places/${slug}`);
+revalidatePath(`/places/${slug}`);\nrevalidatePath("/places");\nrevalidatePath("/", "layout");
 revalidatePath("/my-reviews");
 revalidatePath("/admin/reviews");
 return { success: "Thanks! Your review has been published." };
