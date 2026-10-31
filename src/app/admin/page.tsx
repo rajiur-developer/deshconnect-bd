@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge";
-import { insforgeListUsers } from "@/services/users";
+import { listAdminUsers } from "@/services/users";
 import { listAuditLogs } from "@/services/audit";
 import { listNews } from "@/services/news";
 import { formatDate } from "@/lib/utils";
@@ -36,7 +36,7 @@ function MetricCard({ item }) {
 
 export default async function AdminDashboardPage() {
   const [users, logs, newsResult, pendingNewsResult, places, institutions, hospitals, businesses, reports, donors, requests] = await Promise.all([
-    insforgeListUsers({ page: 1, pageSize: 500 }),
+    listAdminUsers(),
     listAuditLogs(10).catch(() => []),
     listNews({ includeAll: true, page: 1, pageSize: 1 }),
     listNews({ includeAll: true, status: "pending_review", page: 1, pageSize: 1 }),
