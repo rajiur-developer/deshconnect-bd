@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Icon, type IconName } from "@/components/ui/icons";
 
 type NavItem = { href: string; label: string; icon: IconName };
@@ -18,6 +18,7 @@ export function AdminShell({
   role: string;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -46,8 +47,11 @@ export function AdminShell({
               {!collapsed && <p className="dc-admin-nav-heading">{group.title}</p>}
               <div className="grid gap-1">
                 {items.map((item) => {
-                  const target = item.href.split("?")[0];
-                  const active = pathname === target || (target !== "/admin" && pathname.startsWith(target + "/"));
+                  const [target, queryString] = item.href.split("?");
+                  const queryMatches = queryString
+                    ? Array.from(new URLSearchParams(queryString).entries()).every(([key, value]) => searchParams.get(key) === value)
+                    : !groups.some((entry) => entry.items.some((candidate) => candidate.href.startsWith(target + "?")));
+                  const active = (pathname === target && queryMatches) || (!queryString && target !== "/admin" && pathname.startsWith(target + "/"));
                   return (
                     <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} title={collapsed ? item.label : undefined} aria-current={active ? "page" : undefined} className={`dc-admin-nav-link ${active ? "is-active" : ""} ${target.startsWith("/admin/blood") ? "is-blood" : ""} ${collapsed ? "is-collapsed" : ""}`}>
                       <Icon name={item.icon} className="h-[17px] w-[17px] shrink-0" />
@@ -90,7 +94,7 @@ export function AdminShell({
               </label>
               {searchOpen && query.trim() && <div className="dc-admin-search-results">{matches.length ? matches.map((item) => <Link key={item.href} href={item.href} onMouseDown={() => setSearchOpen(false)}><Icon name={item.icon} className="h-4 w-4 text-emerald-700" /><span>{item.label}</span><span className="ml-auto text-[10px] text-slate-400">Open ↗</span></Link>) : <p>No matching admin pages</p>}</div>}
             </div>
-            <Link href="/admin/notifications" className="dc-admin-notification" aria-label="Open notifications" title="Notifications"><Icon name="bell" className="h-[18px] w-[18px]" /><span /></Link>
+            <Link href="/admin/notifications" className="dc-admin-notification" aria-label="Open notifications" title="Notifications"><Icon name="bell" className="h-[18px] w-[18px]" /></Link>
             <Link href="/admin/news?view=requests" className="dc-admin-review hidden sm:inline-flex"><Icon name="alert" className="h-4 w-4" />Review news</Link>
             <Link href="/" className="dc-admin-visit hidden md:inline-flex"><Icon name="external" className="h-4 w-4" />Visit website</Link>
           </div>
