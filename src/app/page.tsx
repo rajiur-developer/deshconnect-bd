@@ -26,6 +26,22 @@ async function loadOr<T>(promise: Promise<T>, fallback: T, timeoutMs = 2500): Pr
   }
 }
 
+async function HomeHeroActions() {
+  const user = await loadOr(getCurrentUser(), null);
+  if (user) return null;
+  return (
+    <>
+      <Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Log in</Link>
+      <Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Create account</Link>
+    </>
+  );
+}
+
+async function HomeDataContent() {
+  const user = await loadOr(getCurrentUser(), null);
+  return <HomeDataSections isAuthenticated={Boolean(user)} />;
+}
+
 async function HomeHeroSearch() {
   const [user, divisions] = await Promise.all([
     loadOr(getCurrentUser(), null),
@@ -74,19 +90,16 @@ export default function HomePage() {
               <Link href="/places" className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-lg shadow-black/10 hover:bg-brand-50">
                 Explore places <span aria-hidden="true">→</span>
               </Link>
-              <Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
-                Log in
-              </Link>
-              <Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
-                Create account
-              </Link>
+              <Suspense fallback={null}>
+                <HomeHeroActions />
+              </Suspense>
             </div>
           </div>
         </div>
       </section>
 
       <Suspense fallback={<HomeSectionsFallback />}>
-        <HomeDataSections isAuthenticated={false} />
+        <HomeDataContent />
       </Suspense>
     </>
   );
