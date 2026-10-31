@@ -30,7 +30,7 @@ export async function insforgeListNews(query: {
   const pageSize = query.pageSize ?? 9;
   params["offset"] = ((page - 1) * pageSize).toString();
   params["limit"] = pageSize.toString();
-  params["order"] = query.sort === "name" ? "title.asc" : query.sort === "newest" ? "created_at.desc" : "published_at.desc";
+  params["order"] = query.sort === "name" ? "title.asc" : "fetched_at.desc.nullslast,published_at.desc";
 
   const [{ data, count }, categories] = await Promise.all([
     insforgeSelectMany("news", params),
