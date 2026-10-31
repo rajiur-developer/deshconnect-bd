@@ -4,7 +4,6 @@ import { SITE } from "@/config/site";
 import { listDivisions } from "@/services/locations";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { Badge } from "@/components/ui/badge";
-import { Icon } from "@/components/ui/icons";
 import { HeroSearch } from "@/components/search/hero-search";
 import { VideoBackground } from "@/components/layout/video-background";
 import { HomeDataSections, HomeSectionsFallback } from "@/components/home/home-data-sections";
@@ -14,7 +13,12 @@ export const metadata = { title: SITE.name, description: SITE.description };
 async function loadOr<T>(promise: Promise<T>, fallback: T, timeoutMs = 2500): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    return await Promise.race([promise, new Promise<T>((resolve) => { timer = setTimeout(() => resolve(fallback), timeoutMs); })]);
+    return await Promise.race([
+      promise,
+      new Promise<T>((resolve) => {
+        timer = setTimeout(() => resolve(fallback), timeoutMs);
+      }),
+    ]);
   } catch {
     return fallback;
   } finally {
@@ -22,32 +26,68 @@ async function loadOr<T>(promise: Promise<T>, fallback: T, timeoutMs = 2500): Pr
   }
 }
 
-export default async function HomePage() {
+async function HomeHeroSearch() {
   const [user, divisions] = await Promise.all([
     loadOr(getCurrentUser(), null),
     loadOr(listDivisions(), []),
   ]);
 
-  return <>
-    <section className="dc-home-hero gradient-hero relative isolate overflow-hidden">
-      <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
-      <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
-        <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
-          <div className="flex justify-center"><Badge tone="accent" className="bg-white/10 text-white ring-white/20">Bangladesh's information & community platform</Badge></div>
-          <h1 className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">Discover your Bangladesh.<span className="block text-brand-300">Connect with your community.</span></h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg">Find local places, institutions, public services, news and community support — all in one place.</p>
-          <div className="mx-auto mt-8 w-full max-w-3xl text-left"><HeroSearch divisions={divisions} user={user} /></div>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/places" className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-lg shadow-black/10 hover:bg-brand-50">Explore places <span aria-hidden="true">→</span></Link>
-            {!user && <><Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Log in</Link><Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Create account</Link></>}
+  return <HeroSearch divisions={divisions} user={user} />;
+}
+
+function HomeHeroSearchFallback() {
+  return (
+    <div className="mx-auto mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/90 p-3 shadow-lg" aria-hidden="true">
+      <div className="h-12 animate-pulse rounded-xl bg-slate-200" />
+      <div className="mt-3 h-4 w-2/5 animate-pulse rounded bg-slate-200" />
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <>
+      <section className="dc-home-hero gradient-hero relative isolate overflow-hidden">
+        <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
+        <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
+          <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
+            <div className="flex justify-center">
+              <Badge tone="accent" className="bg-white/10 text-white ring-white/20">
+                Bangladesh's information & community platform
+              </Badge>
+            </div>
+            <h1 className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+              Discover your Bangladesh.
+              <span className="block text-brand-300">Connect with your community.</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg">
+              Find local places, institutions, public services, news and community support — all in one place.
+            </p>
+            <Suspense fallback={<HomeHeroSearchFallback />}>
+              <div className="mx-auto w-full max-w-3xl text-left">
+                <HomeHeroSearch />
+              </div>
+            </Suspense>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/places" className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-lg shadow-black/10 hover:bg-brand-50">
+                Explore places <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
+                Log in
+              </Link>
+              <Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
+                Create account
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    <Suspense fallback={<HomeSectionsFallback />}>
-      <HomeDataSections isAuthenticated={Boolean(user)} divisions={divisions} />
-    </Suspense>
-  </>;
+      </section>
+
+      <Suspense fallback={<HomeSectionsFallback />}>
+        <HomeDataSections isAuthenticated={false} />
+      </Suspense>
+    </>
+  );
 }
