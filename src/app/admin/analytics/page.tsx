@@ -196,6 +196,26 @@ export default async function WebsiteAnalyticsPage({ searchParams }: { searchPar
           {filteredLogs.length ? <ul className="dc-analytics-activity mt-4">{filteredLogs.slice(0, 6).map((log) => <li key={log.id}><span className="dc-analytics-activity-dot" /><div className="min-w-0 flex-1"><p className="truncate text-sm font-bold text-slate-800">{log.action} · {log.entity}</p><p className="mt-1 truncate text-xs text-slate-500">{log.actorName || "Admin"} · {log.outcome}</p></div><time>{new Date(log.createdAt).toLocaleDateString()}</time></li>)}</ul> : <div className="dc-analytics-empty mt-5"><span>◷</span><p>No admin activity recorded in this period.</p></div>}
         </div>
       </section>
+      <section className="dc-analytics-audience-grid" aria-label="Traffic acquisition and audience reports">
+        <article className="dc-analytics-panel dc-analytics-reveal">
+          <div className="dc-analytics-kicker">CONTENT DISCOVERY</div>
+          <div className="mt-1 flex items-center justify-between gap-3"><h2 className="text-lg font-extrabold text-slate-900">Top pages</h2><span className="dc-analytics-status">Awaiting data</span></div>
+          <p className="mt-1 text-sm text-slate-500">Most visited routes across your website</p>
+          <div className="dc-analytics-report-empty mt-5"><span className="dc-analytics-report-symbol">↗</span><div><p className="text-sm font-bold text-slate-700">Page-view tracking is not connected</p><p className="mt-1 text-xs leading-5 text-slate-500">Top pages and search keywords will appear here after a privacy-friendly visitor tracking source is configured.</p></div></div>
+          <div className="mt-4 space-y-2">{["Homepage", "Places directory", "Blood donation", "Community"].map((label) => <div key={label} className="dc-analytics-muted-row"><span>{label}</span><span>— views</span></div>)}</div>
+        </article>
+        <article className="dc-analytics-panel dc-analytics-reveal" style={{ animationDelay: "80ms" }}>
+          <div className="dc-analytics-kicker">ACQUISITION CHANNELS</div>
+          <div className="mt-1 flex items-center justify-between gap-3"><h2 className="text-lg font-extrabold text-slate-900">Traffic sources</h2><span className="dc-analytics-status">Not connected</span></div>
+          <p className="mt-1 text-sm text-slate-500">Where visitors discover DeshConnect</p>
+          <div className="dc-analytics-source-visual mt-5"><div className="dc-analytics-empty-ring"><span>—<small>visits</small></span></div><div className="space-y-3">{["Direct", "Organic search", "Social", "Referral"].map((label) => <div key={label} className="flex items-center justify-between gap-3 text-xs"><span className="flex items-center gap-2 text-slate-500"><i className="dc-analytics-legend-dot" />{label}</span><strong className="text-slate-400">—</strong></div>)}</div></div>
+          <p className="mt-4 text-[11px] leading-5 text-slate-400">Channel attribution requires page-view and referrer events. No source distribution is estimated.</p>
+        </article>
+        <article className="dc-analytics-panel dc-analytics-reveal xl:col-span-2" style={{ animationDelay: "140ms" }}>
+          <div className="flex flex-wrap items-center justify-between gap-3"><div><div className="dc-analytics-kicker">AUDIENCE GEOGRAPHY</div><h2 className="mt-1 text-lg font-extrabold text-slate-900">Regional audience</h2><p className="mt-1 text-sm text-slate-500">Visitor locations by country, division and district</p></div><span className="dc-analytics-status">Location data unavailable</span></div>
+          <div className="dc-analytics-region-empty mt-5"><span>◎</span><div><p className="text-sm font-bold text-slate-700">Regional reporting is not connected</p><p className="mt-1 max-w-xl text-xs leading-5 text-slate-500">Once anonymous visitor events include an approximate region, this area can show geographic distribution without storing precise personal addresses.</p></div></div>
+        </article>
+      </section>
       <p className="dc-analytics-footnote">Analytics are visible only inside the existing protected Admin workspace. Data shown above comes from current DeshConnect records.</p>
     </main>
   );
