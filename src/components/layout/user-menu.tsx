@@ -35,13 +35,13 @@ onToggle={(event) => setOpen(event.currentTarget.open)}
 <summary
 aria-expanded={open}
 aria-haspopup="menu"
-className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-3 text-sm font-medium text-slate-700 hover:bg-slate-50 [&::-webkit-details-marker]:hidden"
+className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 py-1 pl-1 pr-3 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-emerald-200 hover:bg-emerald-50/70 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 [&::-webkit-details-marker]:hidden"
 >
 <ProfileAvatar name={user.fullName} src={user.avatar} storageKey={user.avatarKey} className="h-7 w-7 text-xs" textClassName="text-xs" />
 <span className="hidden max-w-[10rem] truncate sm:inline">{user.fullName}</span>
 <Icon name="chevron-down" className="h-4 w-4 text-slate-400" />
 </summary>
-<div className="user-menu-panel absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+<div className="user-menu-panel absolute right-0 z-50 mt-3 w-64 origin-top-right overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-900/10">
 <div className="border-b border-slate-100 px-4 py-3">
 <p className="truncate text-sm font-semibold text-slate-900">{user.fullName}</p>
 <p className="truncate text-xs text-slate-500">@{user.username}</p>
