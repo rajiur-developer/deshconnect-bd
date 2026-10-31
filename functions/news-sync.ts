@@ -39,7 +39,7 @@ export default async function (request: Request): Promise<Response> {
   }
 
   // Use the typed CRUD client with the server-only admin key. Never expose this key to the browser.
-  const admin = createClient({ baseUrl, anonKey: apiKey });
+  const admin = createClient({ baseUrl, accessToken: apiKey });
   const now = new Date();
   let inserted = 0;
   let requestsCreated = 0;
