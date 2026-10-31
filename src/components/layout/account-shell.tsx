@@ -39,7 +39,7 @@ return (
 <PageHeader title={title} description={description} variant={messagesOnly ? "messages" : "default"} />
 {minimalDashboard ? (
 <div className="container-x py-5 sm:py-7">
-  <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white/90 p-3 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:p-4">
+  <div className="mb-7 flex flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white/80 p-4 shadow-sm shadow-slate-900/[0.03] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-4">
     <div className="min-w-0">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Your account</p>
       <p className="mt-1 truncate text-sm font-semibold text-slate-900">{user.fullName || user.username}</p>
@@ -53,7 +53,7 @@ return (
         { href: "/notifications", label: "Notifications" },
         { href: "/settings", label: "Settings" },
       ].map((item) => (
-        <Link key={item.href} href={item.href} className="shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 sm:text-sm">
+        <Link key={item.href} href={item.href} className="shrink-0 rounded-xl border border-slate-200/80 bg-white/90 px-3.5 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 sm:text-sm">
           {item.label}
         </Link>
       ))}
