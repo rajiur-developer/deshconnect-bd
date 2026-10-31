@@ -616,19 +616,6 @@ html[lang="bn"] body {
   transform: rotate(180deg);
 }
 
-/* Scroll-triggered reveal. Progressive enhancement: only browsers that
-   support scroll-driven animations opt in, so content is never hidden
-   where the effect cannot run. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    main section {
-      animation: fade-in-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
-    }
-  }
-}
-
 /* Skeleton shimmer — transform-only, GPU friendly. */
 .skeleton-shimmer {
   position: relative;
