@@ -1680,15 +1680,3 @@ main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active 
 @media (max-width: 767px) {
   .dc-analytics-audience-grid { grid-template-columns:minmax(0,1fr); }
 }
-
-/* Scroll-triggered reveal. Progressive enhancement: browsers without view timelines
-   keep content visible and readable without animation. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    main section {
-      animation: fade-in-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
-    }
-  }
-}
