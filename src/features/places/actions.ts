@@ -103,7 +103,9 @@ return { error: "You have already reviewed this place." };
 }
 return { error: dbError.message || "Your review could not be published. Please try again." };
 }
-revalidatePath(`/places/${slug}`);\nrevalidatePath("/places");\nrevalidatePath("/", "layout");
+revalidatePath(`/places/${slug}`);
+revalidatePath("/places");
+revalidatePath("/", "layout");
 revalidatePath("/my-reviews");
 revalidatePath("/admin/reviews");
 return { success: "Thanks! Your review has been published." };
