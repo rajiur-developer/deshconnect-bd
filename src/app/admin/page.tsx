@@ -28,6 +28,7 @@ function MetricCard({ item }) {
         </div>
         <p className="mt-4 break-words text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{typeof item.value === "number" ? item.value.toLocaleString() : item.value ?? "—"}</p>
         <p className="mt-1 text-sm font-medium text-slate-600">{item.label}</p>
+        {item.detail ? <p className="mt-1 text-xs leading-5 text-slate-400">{item.detail}</p> : null}
         <div className={`absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${style.bar}`} />
       </Card>
     </Link>
@@ -53,7 +54,11 @@ export default async function AdminDashboardPage() {
   const pendingNewsTotal = pendingNewsResult.meta.total;
   const moderators = users.filter((item) => item.role === "moderator");
   const moderatorCount = users.some((item) => Boolean(item.role)) ? moderators.length : null;
+  // Count of implemented Next.js App Router page routes in src/app (dynamic routes count once).
+  // Update this when page.tsx route files are added or removed.
+  const activePageRoutes = 73;
   const metrics = [
+    { label: "Active website pages", value: activePageRoutes, detail: "Implemented page routes across the website", href: "/admin/analytics", tone: "teal" },
     { label: "Total users", value: users.length, href: "/admin/users", tone: "green" },
     { label: "Moderators", value: moderatorCount ?? "—", href: "/admin/users", tone: "violet" },
     { label: "Places", value: places, href: "/admin/places", tone: "teal" },
@@ -162,7 +167,7 @@ export default async function AdminDashboardPage() {
       <section className="dc-admin-metrics" aria-labelledby="metrics-heading">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <div><h2 id="metrics-heading" className="text-lg font-bold text-slate-900 sm:text-xl">Platform at a glance</h2><p className="mt-1 text-sm text-slate-500">Select any card to open its management page.</p></div>
-          <Badge tone="brand">11 key metrics</Badge>
+          <Badge tone="brand">12 key metrics</Badge>
         </div>
         <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {metrics.map((item) => <MetricCard key={item.label} item={item} />)}
