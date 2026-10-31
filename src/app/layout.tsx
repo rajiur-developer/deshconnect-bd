@@ -8,6 +8,7 @@ import { PageTheme } from "@/components/layout/page-theme";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthFeedback } from "@/components/ui/auth-feedback";
 import { LanguageProvider } from "@/components/i18n/language-provider";
+import { VisitorTracker } from "@/components/analytics/visitor-tracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -58,6 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             >
               Skip to main content
             </a>
+            <VisitorTracker enabled={!user || user.role === "user"} />
             <Header user={user} />
             <main id="main-content" className="flex-1">
               <PageTheme>{children}</PageTheme>
