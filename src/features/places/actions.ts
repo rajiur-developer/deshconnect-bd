@@ -25,13 +25,17 @@ return { saved: true };
 export type ReviewFormState = { error?: string; success?: string };
 export async function createReviewAction(_prev: ReviewFormState, formData: FormData): Promise<ReviewFormState> {
 const user = await requireUser();
-const slug = String(formData.get("slug") ?? "");
-const placeId = String(formData.get("placeId") ?? "");
+const slug = String(formData.get("slug") ?? "").trim();
+const placeId = String(formData.get("placeId") ?? "").trim();
+
+// FormData values are strings. Convert the selected rating before Zod validation;
+// otherwise z.number() rejects every normal form submission.
 const parsed = reviewSchema.safeParse({
-rating: formData.get("rating"),
-title: formData.get("title"),
-body: formData.get("body"),
+rating: Number(formData.get("rating")),
+title: String(formData.get("title") ?? "").trim(),
+body: String(formData.get("body") ?? "").trim(),
 });
+if (!placeId || !slug) return { error: "Place information is missing. Refresh the page and try again." };
 if (!parsed.success) {
 return { error: formatZodError(parsed.error) };
 }
@@ -39,7 +43,8 @@ const limit = rateLimit(`review:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) {
 return { error: `Too many reviews. Try again in ${limit.retryAfterSeconds}s.` };
 }
-const { data, error } = await insforge.database
+try {
+const { error } = await insforge.database
 .from("reviews")
 .insert([{
 place_id: placeId,
@@ -48,9 +53,23 @@ rating: parsed.data.rating,
 title: parsed.data.title,
 body: parsed.data.body,
 status: "visible",
-}])
-.select()
-.single();
-if (error) throw error;
+}]);
+if (error) {
+const dbError = error as { code?: string; message?: string };
+if (dbError.code === "23505") {
+return { error: "You have already reviewed this place." };
+}
+return { error: dbError.message || "Your review could not be published. Please try again." };
+}
+} catch (error) {
+const dbError = error as { code?: string; message?: string };
+if (dbError.code === "23505") {
+return { error: "You have already reviewed this place." };
+}
+return { error: dbError.message || "Your review could not be published. Please try again." };
+}
 revalidatePath(`/places/${slug}`);
-return { success: "Thanks! Your review has been published." }; }
+revalidatePath("/my-reviews");
+revalidatePath("/admin/reviews");
+return { success: "Thanks! Your review has been published." };
+}
