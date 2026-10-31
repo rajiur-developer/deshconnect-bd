@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicUser } from "@/types/auth";
 import { PageHeader } from "@/components/layout/page-header";
+import { Icon } from "@/components/ui/icons";
 const NAV = [
 { href: "/dashboard", label: "Overview" },
 { href: "/profile", label: "My Profile" },
@@ -67,8 +68,16 @@ return (
     {!messagesOnly && <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4"><p className="truncate text-sm font-semibold text-slate-900">{user.fullName}</p><p className="truncate text-xs text-slate-500">@{user.username}</p></div>}
     <nav className="rounded-2xl border border-slate-200 bg-white p-2" aria-label="Account">
       {navItems.map((item) => (
-        <Link key={item.href} href={item.href} aria-current={messagesOnly && item.href === "/friend-requests" ? "page" : undefined} className={`block rounded-lg px-3 py-2 text-sm ${messagesOnly ? "border border-brand-100 bg-brand-50 font-semibold text-brand-800 shadow-sm" : "text-slate-700 hover:bg-slate-100"}`}>
-          {item.label}
+        <Link
+          key={item.href}
+          href={item.href}
+          aria-current={messagesOnly && item.href === "/friend-requests" ? "page" : undefined}
+          className={messagesOnly
+            ? "inline-flex w-full items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:border-emerald-200 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            : "block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"}
+        >
+          {messagesOnly && <Icon name="users" className="h-4 w-4 shrink-0 text-emerald-600" />}
+          <span>{item.label}</span>
         </Link>
       ))}
     </nav>
