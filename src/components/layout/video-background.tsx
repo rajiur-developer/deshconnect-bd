@@ -8,25 +8,11 @@ export function VideoBackground({ src, className = "" }: { src: string; classNam
   const [hasFailed, setHasFailed] = useState(false);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Keep the hero video enabled on desktop and mobile, but let the page's
+    // critical text and controls render before the decorative video downloads.
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    const connection = (navigator as Navigator & {
-      connection?: { saveData?: boolean; effectiveType?: string };
-    }).connection;
-    const isSlowConnection =
-      connection?.saveData === true ||
-      connection?.effectiveType === "slow-2g" ||
-      connection?.effectiveType === "2g";
-
-    // Keep mobile and data-saving users on the lightweight CSS hero background.
-    // The decorative video is not required to understand or use the homepage.
-    if (isMobile || prefersReducedMotion || isSlowConnection) {
-      setHasFailed(true);
-      return;
-    }
-
-    // Defer the decorative desktop video so it cannot compete with initial rendering.
-    const startTimer = window.setTimeout(() => setShouldLoad(true), 1800);
+    const delay = isMobile ? 900 : 1200;
+    const startTimer = window.setTimeout(() => setShouldLoad(true), delay);
     return () => window.clearTimeout(startTimer);
   }, []);
 
