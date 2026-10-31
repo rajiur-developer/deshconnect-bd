@@ -26,6 +26,7 @@ description="Review, approve, publish and edit news. Submissions stay private un
 <StaffNewsForm categories={categories} userId={user?.id} />
 </div>
 <div className="mb-4 flex flex-wrap gap-2" aria-label="News management views">
+<Link href="/admin/news/deletion-requests" className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100">Deletion approvals</Link>
 <Link href="/admin/news?view=requests" aria-current={view === "requests" ? "page" : undefined} className={`rounded-lg px-4 py-2 text-sm font-medium ${view === "requests" ? "bg-brand-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"}`}>Post requests ({requests.length})</Link>
 <Link href="/admin/news?view=all" aria-current={view === "all" ? "page" : undefined} className={`rounded-lg px-4 py-2 text-sm font-medium ${view === "all" ? "bg-brand-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"}`}>All news ({allNews.length})</Link>
 </div>

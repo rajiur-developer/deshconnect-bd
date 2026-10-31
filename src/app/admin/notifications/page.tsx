@@ -1,4 +1,4 @@
-import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { listAdminUsers } from "@/services/users"; import { Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { relativeTime } from "@/lib/utils";
+import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { listAdminUsers } from "@/services/users"; import { Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { relativeTime } from "@/lib/utils"; import Link from "next/link";
 export const metadata = { title: "Notifications" };
 export default async function AdminNotificationsPage() {
 const [{ data }, users] = await Promise.all([insforgeSelectMany("notifications", { order: "created_at.desc", limit: "500" }), listAdminUsers()]);
@@ -24,6 +24,7 @@ return (
 <td className="px-4 py-3">
 <p className="font-medium text-slate-900">{notification.title}</p>
 <p className="text-xs text-slate-500">{notification.body}</p>
+{notification.href && <Link href={notification.href} className="mt-1 inline-block text-xs font-medium text-brand-700 underline">Open request</Link>}
 </td>
 <td className="px-4 py-3 text-slate-600">{notification.read ? "Read" : "Unread"}</td>
 <td className="px-4 py-3 text-slate-500">{relativeTime(notification.createdAt)}</td>
