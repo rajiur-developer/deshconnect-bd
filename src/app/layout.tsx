@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 
 import { SITE } from "@/config/site";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -39,8 +40,21 @@ export const viewport: Viewport = {
   themeColor: "#0b3d2e",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+async function AuthenticatedShell() {
   const user = await getCurrentUser();
+  return (
+    <>
+      <VisitorTracker enabled={!user || user.role === "user"} />
+      <Header user={user} />
+    </>
+  );
+}
+
+function HeaderFallback() {
+  return <div className="h-[4.5rem] border-b border-gray-200/50 bg-white/90" aria-hidden="true" />;
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = "en";
 
   return (
@@ -59,8 +73,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             >
               Skip to main content
             </a>
-            <VisitorTracker enabled={!user || user.role === "user"} />
-            <Header user={user} />
+            <Suspense fallback={<HeaderFallback />}>
+              <AuthenticatedShell />
+            </Suspense>
             <main id="main-content" className="flex-1">
               <PageTheme>{children}</PageTheme>
             </main>
