@@ -1674,3 +1674,22 @@ main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active 
   .dc-admin-app,.dc-admin-sidebar-mobile,.dc-admin-nav-link,.dc-admin-search,.dc-admin-review,.dc-admin-visit { transition:none !important; }
   .dc-admin-nav-link:hover,.dc-admin-review:hover { transform:none; }
 }
+
+
+/* Analytics acquisition and audience report states */
+.dc-analytics-audience-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.25rem; }
+.dc-analytics-report-empty { display:flex; align-items:flex-start; gap:.8rem; border:1px solid #e8eee9; border-radius:1rem; background:linear-gradient(135deg,#f8fbf8,#f2f7f3); padding:.9rem; }
+.dc-analytics-report-symbol { display:grid; width:2.2rem; height:2.2rem; flex:none; place-items:center; border:1px solid #dcece1; border-radius:.75rem; background:#fff; color:#84958a; font-size:1.05rem; }
+.dc-analytics-muted-row { display:flex; justify-content:space-between; gap:1rem; border-bottom:1px solid #edf2ee; padding:.58rem .2rem; color:#7b8a80; font-size:.7rem; }
+.dc-analytics-muted-row:last-child { border-bottom:0; }
+.dc-analytics-muted-row span:last-child { color:#a6b1a9; font-weight:750; font-variant-numeric:tabular-nums; }
+.dc-analytics-source-visual { display:grid; grid-template-columns: minmax(7rem,.9fr) minmax(0,1fr); align-items:center; gap:1.2rem; }
+.dc-analytics-empty-ring { display:grid; width:min(100%,9.5rem); aspect-ratio:1; place-items:center; border:1rem solid #edf2ee; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 1px #e5ece7; }
+.dc-analytics-empty-ring > span { display:flex; flex-direction:column; align-items:center; color:#9aa79e; font-size:1.45rem; font-weight:900; }
+.dc-analytics-empty-ring small { margin-top:-.1rem; color:#aab5ad; font-size:.6rem; font-weight:700; }
+.dc-analytics-legend-dot { width:.48rem; height:.48rem; border-radius:50%; background:#d5e0d8; }
+.dc-analytics-region-empty { display:flex; min-height:8.5rem; align-items:center; gap:1rem; border:1px dashed #dce9e0; border-radius:1rem; background:linear-gradient(120deg,#f9fcfa,#f2f8f4); padding:1.2rem; }
+.dc-analytics-region-empty > span { display:grid; width:3rem; height:3rem; flex:none; place-items:center; border:1px solid #dcece1; border-radius:1rem; background:#fff; color:#8ba395; font-size:1.45rem; }
+@media (max-width: 767px) {
+  .dc-analytics-audience-grid { grid-template-columns:minmax(0,1fr); }
+}
