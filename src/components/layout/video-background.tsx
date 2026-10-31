@@ -8,43 +8,40 @@ export function VideoBackground({ src, className = "" }: { src: string; classNam
   const [hasFailed, setHasFailed] = useState(false);
 
   useEffect(() => {
-    // Give the page and its data requests a head start before downloading the video.
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+    const isSlowConnection =
+      connection?.saveData === true ||
+      connection?.effectiveType === "slow-2g" ||
+      connection?.effectiveType === "2g";
+
+    // Keep mobile and data-saving users on the lightweight CSS hero background.
+    // The decorative video is not required to understand or use the homepage.
+    if (isMobile || prefersReducedMotion || isSlowConnection) {
+      setHasFailed(true);
+      return;
+    }
+
+    // Defer the decorative desktop video so it cannot compete with initial rendering.
     const startTimer = window.setTimeout(() => setShouldLoad(true), 1800);
-    // Do not leave an endless loader on slow or unsupported mobile connections.
-    const fallbackTimer = window.setTimeout(() => setHasFailed(true), 16800);
-    return () => {
-      window.clearTimeout(startTimer);
-      window.clearTimeout(fallbackTimer);
-    };
+    return () => window.clearTimeout(startTimer);
   }, []);
 
   return (
-    <>
-      <video
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${className} ${isReady ? "opacity-100" : "opacity-0"}`}
-        src={shouldLoad ? src : undefined}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="none"
-        onCanPlay={() => setIsReady(true)}
-        onError={() => setHasFailed(true)}
-        aria-hidden="true"
-      />
-
-      {!isReady && !hasFailed && (
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800"
-          role="status"
-          aria-label="Loading background video"
-        >
-          <div className="flex flex-col items-center gap-3">
-            <span className="h-10 w-10 animate-spin rounded-full border-2 border-white/25 border-t-white/90" />
-            <span className="text-xs font-medium tracking-wide text-white/70">Loading experience…</span>
-          </div>
-        </div>
-      )}
-    </>
+    <video
+      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${className} ${isReady ? "opacity-100" : "opacity-0"}`}
+      src={shouldLoad && !hasFailed ? src : undefined}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="none"
+      onCanPlay={() => setIsReady(true)}
+      onError={() => setHasFailed(true)}
+      aria-hidden="true"
+    />
   );
 }
