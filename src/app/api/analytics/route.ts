@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
   response.cookies.set(SESSION_COOKIE, sessionToken, { ...cookieBase, maxAge: COOKIE_SESSION });
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\\/+$/, "");
+    const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\/+$/, "");
     const anonKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY?.trim();
     if (!baseUrl || !anonKey) throw new Error("InsForge public database configuration is missing");
     const stored = await fetch(`${baseUrl}/api/database/records/visitor_events`, {
