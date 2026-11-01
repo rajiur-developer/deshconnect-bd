@@ -34,7 +34,6 @@ districts={options.districts}
 upazilas={options.upazilas}
 categories={categories.map((category) => ({ value: category.value, label: category.name }))}
 showCategory
-sortOptions={["relevance", "name", "newest"]}
 icon="globe"
 title="Filter news"
 current={{ divisionId, districtId, upazilaId }}
