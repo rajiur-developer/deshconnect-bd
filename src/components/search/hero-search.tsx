@@ -10,18 +10,18 @@ const selected = divisions.find((division) => division.id === divisionId);
 return (
 <form
 action="/search"
-className="w-full rounded-2xl border border-slate-200  p-3 shadow-lg shadow-slate-900/5"
+className="mx-auto w-full max-w-sm rounded-2xl border border-slate-200 bg-white/95 p-2.5 shadow-lg shadow-slate-900/10 backdrop-blur-sm sm:p-3"
 >
-<div className="flex flex-col gap-2 sm:flex-row">
+<div className="flex flex-col gap-2">
 <div className="relative flex-1">
-<Icon name="search" className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+<Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 <input
 name="q"
 value={q}
 onChange={(event) => setQ(event.target.value)}
 placeholder="Search places, hospitals, businesses and services…"
 aria-label="Search DeshConnect"
-className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-3 text-sm focus-ring"
+className="h-[38px] w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm focus-ring"
 />
 </div>
 <select
@@ -33,7 +33,7 @@ setDivisionId(value);
 const match = divisions.find((division) => division.id === value);
 if (match) router.push(`/divisions/${match.slug}`);
 }}
-className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus-ring sm:w-52"
+className="h-[38px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus-ring"
 >
 <option value="">All divisions</option>
 {divisions.map((division) => (
@@ -42,12 +42,12 @@ className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focu
 </select>
 <button
 type="submit"
-className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700"
+className="h-[38px] rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
 >
 Search
 </button>
 </div>
-<div className="mt-3 flex flex-wrap items-center gap-2 px-1 text-sm ">
+<div className="mt-2.5 flex flex-wrap items-center gap-1.5 px-0.5 text-xs">
 <span className="text-red-500">Popular:</span>
 {[
 { label: "Sajek Valley", query: "Sajek Valley" },
@@ -58,13 +58,13 @@ Search
 <a
 key={term.query}
 href={`/search?q=${encodeURIComponent(term.query)}`}
-className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-700"
+className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium leading-4 text-slate-700 transition hover:bg-brand-50 hover:text-brand-700"
 >
 {term.label}
 </a>
 ))}
 {!user && (
-<a href="/register" className="ml-auto font-medium text-brand-700 hover:text-brand-800 text-red-500">
+<a href="/register" className="ml-auto px-1 py-1 text-[11px] font-semibold text-red-500 hover:text-brand-800">
 Create free account →
 </a>
 )}
