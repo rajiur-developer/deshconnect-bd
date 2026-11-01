@@ -3,7 +3,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import type { Message } from "@/types/community";
-import { relativeTime } from "@/lib/utils";
 import { deleteMessageForMeAction, deleteOwnMessageAction, editOwnMessageAction, toggleMessageReactionAction } from "@/features/account/actions";
 import type { PublicUser } from "@/types/auth";
 import { Spinner } from "@/components/ui/spinner";
