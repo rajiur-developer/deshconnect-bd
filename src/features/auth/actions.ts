@@ -191,9 +191,16 @@ export async function googleOAuthAction(): Promise<void> {
     store = await cookies();
     const requestHeaders = await headers();
     const requestHost = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
-    const redirectBase = process.env.NODE_ENV !== "production" && requestHost
-      ? `${requestHeaders.get("x-forwarded-proto") ?? "http"}://${requestHost}`
-      : appUrl();
+    // Prefer the explicitly configured canonical URL. If it is absent,
+    // derive the public origin from the incoming Vercel request in production
+    // as well; falling back to localhost in production breaks Google OAuth.
+    const configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL;
+    const forwardedProto = requestHeaders.get("x-forwarded-proto") ?? (process.env.NODE_ENV === "production" ? "https" : "http");
+    const redirectBase = configuredAppUrl?.trim()
+      ? configuredAppUrl.trim().replace(/\/+$/, "")
+      : requestHost
+        ? `${forwardedProto}://${requestHost.split(",")[0].trim()}`
+        : appUrl();
     const actions = createAuthActions({ cookies: store });
     ({ data, error } = await actions.signInWithOAuth("google", {
       redirectTo: new URL("/api/auth/callback", redirectBase).toString(),
