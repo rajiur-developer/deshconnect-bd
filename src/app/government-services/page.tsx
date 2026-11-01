@@ -42,7 +42,6 @@ districts={options.districts}
 upazilas={options.upazilas}
 categories={CATEGORIES}
 showCategory
-sortOptions={["relevance", "name", "newest"]}
 current={{ divisionId, districtId, upazilaId }}
 />
 <p className="mt-6 text-sm text-slate-500">{meta.total} services found</p>
