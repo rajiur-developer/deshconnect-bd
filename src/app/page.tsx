@@ -31,7 +31,7 @@ async function HomeHeroActions() {
   if (user) return null;
   return (
     <>
-      <Link href="/login" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Log in</Link>
+      <Link href="/login" className="rounded-lg border border-white/30 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10">Log in</Link>
       <Link href="/register" className="rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Create account</Link>
     </>
   );
@@ -53,9 +53,9 @@ async function HomeHeroSearch() {
 
 function HomeHeroSearchFallback() {
   return (
-    <div className="mx-auto mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/90 p-3 shadow-lg" aria-hidden="true">
-      <div className="h-12 animate-pulse rounded-xl bg-slate-200" />
-      <div className="mt-3 h-4 w-2/5 animate-pulse rounded bg-slate-200" />
+    <div className="mx-auto mt-6 w-full max-w-sm rounded-2xl border border-white/20 bg-white/90 p-2.5 shadow-lg" aria-hidden="true">
+      <div className="h-[38px] animate-pulse rounded-lg bg-slate-200" />
+      <div className="mt-2 h-3 w-2/5 animate-pulse rounded bg-slate-200" />
     </div>
   );
 }
@@ -82,12 +82,12 @@ export default function HomePage() {
               Find local places, institutions, public services, news and community support — all in one place.
             </p>
             <Suspense fallback={<HomeHeroSearchFallback />}>
-              <div className="mx-auto w-full max-w-3xl text-left">
+              <div className="mx-auto mt-5 w-full max-w-sm text-left sm:mt-6">
                 <HomeHeroSearch />
               </div>
             </Suspense>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/places" className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-lg shadow-black/10 hover:bg-brand-50">
+            <div className="mt-4 flex flex-wrap justify-center gap-2 sm:mt-5">
+              <Link href="/places" className="rounded-lg bg-white px-4 py-1.5 text-xs font-bold text-brand-800 shadow-lg shadow-black/10 transition hover:bg-brand-50">
                 Explore places <span aria-hidden="true">→</span>
               </Link>
               <Suspense fallback={null}>
