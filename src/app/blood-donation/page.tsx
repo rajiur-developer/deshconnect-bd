@@ -64,7 +64,6 @@ districts={options.districts}
 upazilas={options.upazilas}
 icon="droplet"
 title="Filter donors and requests"
-sortOptions={["relevance", "name", "newest"]}
 extraSelects={[
 {
 name: "bloodGroup",
