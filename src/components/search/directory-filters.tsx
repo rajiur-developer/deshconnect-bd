@@ -13,7 +13,6 @@ districts: DistrictOption[];
 upazilas: UpazilaOption[];
 categories?: { value: string; label: string }[];
 showCategory?: boolean;
-sortOptions?: Array<"relevance" | "name" | "newest" | "rating">;
 extraSelects?: Array<{ name: string; label: string; options: { value: string; label: string }[]; value?: string }>;
 current: { divisionId?: string; districtId?: string; upazilaId?: string };
 labels?: { division?: string; district?: string; upazila?: string };
@@ -34,7 +33,6 @@ districts,
 upazilas,
 categories,
 showCategory,
-sortOptions = ["relevance", "name", "newest", "rating"],
 extraSelects,
 current,
 labels,
@@ -47,7 +45,6 @@ const [districtId, setDistrictId] = useState(current.districtId ?? "");
 const [upazilaId, setUpazilaId] = useState(current.upazilaId ?? "");
 const [searchValue, setSearchValue] = useState(paramValue(params.q));
 const [categoryValue, setCategoryValue] = useState(paramValue(params.category));
-const [sortValue, setSortValue] = useState(paramValue(params.sort) || "relevance");
 const [extraValues, setExtraValues] = useState<Record<string, string>>(
 Object.fromEntries((extraSelects ?? []).map((item) => [item.name, item.value ?? ""]))
 );
@@ -57,9 +54,8 @@ setDistrictId(current.districtId ?? "");
 setUpazilaId(current.upazilaId ?? "");
 setSearchValue(paramValue(params.q));
 setCategoryValue(paramValue(params.category));
-setSortValue(paramValue(params.sort) || "relevance");
 setExtraValues(Object.fromEntries((extraSelects ?? []).map((item) => [item.name, item.value ?? ""])));
-}, [current.divisionId, current.districtId, current.upazilaId, params.q, params.category, params.sort, extraSelects]);
+}, [current.divisionId, current.districtId, current.upazilaId, params.q, params.category, extraSelects]);
 const districtChoices = useMemo(
 () => (divisionId ? districts.filter((item) => item.divisionId === divisionId) : districts),
 [districts, divisionId]
@@ -139,20 +135,13 @@ return (
         {extra.options.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
       </select>
     </label>)}
-    <label className="block min-w-0">
-      <span className="mb-1 block text-[11px] font-semibold text-slate-600">Sort</span>
-      <select name="sort" aria-label="Sort" value={sortValue} onChange={(event) => { setSortValue(event.target.value); submit({ sort: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        {sortOptions.includes("relevance") && <option value="relevance">By relevance</option>}
-        {sortOptions.includes("name") && <option value="name">By name</option>}
-        {sortOptions.includes("newest") && <option value="newest">Newest first</option>}
-        {sortOptions.includes("rating") && <option value="rating">By highest rating</option>}
-      </select>
-    </label>
   </div>
   {hidden.map(([key, value]) => <input key={key} type="hidden" name={key} value={value} />)}
-  <button type="submit" className="mt-2 inline-flex min-h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-brand-700 px-3 py-1.5 text-[11px] font-semibold sm:mt-4 sm:min-h-10 sm:gap-2 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-xs text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
+  <div className="mt-3 flex justify-end sm:mt-4">
+  <button type="submit" className="inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-brand-700 px-4 py-2 text-[11px] font-semibold sm:min-h-10 sm:w-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-xs text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
     <Icon name="filter" className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Apply Filters
   </button>
+  </div>
 </form>
 ); }
 
