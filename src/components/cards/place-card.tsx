@@ -8,7 +8,7 @@ return PLACE_CATEGORIES.find((c) => c.value === category)?.label ?? category; }
 export function PlaceCard({ place, locationLabel }: { place: Place; locationLabel?: string }) {
   const placeSlug = (place.slug && place.slug.trim()) ? place.slug.trim() : `place-${place.id.slice(0, 8)}`;
 return (
-<Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg focus-within:border-brand-300 focus-within:shadow-lg">
+<Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg focus-within:border-emerald-300 focus-within:shadow-lg">
 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
 <RecordImage
 src={place.image}
@@ -17,7 +17,7 @@ fill
 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
 />
-<div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/55 to-transparent" />
+<div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 <div className="absolute left-3 top-3">
 <Badge tone="brand">{place.categoryName ?? placeCategoryLabelBn(place.category)}</Badge>
 </div>
@@ -28,7 +28,7 @@ className="object-cover transition-transform duration-500 ease-out group-hover:s
 )}
 </div>
 <div className="flex flex-1 flex-col p-4">
-<h3 className="text-base font-semibold text-slate-900 group-hover:text-brand-700">
+<h3 className="text-base font-semibold text-slate-900 group-hover:text-emerald-700">
 <Link href={`/places/${placeSlug}`}>{place.name}</Link>
 </h3>
 {locationLabel && (
@@ -46,7 +46,7 @@ className="object-cover transition-transform duration-500 ease-out group-hover:s
 </span>
 <Link
 href={`/places/${placeSlug}`}
-className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-brand-500 hover:text-brand-700"
+className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-emerald-500 hover:text-emerald-700"
 >
 View place
 </Link>
