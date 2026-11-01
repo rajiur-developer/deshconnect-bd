@@ -9,14 +9,14 @@ const href = institution.category === "hospital" || institution.category === "he
 : `/institutions/${institution.slug}`;
 return (
 <Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg focus-within:border-brand-300 focus-within:shadow-lg">
-<div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
-<RecordImage
+<div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-100">
+{institution.image?.trim() ? <RecordImage
 src={institution.image}
 alt={institution.name}
 fill
 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-/>
+/> : <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-emerald-50 via-white to-slate-100"><div className="text-center"><span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-white text-3xl shadow-sm ring-1 ring-slate-200">{institution.category === "hospital" || institution.category === "health-centre" ? "🏥" : "🎓"}</span><span className="mt-2 block text-xs font-semibold text-slate-500">{institution.category === "hospital" || institution.category === "health-centre" ? "Healthcare" : "Education"}</span></div></div>}
 <div className="absolute left-3 top-3">
 <Badge tone="info">{institutionCategoryLabel(institution.category, institution.categoryName)}</Badge>
 </div>
