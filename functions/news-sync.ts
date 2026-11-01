@@ -1,4 +1,4 @@
-import { createAdminClient } from "npm:@insforge/sdk";
+import { createClient } from "npm:@insforge/sdk";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,7 +38,7 @@ export default async function (request: Request): Promise<Response> {
     return Response.json({ error: "News sync is not configured. Set GNEWS_API_KEY and backend credentials." }, { status: 500, headers: corsHeaders });
   }
 
-  const admin = createAdminClient({ baseUrl, apiKey });
+  const admin = createClient({ baseUrl, anonKey: apiKey });
   const now = new Date();
   let inserted = 0;
   let requestsCreated = 0;
