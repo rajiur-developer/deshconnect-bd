@@ -32,7 +32,7 @@ export default async function HospitalsPage({ searchParams }: { searchParams: Pr
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <div className="mb-3 flex items-center gap-2"><Icon name="filter" className="h-4 w-4 text-brand-700" /><h2 className="text-sm font-bold text-slate-900">Find a facility</h2></div>
-          <DirectoryFilters action="/hospitals" params={params} divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} sortOptions={["relevance", "name", "newest"]} current={{ divisionId, districtId, upazilaId }} />
+          <DirectoryFilters action="/hospitals" params={params} divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} current={{ divisionId, districtId, upazilaId }} />
         </div>
         <div className="mt-8 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">Directory results</p><h2 className="mt-1 text-xl font-bold text-slate-950">Available hospitals</h2></div><p className="text-sm text-slate-500">{meta.total.toLocaleString()} records found</p></div>
         {items.length ? <ListGrid className="mt-5">{items.map((institution) => <InstitutionCard key={institution.id} institution={institution} />)}</ListGrid> : <div className="mt-5"><EmptyState title="No hospitals match your filters" icon={<Icon name="heart" className="h-10 w-10" />} /></div>}
