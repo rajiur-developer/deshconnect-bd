@@ -67,7 +67,7 @@ export default function HomePage() {
         <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/65 to-slate-900/55" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20" />
-        <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
+        <div className="container-x relative flex min-h-[450px] items-center justify-center py-10 text-center sm:min-h-[520px] sm:py-14 lg:min-h-[570px] lg:py-20">
           <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
             <div className="flex justify-center">
               <Badge tone="accent" className="bg-white/10 text-white ring-white/20">
