@@ -178,7 +178,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
           </button>
 
           {dropdownOpen && (
-            <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-72 overflow-y-auto rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-2xl shadow-slate-950/20">
+            <div className="absolute left-0 top-full z-[9999] mt-1 w-full max-h-72 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-2xl shadow-slate-950/20">
               <button
                 type="button"
                 onClick={detectLocation}
