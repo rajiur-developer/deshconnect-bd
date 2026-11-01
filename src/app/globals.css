@@ -1680,3 +1680,119 @@ main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active 
 @media (max-width: 767px) {
   .dc-analytics-audience-grid { grid-template-columns:minmax(0,1fr); }
 }
+
+
+/* Messaging workspace: viewport-safe split layout and fixed composer */
+.dc-messaging-shell {
+  height: clamp(30rem, calc(100dvh - 14rem), 54rem);
+  min-height: 0;
+  min-width: 0;
+  overscroll-behavior: contain;
+}
+.dc-chat-sidebar,
+.dc-chat-panel {
+  min-height: 0;
+  min-width: 0;
+}
+.dc-chat-panel {
+  display: flex;
+  flex-direction: column;
+}
+.dc-chat-header {
+  flex: 0 0 auto;
+}
+.dc-chat-transcript {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.dc-chat-composer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  flex: 0 0 auto;
+  border-top: 1px solid #e2e8f0;
+  background: rgb(255 255 255 / .92);
+  padding-bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dc-chat-composer form > div:last-of-type {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .45rem;
+}
+.dc-chat-composer form button:not([aria-label="Cancel voice recording"]) {
+  min-height: 44px;
+}
+.dc-chat-composer form input:not([type="file"]),
+.dc-chat-composer form textarea {
+  min-width: 0;
+  min-height: 44px;
+}
+.dc-chat-list-item,
+.dc-chat-header a,
+.dc-chat-header button {
+  min-height: 44px;
+}
+.dc-chat-sidebar-head input {
+  min-height: 44px;
+}
+@media (max-width: 767px) {
+  .dc-messaging-shell {
+    height: clamp(26rem, calc(100dvh - 12.5rem), 48rem);
+    min-height: 0;
+    border-radius: 1.15rem;
+  }
+  .dc-chat-sidebar {
+    border-right: 0;
+  }
+  .dc-chat-sidebar-head {
+    padding: .9rem;
+  }
+  .dc-chat-header {
+    min-height: 4rem;
+    gap: .55rem;
+    padding-inline: .75rem;
+  }
+  .dc-chat-header .dc-chat-eyebrow {
+    font-size: .55rem;
+    letter-spacing: .12em;
+  }
+  .dc-chat-transcript {
+    padding: .75rem;
+  }
+  .dc-chat-composer {
+    padding: .65rem;
+    padding-bottom: calc(.65rem + env(safe-area-inset-bottom, 0px));
+  }
+  .dc-chat-composer form > div:last-of-type {
+    gap: .25rem;
+  }
+  .dc-chat-composer form > div:last-of-type button {
+    min-width: 44px;
+  }
+  .mobile-conversation {
+    height: calc(100dvh - 4rem);
+    min-height: 0;
+    padding-bottom: 0;
+  }
+  .mobile-conversation .dc-chat-composer {
+    padding-bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (max-height: 700px) and (min-width: 768px) {
+  .dc-messaging-shell {
+    height: calc(100dvh - 11rem);
+    min-height: 25rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-chat-composer,
+  .dc-chat-list-item {
+    transition: none !important;
+  }
+}
