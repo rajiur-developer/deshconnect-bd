@@ -18,7 +18,7 @@ return (
 <div className="flex flex-wrap items-start justify-between gap-4">
 {variant === "messages" ? <div className="relative z-10 flex max-w-3xl items-center gap-4">
 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-800 text-white shadow-md shadow-brand-900/15"><Icon name="message" className="h-6 w-6" /></span>
-<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.10em] text-brand-700">Direct messages</p><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>{description && <p className="mt-1 text-slate-600">{description}</p>}</div>
+<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">Direct messages</p><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>{description && <p className="mt-1 text-slate-600">{description}</p>}</div>
 </div> : <div className="max-w-3xl"><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>{description && <p className="mt-2 text-slate-600">{description}</p>}</div>}
 {action && <div className="shrink-0">{action}</div>}
 </div>
