@@ -74,11 +74,11 @@ export default function HomePage() {
                 Bangladesh's information & community platform
               </Badge>
             </div>
-            <h1 className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-2xl font-bold leading-snug text-white sm:mt-5 sm:text-5xl sm:leading-tight lg:text-6xl">
               Discover your Bangladesh.
               <span className="block text-brand-300">Connect with your community.</span>
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-brand-50 sm:mt-5 sm:text-lg sm:leading-7">
               Find local places, institutions, public services, news and community support — all in one place.
             </p>
             <Suspense fallback={<HomeHeroSearchFallback />}>
