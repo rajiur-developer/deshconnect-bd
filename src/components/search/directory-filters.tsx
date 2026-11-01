@@ -23,7 +23,7 @@ return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 /**
 * Composable directory filter: keyword, Division → District → Upazila,
-* category and sort. The selects are dependent and the form submits itself
+* category and page-specific filters. The selects are dependent and the form submits itself
 * whenever a selection changes, without a full document reload.
 */ export function DirectoryFilters({
 action,
@@ -99,7 +99,7 @@ return (
     <input id="q" name="q" value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder="Search by name or keyword" aria-label="Search by name or keyword" className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2 sm:pl-9 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10" />
   </div>
 
-  <div className="grid grid-cols-2 gap-2 sm:gap-4">
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
     <label className="block min-w-0">
       <span className="mb-0.5 block text-[10px] font-semibold text-slate-600 sm:mb-1 sm:text-[11px]">{labels?.division ?? "Division"}</span>
       <select name="divisionId" aria-label="Division" value={divisionId} onChange={(event) => { setDivisionId(event.target.value); setDistrictId(""); setUpazilaId(""); submit({ divisionId: event.target.value, districtId: "", upazilaId: "" }); }} className="min-h-8 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-10 sm:rounded-xl sm:px-2.5 sm:text-xs outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
@@ -137,8 +137,8 @@ return (
     </label>)}
   </div>
   {hidden.map(([key, value]) => <input key={key} type="hidden" name={key} value={value} />)}
-  <div className="mt-3 flex justify-end sm:mt-4">
-  <button type="submit" className="inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-brand-700 px-4 py-2 text-[11px] font-semibold sm:min-h-10 sm:w-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-xs text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
+  <div className="mt-4">
+  <button type="submit" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
     <Icon name="filter" className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Apply Filters
   </button>
   </div>
@@ -205,7 +205,7 @@ export function PlacesDirectoryFilters({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <label className="block">
           <span className="mb-0.5 block text-[10px] font-semibold text-slate-600 sm:mb-1 sm:text-[11px]">Division</span>
           <select
@@ -270,10 +270,10 @@ export function PlacesDirectoryFilters({
         </label>
       </div>
 
-      <div className="mt-3 flex justify-end sm:mt-4">
+      <div className="mt-4">
         <button
           type="submit"
-          className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0 sm:w-auto sm:px-5"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0"
         >
           <Icon name="filter" className="h-4 w-4" />
           Apply Filters
