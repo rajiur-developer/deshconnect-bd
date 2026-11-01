@@ -65,8 +65,8 @@ export default function HomePage() {
     <>
       <section className="dc-home-hero gradient-hero relative z-20 isolate overflow-visible">
         <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/65 to-slate-900/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20" />
         <div className="container-x relative flex min-h-[570px] items-center justify-center py-14 text-center sm:py-16 lg:py-20">
           <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
             <div className="flex justify-center">
@@ -74,11 +74,11 @@ export default function HomePage() {
                 Bangladesh's information & community platform
               </Badge>
             </div>
-            <h1 className="mt-4 text-2xl font-bold leading-snug text-white sm:mt-5 sm:text-5xl sm:leading-tight lg:text-6xl">
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight leading-tight text-white sm:mt-5 sm:text-5xl sm:leading-tight lg:text-6xl">
               Discover your Bangladesh.
-              <span className="block text-brand-300">Connect with your community.</span>
+              <span className="block text-emerald-300">Connect with your community.</span>
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-brand-50 sm:mt-5 sm:text-lg sm:leading-7">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-slate-100 sm:mt-5 sm:text-lg sm:leading-7">
               Find local places, institutions, public services, news and community support — all in one place.
             </p>
             <Suspense fallback={<HomeHeroSearchFallback />}>
@@ -87,7 +87,7 @@ export default function HomePage() {
               </div>
             </Suspense>
             <div className="mt-3 flex flex-wrap justify-center gap-2 sm:mt-5 sm:gap-3">
-              <Link href="/places" className="rounded-lg bg-white px-3 py-1.5 text-[11px] font-bold text-brand-800 shadow-lg shadow-black/10 transition hover:bg-brand-50 sm:px-4 sm:py-2 sm:text-sm">
+              <Link href="/places" className="rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:bg-emerald-700 sm:px-4 sm:py-2 sm:text-sm">
                 Explore places <span aria-hidden="true">→</span>
               </Link>
               <Suspense fallback={null}>
