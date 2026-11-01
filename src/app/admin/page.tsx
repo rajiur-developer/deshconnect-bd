@@ -44,7 +44,7 @@ export default async function AdminDashboardPage() {
     insforgeSelectMany("institutions", { category: "in.(school,college,madrasah)", limit: "1" }).then((r) => r.count),
     insforgeSelectMany("hospitals", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("businesses", { limit: "1" }).then((r) => r.count),
-    insforgeSelectMany("reports", { status: "eq.open", limit: "1" }).then((r) => r.count),
+    insforgeSelectMany("reports", { status: "eq.open", limit: "1" }).then((r) => r.count).catch(() => null),
     insforgeSelectMany("blood_donors", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("blood_requests", { status: "eq.active", limit: "1" }).then((r) => r.count),
   ]);
@@ -62,7 +62,7 @@ export default async function AdminDashboardPage() {
     { label: "Businesses", value: businesses, href: "/admin/businesses", tone: "amber" },
     { label: "News articles", value: newsTotal, href: "/admin/news?view=all", tone: "blue" },
     { label: "Pending news", value: pendingNewsTotal, href: "/admin/news?view=requests", tone: pendingNewsTotal ? "amber" : "green" },
-    { label: "Open reports", value: reports, href: "/admin/reports", tone: reports ? "red" : "green" },
+    { label: "Open reports", value: reports ?? "—", href: "/admin/reports", tone: reports == null ? "blue" : reports ? "red" : "green" },
     { label: "Blood donors", value: donors, href: "/admin/blood-donors", tone: "red" },
     { label: "Active blood requests", value: requests, href: "/admin/blood-requests", tone: "violet" },
   ];
@@ -101,7 +101,7 @@ export default async function AdminDashboardPage() {
           <div><p className="text-xs text-brand-100/75">Users in admin list</p><p className="mt-1 text-xl font-bold">{users.length.toLocaleString()}</p></div>
           <div><p className="text-xs text-brand-100/75">Content records</p><p className="mt-1 text-xl font-bold">{(Number(places ?? 0) + Number(institutions ?? 0) + Number(hospitals ?? 0) + Number(businesses ?? 0) + Number(newsTotal ?? 0)).toLocaleString()}</p></div>
           <div><p className="text-xs text-brand-100/75">Pending news</p><p className="mt-1 text-xl font-bold">{Number(pendingNewsTotal ?? 0).toLocaleString()}</p></div>
-          <div><p className="text-xs text-brand-100/75">Open reports</p><p className="mt-1 text-xl font-bold">{Number(reports ?? 0).toLocaleString()}</p></div>
+          <div><p className="text-xs text-brand-100/75">Open reports</p><p className="mt-1 text-xl font-bold">{reports == null ? "—" : Number(reports).toLocaleString()}</p></div>
         </div>
       </section>
 
