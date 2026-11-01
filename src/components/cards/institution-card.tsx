@@ -8,7 +8,7 @@ const href = institution.category === "hospital" || institution.category === "he
 ? `/hospitals/${institution.slug}`
 : `/institutions/${institution.slug}`;
 return (
-<Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg focus-within:border-brand-300 focus-within:shadow-lg">
+<Card className="dc-content-card group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg focus-within:border-emerald-300 focus-within:shadow-lg">
 <div className="relative aspect-video overflow-hidden rounded-2xl bg-slate-100">
 {institution.image?.trim() ? <RecordImage
 src={institution.image}
@@ -22,7 +22,7 @@ className="object-cover transition-transform duration-500 ease-out group-hover:s
 </div>
 </div>
 <div className="flex flex-1 flex-col p-4">
-<h3 className="text-base font-semibold text-slate-900 group-hover:text-brand-700">
+<h3 className="text-base font-semibold text-slate-900 group-hover:text-emerald-700">
 <Link href={href}>{institution.name}</Link>
 </h3>
 {locationLabel && (
@@ -41,7 +41,7 @@ Emergency: {institution.emergencyPhone}
 <div className="mt-auto pt-4">
 <Link
 href={href}
-className="inline-flex items-center gap-1 text-sm font-medium text-brand-700 hover:text-brand-800"
+className="inline-flex items-center gap-1 text-sm font-medium text-emerald-700 hover:text-emerald-800"
 >
 View details
 <Icon name="arrow-right" className="h-4 w-4" />
