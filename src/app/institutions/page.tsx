@@ -38,7 +38,6 @@ districts={options.districts}
 upazilas={options.upazilas}
 categories={categories.map((category) => ({ value: category.value, label: category.name }))}
 showCategory
-sortOptions={["relevance", "name", "newest"]}
 current={{ divisionId, districtId, upazilaId }}
 />
 <p className="mt-6 text-sm text-slate-500">{meta.total} records found</p>
