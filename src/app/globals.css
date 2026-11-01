@@ -1694,10 +1694,7 @@ main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active 
   min-height: 0;
   min-width: 0;
 }
-.dc-chat-panel {
-  display: flex;
-  flex-direction: column;
-}
+.dc-chat-panel { min-height: 0; min-width: 0; }
 .dc-chat-header {
   flex: 0 0 auto;
 }
