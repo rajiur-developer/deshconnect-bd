@@ -150,7 +150,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
   return (
     <form
       action="/search"
-      className="mx-auto w-full rounded-2xl border border-white/20 bg-white/10 p-3 shadow-xl shadow-slate-950/10 backdrop-blur-md sm:p-4 md:rounded-3xl md:p-5"
+      className="mx-auto w-full rounded-2xl border border-white/20 bg-black/40 p-3 shadow-2xl shadow-slate-950/30 backdrop-blur-md sm:p-4 md:rounded-3xl md:p-5"
     >
       <div className="flex w-full flex-col gap-2 sm:gap-2.5 md:flex-row md:items-center">
         <div className="relative min-w-0 flex-1">
@@ -165,7 +165,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
           />
         </div>
 
-        <div ref={dropdownRef} className="relative w-full md:w-48 md:shrink-0">
+        <div ref={dropdownRef} className="relative z-50 w-full overflow-visible md:w-48 md:shrink-0">
           <button
             type="button"
             aria-haspopup="listbox"
