@@ -2,9 +2,9 @@ import Link from "next/link";
 import { RecordImage } from "@/components/ui/record-image";
 import type { Institution } from "@/types/content"; import { INSTITUTION_CATEGORIES } from "@/lib/constants"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 export function institutionCategoryLabel(category: string, categoryName?: string): string {
-return categoryName ?? INSTITUTION_CATEGORIES.find((item) => item.value === category)?.label ?? category; }
+return categoryName ?? (category === "diagnostic-centre" ? "Diagnostic Centre" : INSTITUTION_CATEGORIES.find((item) => item.value === category)?.label ?? category); }
 export function InstitutionCard({ institution, locationLabel }: { institution: Institution; locationLabel?: string }) {
-const href = institution.category === "hospital" || institution.category === "health-centre"
+const href = institution.category === "hospital" || institution.category === "health-centre" || institution.category === "diagnostic-centre"
 ? `/hospitals/${institution.slug}`
 : `/institutions/${institution.slug}`;
 return (
