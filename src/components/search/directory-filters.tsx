@@ -270,13 +270,15 @@ export function PlacesDirectoryFilters({
         </label>
       </div>
 
-      <button
-        type="submit"
-        className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0"
-      >
-        <Icon name="filter" className="h-4 w-4" />
-        Apply Filters
-      </button>
+      <div className="mt-3 flex justify-end sm:mt-4">
+        <button
+          type="submit"
+          className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0 sm:w-auto sm:px-5"
+        >
+          <Icon name="filter" className="h-4 w-4" />
+          Apply Filters
+        </button>
+      </div>
     </form>
   );
 }
