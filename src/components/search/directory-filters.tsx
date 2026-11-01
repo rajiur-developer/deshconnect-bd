@@ -89,131 +89,70 @@ const hidden = Object.entries(params)
 .filter(([key, value]) => !managedKeys.has(key) && value !== undefined)
 .map(([key, value]) => [key, Array.isArray(value) ? value[0]! : value] as const);
 return (
-<form ref={formRef} action={action} method="get" onSubmit={(event) => { event.preventDefault(); submit(); }} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-<div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-<Icon name={icon} className="h-4 w-4 text-brand-600" />
-{title}
-</div>
-<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-<div className="lg:col-span-2">
-<label htmlFor="q" className="sr-only">Search</label>
-<div className="relative">
-<Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-<input
-id="q"
-name="q"
-value={searchValue}
-onChange={(event) => setSearchValue(event.target.value)}
-placeholder="Search by name or keyword"
-className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm focus-ring"
-/>
-</div>
-</div>
-<select
-name="divisionId"
-aria-label="Division"
-value={divisionId}
-onChange={(event) => {
-setDivisionId(event.target.value);
-setDistrictId("");
-setUpazilaId("");
-submit({ divisionId: event.target.value, districtId: "", upazilaId: "" });
-}}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
->
-<option value="">{labels?.division ?? "All divisions"}</option>
-{divisions.map((item) => (
-<option key={item.id} value={item.id}>{item.name}</option>
-))}
-</select>
-<select
-name="districtId"
-aria-label="District"
-value={districtId}
-onChange={(event) => {
-setDistrictId(event.target.value);
-setUpazilaId("");
-submit({ districtId: event.target.value, upazilaId: "" });
-}}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring disabled:bg-slate-100"
->
-<option value="">{labels?.district ?? "All districts"}</option>
-{districtChoices.map((item) => (
-<option key={item.id} value={item.id}>{item.name}</option>
-))}
-</select>
-<select
-name="upazilaId"
-aria-label="Upazila"
-value={upazilaId}
-onChange={(event) => {
-setUpazilaId(event.target.value);
-submit({ upazilaId: event.target.value });
-}}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring disabled:bg-slate-100"
->
-<option value="">{labels?.upazila ?? "All upazilas"}</option>
-{upazilaChoices.map((item) => (
-<option key={item.id} value={item.id}>{item.name}</option>
-))}
-</select>
-{showCategory && categories && (
-<select
-name="category"
-aria-label="Category"
-value={categoryValue}
-onChange={(event) => { setCategoryValue(event.target.value); submit({ category: event.target.value }); }}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
->
-<option value="">All categories</option>
-{categories.map((item) => (
-<option key={item.value} value={item.value}>{item.label}</option>
-))}
-</select>
-)}
-{extraSelects?.map((extra) => (
-<select
-key={extra.name}
-name={extra.name}
-aria-label={extra.label}
-value={extraValues[extra.name] ?? ""}
-onChange={(event) => { setExtraValues((currentValues) => ({ ...currentValues, [extra.name]: event.target.value })); submit({ [extra.name]: event.target.value }); }}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
->
-<option value="">All {extra.label.toLowerCase()}</option>
-{extra.options.map((item) => (
-<option key={item.value} value={item.value}>{item.label}</option>
-))}
-</select>
-))}
-<select
-name="sort"
-aria-label="Sort"
-value={sortValue}
-onChange={(event) => { setSortValue(event.target.value); submit({ sort: event.target.value }); }}
-className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
->
-{sortOptions.includes("relevance") && <option value="relevance">By relevance</option>}
-{sortOptions.includes("name") && <option value="name">By name</option>}
-{sortOptions.includes("newest") && <option value="newest">Newest first</option>}
-{sortOptions.includes("rating") && <option value="rating">By highest rating</option>}
-</select>
-</div>
-{hidden.map(([key, value]) => (
-<input key={key} type="hidden" name={key} value={value} />
-))}
-<div className="mt-4 flex justify-end gap-2">
-<Link
-href={action}
-scroll={false}
-className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-ring"
->
-Clear filters
-</Link>
-<button type="submit" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 focus-ring">
-Apply filters
-</button>
-</div>
+<form ref={formRef} action={action} method="get" onSubmit={(event) => { event.preventDefault(); submit(); }} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_18px_50px_-24px_rgba(15,45,30,0.20)] sm:p-5">
+  <div className="mb-4 flex items-center justify-between gap-3">
+    <div className="flex items-center gap-2.5">
+      <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand-50 text-brand-700"><Icon name={icon} className="h-4 w-4" /></span>
+      <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+    </div>
+    <Link href={action} scroll={false} className="rounded-lg px-3 py-2 text-xs font-semibold text-brand-700 transition hover:bg-brand-50 focus-ring">Reset all</Link>
+  </div>
+
+  <div className="relative mb-3">
+    <Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+    <input id="q" name="q" value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder="Search by name or keyword" aria-label="Search by name or keyword" className="min-h-10 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10" />
+  </div>
+
+  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+    <label className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{labels?.division ?? "Division"}</span>
+      <select name="divisionId" aria-label="Division" value={divisionId} onChange={(event) => { setDivisionId(event.target.value); setDistrictId(""); setUpazilaId(""); submit({ divisionId: event.target.value, districtId: "", upazilaId: "" }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{labels?.division ?? "All divisions"}</option>
+        {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+      </select>
+    </label>
+    <label className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{labels?.district ?? "District"}</span>
+      <select name="districtId" aria-label="District" value={districtId} onChange={(event) => { setDistrictId(event.target.value); setUpazilaId(""); submit({ districtId: event.target.value, upazilaId: "" }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{labels?.district ?? "All districts"}</option>
+        {districtChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+      </select>
+    </label>
+    <label className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{labels?.upazila ?? "Upazila"}</span>
+      <select name="upazilaId" aria-label="Upazila" value={upazilaId} onChange={(event) => { setUpazilaId(event.target.value); submit({ upazilaId: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{labels?.upazila ?? "All upazilas"}</option>
+        {upazilaChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+      </select>
+    </label>
+    {showCategory && categories && <label className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">Category</span>
+      <select name="category" aria-label="Category" value={categoryValue} onChange={(event) => { setCategoryValue(event.target.value); submit({ category: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">All categories</option>
+        {categories.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+      </select>
+    </label>}
+    {extraSelects?.map((extra) => <label key={extra.name} className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{extra.label}</span>
+      <select name={extra.name} aria-label={extra.label} value={extraValues[extra.name] ?? ""} onChange={(event) => { setExtraValues((currentValues) => ({ ...currentValues, [extra.name]: event.target.value })); submit({ [extra.name]: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">All {extra.label.toLowerCase()}</option>
+        {extra.options.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+      </select>
+    </label>)}
+    <label className="block min-w-0">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">Sort</span>
+      <select name="sort" aria-label="Sort" value={sortValue} onChange={(event) => { setSortValue(event.target.value); submit({ sort: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        {sortOptions.includes("relevance") && <option value="relevance">By relevance</option>}
+        {sortOptions.includes("name") && <option value="name">By name</option>}
+        {sortOptions.includes("newest") && <option value="newest">Newest first</option>}
+        {sortOptions.includes("rating") && <option value="rating">By highest rating</option>}
+      </select>
+    </label>
+  </div>
+  {hidden.map(([key, value]) => <input key={key} type="hidden" name={key} value={value} />)}
+  <button type="submit" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
+    <Icon name="filter" className="h-4 w-4" /> Apply Filters
+  </button>
 </form>
 ); }
 
