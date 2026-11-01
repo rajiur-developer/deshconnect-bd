@@ -63,7 +63,7 @@ function HomeHeroSearchFallback() {
 export default function HomePage() {
   return (
     <>
-      <section className="dc-home-hero gradient-hero relative isolate overflow-hidden">
+      <section className="dc-home-hero gradient-hero relative z-20 isolate">
         <VideoBackground src="/images/banner/homePage.mp4" className="bg-brand-950" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-950/75 to-brand-900/65" />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-brand-950/20" />
