@@ -228,7 +228,6 @@ export function PlacesDirectoryFilters({
   categories,
   current,
 }: Pick<Props, "action" | "params" | "divisions" | "districts" | "upazilas" | "categories" | "current">) {
-  const formRef = useRef<HTMLFormElement>(null);
   const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
   const [districtId, setDistrictId] = useState(current.districtId ?? "");
   const [upazilaId, setUpazilaId] = useState(current.upazilaId ?? "");
@@ -245,7 +244,6 @@ export function PlacesDirectoryFilters({
 
   return (
     <form
-      ref={formRef}
       action={action}
       method="get"
       className="relative z-10 -mt-10 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_18px_50px_-24px_rgba(15,45,30,0.28)] sm:-mt-14 sm:p-6"
@@ -275,13 +273,13 @@ export function PlacesDirectoryFilters({
           onChange={(event) => setSearchValue(event.target.value)}
           placeholder="Search by name or keyword"
           aria-label="Search by name or keyword"
-          className="min-h-12 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+          className="min-h-10 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2.5 pl-10 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-semibold text-slate-600">Division</span>
+          <span className="mb-1 block text-[11px] font-semibold text-slate-600">Division</span>
           <select
             name="divisionId"
             aria-label="Division"
@@ -291,7 +289,7 @@ export function PlacesDirectoryFilters({
               setDistrictId("");
               setUpazilaId("");
             }}
-            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+            className="min-h-10 w-full rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           >
             <option value="">All divisions</option>
             {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
@@ -346,7 +344,7 @@ export function PlacesDirectoryFilters({
 
       <button
         type="submit"
-        className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0"
+        className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0"
       >
         <Icon name="filter" className="h-4 w-4" />
         Apply Filters
