@@ -161,7 +161,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
             onChange={(event) => setQ(event.target.value)}
             placeholder={placeholder || "Search places, hospitals, businesses and services…"}
             aria-label="Search DeshConnect"
-            className="h-9 w-full rounded-lg border border-white/40 bg-white/90 py-1.5 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-500 focus:border-white focus:bg-white focus:ring-2 focus:ring-white/30 sm:h-11 sm:rounded-xl sm:py-2 sm:pl-11 sm:text-sm"
+            className="h-9 w-full rounded-lg border border-white/40 bg-white/90 py-1.5 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 sm:h-11 sm:rounded-xl sm:py-2 sm:pl-11 sm:text-sm"
           />
         </div>
 
@@ -171,7 +171,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
             aria-haspopup="listbox"
             aria-expanded={dropdownOpen}
             onClick={() => setDropdownOpen((open) => !open)}
-            className="flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-white/40 bg-white/90 px-3 py-1.5 text-left text-xs text-slate-800 outline-none transition hover:bg-white focus:border-white focus:ring-2 focus:ring-white/30 sm:h-11 sm:rounded-xl sm:py-2 sm:text-sm"
+            className="flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-white/40 bg-white/90 px-3 py-1.5 text-left text-xs text-slate-800 outline-none transition hover:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 sm:h-11 sm:rounded-xl sm:py-2 sm:text-sm"
           >
             <span className="truncate">{selected?.name ?? "All divisions"}</span>
             <Icon name="chevron-down" className={`h-4 w-4 shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
@@ -182,7 +182,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
               <button
                 type="button"
                 onClick={detectLocation}
-                className="flex w-full items-center gap-2 rounded-lg bg-brand-50 px-3 py-2.5 text-xs font-semibold text-brand-800 transition hover:bg-brand-100 sm:text-sm"
+                className="flex w-full items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 sm:text-sm"
               >
                 <span aria-hidden="true">📍</span>
                 Detect My Location
@@ -203,7 +203,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
                   role="option"
                   aria-selected={divisionId === division.id}
                   onClick={() => chooseDivision(division)}
-                  className={`w-full rounded-lg px-3 py-2 text-left text-xs transition hover:bg-slate-50 sm:text-sm ${divisionId === division.id ? "bg-brand-50 font-semibold text-brand-800" : "text-slate-700"}`}
+                  className={`w-full rounded-lg px-3 py-2 text-left text-xs transition hover:bg-slate-50 sm:text-sm ${divisionId === division.id ? "bg-emerald-50 font-semibold text-emerald-800" : "text-slate-700"}`}
                 >
                   {division.name}
                 </button>
@@ -214,7 +214,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
 
         <button
           type="submit"
-          className="h-9 w-full rounded-lg bg-brand-600 px-5 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:h-11 sm:rounded-xl sm:py-2 sm:text-sm md:w-auto md:shrink-0"
+          className="h-9 w-full rounded-lg bg-emerald-600 px-5 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:h-11 sm:rounded-xl sm:py-2 sm:text-sm md:w-auto md:shrink-0"
         >
           Search
         </button>
