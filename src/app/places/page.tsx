@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { listPlaces } from "@/services/places"; import { listContentCategories } from "@/services/content-categories"; import { getDirectoryLocationOptions } from "@/services/locations"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { PlaceCard } from "@/components/cards/place-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
+import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { listPlaces } from "@/services/places"; import { listContentCategories } from "@/services/content-categories"; import { getDirectoryLocationOptions } from "@/services/locations"; import { PlacesDirectoryFilters } from "@/components/search/directory-filters"; import { PlaceCard } from "@/components/cards/place-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
 export const metadata: Metadata = { title: "Places to visit" };
 export default async function PlacesPage({
 searchParams, }: {
@@ -25,19 +25,19 @@ listContentCategories("place"),
 return (
 <>
 <PageBanner
-title="Places to visit"
-description="Browse places to visit across Bangladesh, filtered by division, district, and upazila."
-media="/images/banner/Travel.webp"
+  title="Places to visit"
+  description="Browse places to visit across Bangladesh, filtered by division, district, and upazila."
+  media="/images/banner/Travel.webp"
+  className="[&_.container-x]:!min-h-[34vh] [&_.container-x]:!py-12 sm:[&_.container-x]:!min-h-[42vh] sm:[&_.container-x]:!py-16"
 />
-<div className="container-x py-8">
-<DirectoryFilters
+<div className="container-x pb-8 pt-0">
+<PlacesDirectoryFilters
 action="/places"
 params={params}
 divisions={options.divisions}
 districts={options.districts}
 upazilas={options.upazilas}
 categories={categories.map((category) => ({ value: category.value, label: category.name }))}
-showCategory
 current={{ divisionId, districtId, upazilaId }}
 />
 <p className="mt-6 text-sm text-slate-500">
