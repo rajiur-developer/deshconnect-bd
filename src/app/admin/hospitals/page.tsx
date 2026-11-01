@@ -13,6 +13,7 @@ export const metadata = { title: "Hospitals" };
 const REQUIRED_HOSPITAL_CATEGORIES = [
   { value: "hospital", label: "Hospital" },
   { value: "health-centre", label: "Health centre" },
+  { value: "diagnostic-centre", label: "Diagnostic centre" },
 ];
 
 export default async function AdminHospitalsPage({
