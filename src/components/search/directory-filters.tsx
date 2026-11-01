@@ -216,3 +216,141 @@ Apply filters
 </div>
 </form>
 ); }
+
+
+/** Places directory filter card with explicit apply/reset actions. */
+export function PlacesDirectoryFilters({
+  action,
+  params,
+  divisions,
+  districts,
+  upazilas,
+  categories,
+  current,
+}: Pick<Props, "action" | "params" | "divisions" | "districts" | "upazilas" | "categories" | "current">) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
+  const [districtId, setDistrictId] = useState(current.districtId ?? "");
+  const [upazilaId, setUpazilaId] = useState(current.upazilaId ?? "");
+  const [searchValue, setSearchValue] = useState(paramValue(params.q));
+  const [categoryValue, setCategoryValue] = useState(paramValue(params.category));
+  const districtChoices = useMemo(
+    () => (divisionId ? districts.filter((item) => item.divisionId === divisionId) : districts),
+    [districts, divisionId]
+  );
+  const upazilaChoices = useMemo(
+    () => (districtId ? upazilas.filter((item) => item.districtId === districtId) : upazilas),
+    [upazilas, districtId]
+  );
+
+  return (
+    <form
+      ref={formRef}
+      action={action}
+      method="get"
+      className="relative z-10 -mt-10 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_18px_50px_-24px_rgba(15,45,30,0.28)] sm:-mt-14 sm:p-6"
+    >
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-brand-700">
+            <Icon name="filter" className="h-[18px] w-[18px]" />
+          </span>
+          <h2 className="text-base font-semibold text-slate-900">Filter</h2>
+        </div>
+        <Link
+          href={action}
+          scroll={false}
+          className="rounded-lg px-3 py-2 text-sm font-semibold text-brand-700 transition hover:bg-brand-50 hover:text-brand-800 focus-ring"
+        >
+          Reset all
+        </Link>
+      </div>
+
+      <div className="relative mb-4">
+        <Icon name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-slate-400" />
+        <input
+          id="q"
+          name="q"
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.target.value)}
+          placeholder="Search by name or keyword"
+          aria-label="Search by name or keyword"
+          className="min-h-12 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-semibold text-slate-600">Division</span>
+          <select
+            name="divisionId"
+            aria-label="Division"
+            value={divisionId}
+            onChange={(event) => {
+              setDivisionId(event.target.value);
+              setDistrictId("");
+              setUpazilaId("");
+            }}
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+          >
+            <option value="">All divisions</option>
+            {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-semibold text-slate-600">District</span>
+          <select
+            name="districtId"
+            aria-label="District"
+            value={districtId}
+            onChange={(event) => {
+              setDistrictId(event.target.value);
+              setUpazilaId("");
+            }}
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+          >
+            <option value="">All districts</option>
+            {districtChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-semibold text-slate-600">Upazila</span>
+          <select
+            name="upazilaId"
+            aria-label="Upazila"
+            value={upazilaId}
+            onChange={(event) => setUpazilaId(event.target.value)}
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+          >
+            <option value="">All upazilas</option>
+            {upazilaChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-semibold text-slate-600">Category</span>
+          <select
+            name="category"
+            aria-label="Category"
+            value={categoryValue}
+            onChange={(event) => setCategoryValue(event.target.value)}
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+          >
+            <option value="">All categories</option>
+            {(categories ?? []).map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/15 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:translate-y-0"
+      >
+        <Icon name="filter" className="h-4 w-4" />
+        Apply Filters
+      </button>
+    </form>
+  );
+}
