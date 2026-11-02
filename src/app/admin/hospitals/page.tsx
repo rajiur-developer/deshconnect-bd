@@ -29,9 +29,16 @@ export default async function AdminHospitalsPage({
     listContentCategories("hospital"),
   ]);
 
-  // Always include the category values used by the public Hospitals directory.
-  // Category configuration may be incomplete, but existing hospital records must
-  // still be visible and manageable in the admin panel.
+  // Do not filter by configured categories: imported hospital rows may use
+  // legacy labels such as "Private Hospital", "NGO Clinic" or "Diagnostic Center".
+  // Load the complete first admin page and expose every stored category in the editor.
+  const { items, meta } = await insforgeListAdminHospitals({
+    categories: [],
+    q: query,
+    page: parsePage(firstParam(params.page)),
+    pageSize: 100,
+  });
+
   const categoriesByValue = new Map(
     REQUIRED_HOSPITAL_CATEGORIES.map((category) => [category.value, category]),
   );
@@ -41,13 +48,15 @@ export default async function AdminHospitalsPage({
       label: category.name,
     });
   }
+  for (const record of items as Hospital[]) {
+    if (record.category && !categoriesByValue.has(record.category)) {
+      categoriesByValue.set(record.category, {
+        value: record.category,
+        label: record.category,
+      });
+    }
+  }
   const categories = Array.from(categoriesByValue.values());
-
-  const { items, meta } = await insforgeListAdminHospitals({
-    categories: categories.map((category) => category.value),
-    q: query,
-    page: parsePage(firstParam(params.page)),
-  });
 
   return (
     <InstitutionManager

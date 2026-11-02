@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Badge, Card } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,20 @@ type Props = {
   userId: string;
 };
 
+function RecordThumbnail({ src, alt }: { src?: string | null; alt: string }) {
+  return (
+    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+      {src ? (
+        <Image src={src} alt={alt} fill sizes="40px" unoptimized className="object-cover" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-400" aria-label="No image">
+          {alt.trim().charAt(0).toUpperCase() || "—"}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function InstitutionManager({
   title,
   description,
@@ -41,7 +56,11 @@ export function InstitutionManager({
   userId,
 }: Props) {
   const categoryValues = new Set(categories.map((category) => category.value));
-  const managedRecords = records.filter((record) => categoryValues.has(record.category));
+  // Imported hospital categories may not yet exist in content_categories.
+  // Keep every hospital row manageable instead of hiding it behind that filter.
+  const managedRecords = isHospital
+    ? records
+    : records.filter((record) => categoryValues.has(record.category));
 
   return (
     <>
@@ -96,18 +115,23 @@ export function InstitutionManager({
             {managedRecords.map((record) => (
               <tr key={record.id}>
                 <td className="px-4 py-3">
-                  <Link
-                    href={`${isHospital ? "/hospitals" : "/institutions"}/${record.slug}`}
-                    className="font-medium text-slate-900 hover:text-brand-700"
-                  >
-                    {record.name}
-                  </Link>
+                  <div className="flex min-w-[14rem] items-center gap-3">
+                    <RecordThumbnail src={record.image} alt={record.name} />
+                    <Link
+                      href={`${isHospital ? "/hospitals" : "/institutions"}/${record.slug}`}
+                      className="font-medium text-slate-900 hover:text-brand-700"
+                    >
+                      {record.name}
+                    </Link>
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-slate-600">
                   {categories.find((category) => category.value === record.category)?.label ?? record.category}
                 </td>
                 <td className="px-4 py-3">
-                  <Badge tone={record.status === "published" ? "success" : "neutral"}>{record.status}</Badge>
+                  <Badge tone={record.status === "published" ? "success" : "neutral"}>
+                    {record.status === "archived" ? "hidden" : record.status}
+                  </Badge>
                 </td>
                 <td className="px-4 py-3">
                   <Badge tone={record.verification === "verified" ? "success" : "neutral"}>{record.verification}</Badge>
