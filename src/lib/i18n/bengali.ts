@@ -81,7 +81,7 @@ const WORDS: Record<string, string> = {
   home: "হোম", about: "সম্পর্কে", contact: "যোগাযোগ", help: "সহায়তা",
   login: "লগইন", logout: "লগআউট", register: "নিবন্ধন", signup: "নিবন্ধন",
   account: "অ্যাকাউন্ট", create: "তৈরি", edit: "সম্পাদনা", delete: "মুছুন",
-  save: "সংরক্ষণ", cancel: "বাতিল", submit: "জমা", send: "পাঠান",
+  save: "সংরক্ষণ করুন", cancel: "বাতিল", submit: "জমা দিন", send: "পাঠান",
   search: "খুঁজুন", filter: "ফিল্টার", sort: "সাজান", view: "দেখুন",
   details: "বিস্তারিত", more: "আরও", less: "কম", all: "সব", latest: "সর্বশেষ",
   popular: "জনপ্রিয়", featured: "বিশেষ", new: "নতুন", update: "আপডেট",
@@ -99,24 +99,25 @@ const WORDS: Record<string, string> = {
   blood: "রক্ত", donation: "দান", donor: "রক্তদাতা", donors: "রক্তদাতারা",
   request: "অনুরোধ", requests: "অনুরোধসমূহ", education: "শিক্ষা", health: "স্বাস্থ্য",
   government: "সরকারি", explore: "অন্বেষণ", today: "আজ", yesterday: "গতকাল",
-  name: "নাম", first: "প্রথম", last: "শেষ", full: "পূর্ণ", your: "আপনার",
-  my: "আমার", welcome: "স্বাগতম", hello: "হ্যালো", continue: "চালিয়ে যান",
+  first: "প্রথম", last: "শেষ", full: "পূর্ণ", your: "আপনার", my: "আমার",
+  welcome: "স্বাগতম", hello: "হ্যালো", continue: "চালিয়ে যান",
   next: "পরবর্তী", previous: "পূর্ববর্তী", back: "ফিরে যান", close: "বন্ধ",
   open: "খুলুন", yes: "হ্যাঁ", no: "না", optional: "ঐচ্ছিক", required: "আবশ্যক",
   available: "উপলব্ধ", unavailable: "অনুপলব্ধ", active: "সক্রিয়", inactive: "নিষ্ক্রিয়",
-  total: "মোট", active: "সক্রিয়", read: "পড়ুন", unread: "অপঠিত",
-  result: "ফলাফল", results: "ফলাফল", page: "পৃষ্ঠা", pages: "পৃষ্ঠাসমূহ",
-  password: "পাসওয়ার্ড", confirm: "নিশ্চিত", verification: "যাচাইকরণ",
-  verify: "যাচাই", email: "ইমেইল", phone: "ফোন", mobile: "মোবাইল",
-  bangladesh: "বাংলাদেশ", district: "জেলা", division: "বিভাগ",
-  submit: "জমা দিন", save: "সংরক্ষণ করুন", cancel: "বাতিল",
+  total: "মোট", read: "পড়ুন", unread: "অপঠিত", result: "ফলাফল", results: "ফলাফল",
+  page: "পৃষ্ঠা", pages: "পৃষ্ঠাসমূহ", confirm: "নিশ্চিত", verification: "যাচাইকরণ",
+  verify: "যাচাই", mobile: "মোবাইল", bangladesh: "বাংলাদেশ", district: "জেলা",
+  division: "বিভাগ", name: "নাম",
 };
 const TOKEN_PATTERN = /[A-Za-z]+(?:['’][A-Za-z]+)?/g;
 const PHRASE_ENTRIES = Object.entries(PHRASES).sort(([a], [b]) => b.length - a.length);
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** Translate common interface copy locally; unknown words remain unchanged. */
 export function translateToBengali(value: string): string {
   let translated = value;
   for (const [phrase, replacement] of PHRASE_ENTRIES) {
-    translated = translated.replace(new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), replacement);
+    translated = translated.replace(new RegExp(escapeRegExp(phrase), "gi"), replacement);
   }
   return translated.replace(TOKEN_PATTERN, (word) => WORDS[word.toLowerCase()] ?? word);
 }
