@@ -12,7 +12,8 @@ type LanguageContextValue = {
 type OriginalAttribute = { original: string; lastApplied: string };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const EXCLUDED = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,CODE,PRE,SVG,[translate='no'],[data-no-translate],[contenteditable='true']";
+const TEXT_EXCLUDED = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,CODE,PRE,SVG,[translate='no'],[data-no-translate],[contenteditable='true']";
+const ATTRIBUTE_EXCLUDED = "SCRIPT,STYLE,NOSCRIPT,SVG,[translate='no'],[data-no-translate],[contenteditable='true']";
 const ATTRIBUTES = ["aria-label", "placeholder", "title", "alt"] as const;
 
 export function LanguageProvider({
@@ -45,7 +46,7 @@ export function LanguageProvider({
       let current = walker.nextNode();
       while (current) {
         const text = current as Text;
-        if (!text.parentElement?.closest(EXCLUDED)) {
+        if (!text.parentElement?.closest(TEXT_EXCLUDED)) {
           let original = textOriginals.current.get(text);
           const lastApplied = textLastApplied.current.get(text);
           if (original === undefined) {
@@ -64,7 +65,7 @@ export function LanguageProvider({
       }
 
       for (const element of document.body.querySelectorAll("*")) {
-        if (element.closest(EXCLUDED)) continue;
+        if (element.closest(ATTRIBUTE_EXCLUDED)) continue;
         for (const name of ATTRIBUTES) {
           const value = element.getAttribute(name);
           if (value === null) continue;
