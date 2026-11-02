@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { PublicUser } from "@/types/auth";
 import { isNavGroup, isNavPathActive, PRIMARY_NAV } from "@/config/site";
 import { Icon } from "@/components/ui/icons";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } from "@/components/messaging/message-realtime-notifications";
 import { UserMenu } from "@/components/layout/user-menu";
 
@@ -21,132 +22,167 @@ export function MobileNav({
   unreadMessages?: number;
   initialUnreadMessages?: UnreadConversation[];
 }) {
-  const [open, setOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
   const routeReady = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const pathname = usePathname();
   const unreadTotal = useUnreadMessageTotal(initialUnreadMessages);
 
-  useEffect(() => setOpen(false), [pathname]);
+  const moreItems = useMemo(
+    () =>
+      PRIMARY_NAV.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry])).filter(
+        (item) =>
+          !["/", "/places", "/community", "/messages", "/profile"].includes(item.href),
+      ),
+    [],
+  );
+  const moreActive = routeReady && moreItems.some((item) => isNavPathActive(pathname, item.href));
+
+  useEffect(() => setMoreOpen(false), [pathname]);
 
   return (
-    <div className="flex items-center gap-2 lg:hidden">
-      <Link
-        href="/blood-donation"
-        aria-label="Blood Donation"
-        aria-current={routeReady && isNavPathActive(pathname, "/blood-donation") ? "page" : undefined}
-        title="Blood Donation"
-        className={`grid h-10 w-10 place-items-center rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 ${routeReady && isNavPathActive(pathname, "/blood-donation") ? "bg-rose-50" : "bg-white"}`}
-      >
-        <Icon name="droplet" className="h-5 w-5" />
-      </Link>
-      <Link
-        href="/messages"
-        aria-label={`Messages${unreadTotal > 0 ? `, ${unreadTotal} unread` : ""}`}
-        aria-current={routeReady && isNavPathActive(pathname, "/messages") ? "page" : undefined}
-        title="Messages"
-        className={`relative grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 ${routeReady && isNavPathActive(pathname, "/messages") ? "bg-slate-100" : "bg-white"}`}
-      >
-        <Icon name="message" className="h-5 w-5" />
-        {unreadTotal > 0 && (
-          <span className="absolute -right-1 -top-1">
-            <UnreadMessageBadge count={unreadTotal} />
-          </span>
-        )}
-      </Link>
-      {user && <UserMenu user={user} unread={unread} />}
-      <button
-        type="button"
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        aria-label="Show or hide navigation"
-        className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700"
-      >
-        <Icon name={open ? "close" : "menu"} className="h-5 w-5" />
-      </button>
-      {open && (
-        <div className="dc-mobile-menu absolute inset-x-0 top-16 z-40 border-b border-slate-200 bg-white shadow-lg">
-          <nav className="container-x flex flex-col gap-1 py-4">
-            {PRIMARY_NAV.filter((entry) => isNavGroup(entry) || (entry.href !== "/blood-donation" && entry.href !== "/messages")).map((entry) => {
-              if (isNavGroup(entry)) {
-                const isExpanded = openGroup === entry.label;
-                const isGroupActive = routeReady && entry.items.some((item) => isNavPathActive(pathname, item.href));
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200/90 bg-white/95 px-1 pt-2 shadow-[0_-8px_28px_-22px_rgba(15,61,46,.45)] backdrop-blur-xl lg:hidden"
+      style={{ paddingBottom: "max(.5rem, env(safe-area-inset-bottom))" }}
+    >
+      <div className="mx-auto grid max-w-xl grid-cols-6 items-center gap-0.5">
+        <MobileNavLink href="/" label="Home" icon="home" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink href="/places" label="Explore" icon="mountain" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink href="/community" label="Community" icon="users" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink
+          href="/messages"
+          label="Messages"
+          icon="message"
+          pathname={pathname}
+          routeReady={routeReady}
+          badge={unreadTotal}
+        />
+        <Link
+          href={user ? "/profile" : "/login"}
+          aria-label="Profile"
+          aria-current={routeReady && (isNavPathActive(pathname, "/profile") || (!user && isNavPathActive(pathname, "/login"))) ? "page" : undefined}
+          className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${routeReady && (isNavPathActive(pathname, "/profile") || (!user && isNavPathActive(pathname, "/login"))) ? "text-brand-700" : "text-slate-500 hover:text-brand-700"}`}
+        >
+          {user ? (
+            <ProfileAvatar name={user.fullName} src={user.avatar} storageKey={user.avatarKey} className="h-6 w-6 text-[9px]" textClassName="text-[9px]" />
+          ) : (
+            <Icon name="users" className="h-6 w-6" />
+          )}
+          <span className="max-w-full truncate">Profile</span>
+        </Link>
+        <button
+          type="button"
+          onClick={() => setMoreOpen((value) => !value)}
+          aria-expanded={moreOpen}
+          aria-controls="dc-mobile-more-menu"
+          aria-label="More navigation options"
+          className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${moreOpen || moreActive ? "text-brand-700" : "text-slate-500 hover:text-brand-700"}`}
+        >
+          <Icon name={moreOpen ? "close" : "menu"} className="h-6 w-6" />
+          <span>More</span>
+        </button>
+      </div>
+
+      {moreOpen && (
+        <>
+          <button
+            type="button"
+            aria-label="Close more navigation"
+            className="fixed inset-0 -z-10 bg-slate-950/20"
+            onClick={() => setMoreOpen(false)}
+          />
+          <div
+            id="dc-mobile-more-menu"
+            className="absolute inset-x-3 bottom-[calc(100%+0.6rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-[0_18px_50px_-18px_rgba(15,45,30,.35)]"
+          >
+            <div className="mb-2 flex items-center justify-between px-1">
+              <p className="text-sm font-bold text-slate-800">More from DeshConnect</p>
+              {user && <UserMenu user={user} unread={unread} />}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {moreItems.map((item) => {
+                const active = routeReady && isNavPathActive(pathname, item.href);
                 return (
-                  <div key={entry.label}>
-                    <button
-                      type="button"
-                      onClick={() => setOpenGroup((current) => current === entry.label ? null : entry.label)}
-                      aria-expanded={isExpanded}
-                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide ${isGroupActive ? "bg-brand-50 text-brand-700" : "text-slate-400 hover:bg-slate-50"}`}
-                    >
-                      {entry.label}
-                      <Icon
-                        name="chevron-down"
-                        aria-hidden="true"
-                        className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                      />
-                    </button>
-                    {isExpanded && (
-                      <div className="mt-1 flex flex-col gap-1">
-                        {entry.items.map((item) => {
-                          const isActive = routeReady && isNavPathActive(pathname, item.href);
-                          return (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              aria-current={isActive ? "page" : undefined}
-                              className={`rounded-lg py-2 pl-6 pr-3 text-sm font-medium ${isActive ? "bg-brand-50 text-brand-700" : "text-slate-700 hover:bg-slate-100"}`}
-                            >
-                              {item.label}
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`rounded-xl border px-3 py-3 text-sm font-medium transition-colors ${active ? "border-brand-200 bg-brand-50 text-brand-800" : "border-slate-100 bg-slate-50 text-slate-700 hover:border-brand-100 hover:bg-brand-50"}`}
+                  >
+                    {item.label}
+                  </Link>
                 );
-              }
-
-              const isActive = routeReady && isNavPathActive(pathname, entry.href);
-              const itemClass = `text-slate-700 hover:bg-slate-100${isActive ? " bg-slate-100 text-slate-900" : ""}`;
-
-              return (
-                <Link
-                  key={entry.href}
-                  href={entry.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold ${itemClass}`}
-                >
-                  {entry.label}
-                </Link>
-              );
-            })}
-            <form action="/search" className="mt-2 px-3">
-              <input
-                name="q"
-                placeholder="Search DeshConnect"
-                className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm"
-              />
+              })}
+            </div>
+            <form action="/search" className="mt-3">
+              <label className="sr-only" htmlFor="dc-mobile-search">Search DeshConnect</label>
+              <div className="flex gap-2">
+                <input
+                  id="dc-mobile-search"
+                  name="q"
+                  placeholder="Search DeshConnect"
+                  className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                />
+                <button type="submit" className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white">
+                  Search
+                </button>
+              </div>
             </form>
-            <div className="mt-2 flex gap-2 px-3">
+            <div className="mt-3 flex gap-2 border-t border-slate-100 pt-3">
               {user ? (
-                <Link href="/dashboard" className="flex-1 rounded-lg bg-brand-600 px-3 py-2 text-center text-sm font-medium text-white">
+                <Link href="/dashboard" className="flex-1 rounded-xl bg-brand-600 px-3 py-2.5 text-center text-sm font-semibold text-white">
                   Dashboard
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="flex-1 rounded-lg bg-brand-600 px-3 py-2 text-center text-sm font-medium text-white">
+                  <Link href="/login" className="flex-1 rounded-xl bg-brand-600 px-3 py-2.5 text-center text-sm font-semibold text-white">
                     Login
                   </Link>
-                  <Link href="/register" className="flex-1 rounded-lg border border-brand-200 px-3 py-2 text-center text-sm font-medium text-brand-700">
+                  <Link href="/register" className="flex-1 rounded-xl border border-brand-200 px-3 py-2.5 text-center text-sm font-semibold text-brand-700">
                     Create account
                   </Link>
                 </>
               )}
             </div>
-          </nav>
-        </div>
+          </div>
+        </>
       )}
-    </div>
+    </nav>
+  );
+}
+
+function MobileNavLink({
+  href,
+  label,
+  icon,
+  pathname,
+  routeReady,
+  badge = 0,
+}: {
+  href: string;
+  label: string;
+  icon: "home" | "mountain" | "users" | "message";
+  pathname: string;
+  routeReady: boolean;
+  badge?: number;
+}) {
+  const active = routeReady && isNavPathActive(pathname, href);
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
+      className={`relative flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${active ? "bg-brand-50 text-brand-700" : "text-slate-500 hover:bg-slate-50 hover:text-brand-700"}`}
+    >
+      <span className="relative">
+        <Icon name={icon} className="h-6 w-6" />
+        {badge > 0 && (
+          <span className="absolute -right-2 -top-1">
+            <UnreadMessageBadge count={badge} />
+          </span>
+        )}
+      </span>
+      <span className="max-w-full truncate">{label}</span>
+    </Link>
   );
 }
