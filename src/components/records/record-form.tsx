@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import { createRecordAction, type RecordFormState } from "@/features/records/actions";
 import { RECORD_ATTACHMENT_BUCKET, RECORD_ATTACHMENT_MAX_BYTES, RECORD_ATTACHMENT_TYPES } from "@/features/records/constants";
 import { Button } from "@/components/ui/button";
@@ -61,8 +62,10 @@ export function RecordForm({ userId }: { userId: string }) {
     setUploading(true);
     try {
       const client = getInsForgeBrowserClient();
-      const key = `${userId}/${crypto.randomUUID()}-${safeFilename(file.name)}`;
-      const { data, error } = await client.storage.from(RECORD_ATTACHMENT_BUCKET).upload(key, file);
+      const optimizedImage = await optimizeImageForUpload(file);
+      const optimizedFile = new File([optimizedImage], `attachment.${optimizedImage.type === "image/webp" ? "webp" : "jpg"}`, { type: optimizedImage.type });
+      const key = `${userId}/${crypto.randomUUID()}-${safeFilename(optimizedFile.name)}`;
+      const { data, error } = await client.storage.from(RECORD_ATTACHMENT_BUCKET).upload(key, optimizedFile);
       if (error || !data?.url || !data?.key) {
         setUploadError("File upload failed. Please try again.");
         return;
@@ -71,8 +74,8 @@ export function RecordForm({ userId }: { userId: string }) {
       if (urlRef.current) urlRef.current.value = data.url;
       if (keyRef.current) keyRef.current.value = data.key;
       if (nameRef.current) nameRef.current.value = file.name.slice(0, 180);
-      if (mimeRef.current) mimeRef.current.value = file.type;
-      if (sizeRef.current) sizeRef.current.value = String(file.size);
+      if (mimeRef.current) mimeRef.current.value = optimizedFile.type;
+      if (sizeRef.current) sizeRef.current.value = String(optimizedFile.size);
       if (fileInputRef.current) fileInputRef.current.value = "";
 
       submitAfterUpload.current = true;
