@@ -57,7 +57,7 @@ export function MobileNav({
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-2 bottom-2 z-[60] lg:hidden"
+      className="fixed inset-x-2 top-[10px] z-[60] lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="relative mx-auto max-w-2xl rounded-[1.5rem] border border-white/80 bg-white/88 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.34),0_3px_12px_-4px_rgba(15,23,42,.14)] backdrop-blur-2xl ring-1 ring-slate-900/[0.03]">
