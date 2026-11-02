@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { translateToBengali } from "@/lib/i18n/bengali";
+import { translateToLocale } from "@/lib/i18n/bengali";
 
 type Locale = "en" | "bn";
 type LanguageContextValue = {
@@ -9,6 +9,7 @@ type LanguageContextValue = {
   enabled: boolean;
   setLocale: (locale: Locale) => void;
 };
+type OriginalAttribute = { original: string; lastApplied: string };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 const EXCLUDED = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,CODE,PRE,SVG,[translate='no'],[data-no-translate],[contenteditable='true']";
@@ -25,8 +26,10 @@ export function LanguageProvider({
 }) {
   const [locale, setLocaleState] = useState<Locale>(enabled ? initialLocale : "en");
   const textOriginals = useRef(new WeakMap<Text, string>());
-  const attributeOriginals = useRef(new WeakMap<Element, Map<string, string>>());
+  const textLastApplied = useRef(new WeakMap<Text, string>());
+  const attributeOriginals = useRef(new WeakMap<Element, Map<string, OriginalAttribute>>());
   const titleOriginal = useRef<string | null>(null);
+  const titleLastApplied = useRef<string | null>(null);
 
   const setLocale = useCallback((nextLocale: Locale) => {
     if (!enabled) return;
@@ -36,23 +39,7 @@ export function LanguageProvider({
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    if (locale === "en") {
-      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      let node = walker.nextNode();
-      while (node) {
-        const original = textOriginals.current.get(node as Text);
-        if (original !== undefined) (node as Text).data = original;
-        node = walker.nextNode();
-      }
-      for (const element of document.body.querySelectorAll("*")) {
-        const originals = attributeOriginals.current.get(element);
-        originals?.forEach((value, name) => element.setAttribute(name, value));
-      }
-      if (titleOriginal.current !== null) document.title = titleOriginal.current;
-      return;
-    }
 
-    let timer: ReturnType<typeof setTimeout> | undefined;
     const translatePage = () => {
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let current = walker.nextNode();
@@ -60,16 +47,18 @@ export function LanguageProvider({
         const text = current as Text;
         if (!text.parentElement?.closest(EXCLUDED)) {
           let original = textOriginals.current.get(text);
+          const lastApplied = textLastApplied.current.get(text);
           if (original === undefined) {
             original = text.data;
             textOriginals.current.set(text, original);
-          } else if (text.data !== translateToBengali(original) && text.data !== original) {
+          } else if (lastApplied !== undefined && text.data !== lastApplied) {
             original = text.data;
             textOriginals.current.set(text, original);
           }
-          if (original.trim() && /[A-Za-z]/.test(original)) {
-            text.data = translateToBengali(original);
-          }
+
+          const translated = translateToLocale(original, locale);
+          if (text.data !== translated) text.data = translated;
+          textLastApplied.current.set(text, translated);
         }
         current = walker.nextNode();
       }
@@ -81,27 +70,33 @@ export function LanguageProvider({
           if (value === null) continue;
           let originals = attributeOriginals.current.get(element);
           if (!originals) {
-            originals = new Map();
+            originals = new Map<string, OriginalAttribute>();
             attributeOriginals.current.set(element, originals);
           }
-          let original = originals.get(name);
-          if (original === undefined) {
-            original = value;
-            originals.set(name, original);
-          } else if (value !== translateToBengali(original) && value !== original) {
-            original = value;
-            originals.set(name, original);
+          let record = originals.get(name);
+          if (!record) {
+            record = { original: value, lastApplied: value };
+            originals.set(name, record);
+          } else if (value !== record.lastApplied) {
+            record = { original: value, lastApplied: value };
+            originals.set(name, record);
           }
-          if (original.trim() && /[A-Za-z]/.test(original)) {
-            element.setAttribute(name, translateToBengali(original));
-          }
+          const translated = translateToLocale(record.original, locale);
+          if (value !== translated) element.setAttribute(name, translated);
+          record.lastApplied = translated;
         }
       }
 
       if (titleOriginal.current === null) titleOriginal.current = document.title;
-      document.title = translateToBengali(titleOriginal.current);
+      else if (titleLastApplied.current !== null && document.title !== titleLastApplied.current) {
+        titleOriginal.current = document.title;
+      }
+      const translatedTitle = translateToLocale(titleOriginal.current, locale);
+      if (document.title !== translatedTitle) document.title = translatedTitle;
+      titleLastApplied.current = translatedTitle;
     };
 
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = new MutationObserver(() => {
       clearTimeout(timer);
       timer = setTimeout(translatePage, 100);
