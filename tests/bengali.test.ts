@@ -5,16 +5,21 @@ describe("manual bidirectional translation", () => {
   it("translates common interface phrases to Bengali", () => {
     expect(translateToBengali("Blood Donation")).toBe("রক্তদান");
     expect(translateToBengali("Search")).toBe("খুঁজুন");
-    expect(translateToBengali("Admin workspace")).toBe("অ্যাডমিন কর্মক্ষেত্র");
-    expect(translateToBengali("Search admin pages...")).toBe("অ্যাডমিন পেজ খুঁজুন...");
-    expect(translateToBengali("Reset all")).toBe("সব রিসেট করুন");
+    expect(translateToBengali("Admin workspace")).toBe("প্রশাসনিক কর্মক্ষেত্র");
+    expect(translateToBengali("Search admin pages...")).toBe("প্রশাসনিক পৃষ্ঠা খুঁজুন...");
+    expect(translateToBengali("Reset all")).toBe("সব নতুন করে সাজান");
+    expect(translateToBengali("Welcome back")).toBe("আবারও স্বাগতম");
+    expect(translateToBengali("No notifications yet")).toBe("এখনো কোনো বিজ্ঞপ্তি নেই");
+    expect(translateToBengali("Unique visitors")).toBe("স্বতন্ত্র দর্শনার্থী");
   });
 
   it("translates known Bengali interface phrases back to English", () => {
     expect(translateToEnglish("রক্তদান")).toBe("Blood Donation");
     expect(translateToEnglish("খুঁজুন")).toBe("Search");
-    expect(translateToEnglish("অ্যাডমিন কর্মক্ষেত্র")).toBe("Admin workspace");
-    expect(translateToEnglish("সব রিসেট করুন")).toBe("Reset all");
+    expect(translateToEnglish("প্রশাসনিক কর্মক্ষেত্র")).toBe("Admin workspace");
+    expect(translateToEnglish("সব নতুন করে সাজান")).toBe("Reset all");
+    expect(translateToEnglish("আবারও স্বাগতম")).toBe("Welcome back");
+    expect(translateToEnglish("এখনো কোনো বিজ্ঞপ্তি নেই")).toBe("No notifications yet");
   });
 
   it("leaves unknown words unchanged rather than guessing", () => {

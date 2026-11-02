@@ -161,6 +161,7 @@ const mine = message.senderId === viewerId;
 return (
 <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
 <p
+data-no-translate
 className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 text-sm ${                   mine ? "bg-brand-600 text-white" : "bg-slate-100 text-slate-800"                 }`}
 >
 {message.body}
