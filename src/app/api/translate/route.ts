@@ -2,21 +2,65 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-function decodeGoogleText(value: string): string {
-  return value
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&#([0-9]+);/g, (_match, code: string) => String.fromCodePoint(Number(code)))
-    .replace(/&#x([0-9a-f]+);/gi, (_match, code: string) => String.fromCodePoint(Number.parseInt(code, 16)));
+type Locale = "en" | "bn";
+
+function getTranslationEndpoint(): URL | null {
+  const configuredUrl = process.env.LIBRETRANSLATE_URL?.trim();
+  if (!configuredUrl) return null;
+
+  try {
+    const url = new URL(configuredUrl);
+    const isLocal = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    if (url.protocol !== "https:" && !(isLocal && url.protocol === "http:")) return null;
+    url.pathname = `${url.pathname.replace(/\\/+$/, "")}/translate`.replace(/^\\/\\/translate$/, "/translate");
+    url.search = "";
+    url.hash = "";
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+async function translateTexts(texts: string[], target: Locale, endpoint: URL): Promise<string[]> {
+  const source = target === "bn" ? "en" : "bn";
+  const apiKey = process.env.LIBRETRANSLATE_API_KEY?.trim();
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      q: texts,
+      source,
+      target,
+      format: "text",
+      ...(apiKey ? { api_key: apiKey } : {}),
+    }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(25_000),
+  });
+
+  if (response.status === 429) {
+    throw new Error("LibreTranslate rate limit reached.");
+  }
+  if (!response.ok) {
+    throw new Error(`LibreTranslate request failed with status ${response.status}.`);
+  }
+
+  const payload = await response.json() as { translatedText?: unknown };
+  const translated = payload?.translatedText;
+  if (Array.isArray(translated) && translated.length === texts.length && translated.every((item) => typeof item === "string")) {
+    return translated;
+  }
+  if (texts.length === 1 && typeof translated === "string") return [translated];
+  throw new Error("LibreTranslate returned an invalid response.");
 }
 
 export async function POST(request: Request) {
-  const key = process.env.GOOGLE_TRANSLATE_API_KEY;
-  if (!key) {
-    return NextResponse.json({ error: "Google Cloud Translation is not configured." }, { status: 503 });
+  const endpoint = getTranslationEndpoint();
+  if (!endpoint) {
+    return NextResponse.json(
+      { error: "LibreTranslate is not configured. Set LIBRETRANSLATE_URL to your self-hosted instance." },
+      { status: 503 },
+    );
   }
 
   let input: { texts?: unknown; target?: unknown };
@@ -39,30 +83,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await fetch(
-      `https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(key)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: texts, target, format: "text" }),
-        cache: "no-store",
-      },
+    const translations = await translateTexts(texts as string[], target as Locale, endpoint);
+    return NextResponse.json({ translations });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown translation error.";
+    console.error("[DeshConnect] LibreTranslate request failed:", message);
+    return NextResponse.json(
+      { error: "LibreTranslate request failed. Please try again later." },
+      { status: message.includes("rate limit") ? 429 : 502 },
     );
-    const payload = await result.json();
-    if (!result.ok) {
-      console.error("Google Cloud Translation request failed:", payload?.error?.message ?? result.status);
-      return NextResponse.json({ error: "Google Translation request failed." }, { status: 502 });
-    }
-    const rows = payload?.data?.translations;
-    if (!Array.isArray(rows) || rows.length !== texts.length) {
-      return NextResponse.json({ error: "Invalid Google Translation response." }, { status: 502 });
-    }
-    return NextResponse.json({
-      translations: rows.map((row: { translatedText?: unknown }, index: number) =>
-        typeof row?.translatedText === "string" ? decodeGoogleText(row.translatedText) : texts[index],
-      ),
-    });
-  } catch {
-    return NextResponse.json({ error: "Could not reach Google Translation." }, { status: 502 });
   }
 }
