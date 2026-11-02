@@ -121,3 +121,28 @@ export function translateToBengali(value: string): string {
   }
   return translated.replace(TOKEN_PATTERN, (word) => WORDS[word.toLowerCase()] ?? word);
 }
+
+
+const BENGALI_PHRASES = Object.entries(PHRASES)
+  .sort(([a], [b]) => b.length - a.length)
+  .map(([english, bengali]) => [bengali, english] as const);
+const BENGALI_WORDS = Object.fromEntries(
+  Object.entries(WORDS).map(([english, bengali]) => [bengali, english]),
+);
+const BENGALI_TOKEN_PATTERN = /[\\u0980-\\u09FF]+/g;
+
+/** Translate known Bengali interface copy back to English without changing unknown text. */
+export function translateToEnglish(value: string): string {
+  let translated = value;
+  for (const [bengali, english] of BENGALI_PHRASES) {
+    translated = translated.replace(new RegExp(escapeRegExp(bengali), "g"), english);
+  }
+  return translated.replace(BENGALI_TOKEN_PATTERN, (word) => BENGALI_WORDS[word] ?? word);
+}
+
+/** Translate known interface text in either direction; unknown words stay untouched. */
+export function translateToLocale(value: string, locale: "en" | "bn"): string {
+  if (locale === "bn" && /[A-Za-z]/.test(value)) return translateToBengali(value);
+  if (locale === "en" && /[\\u0980-\\u09FF]/.test(value)) return translateToEnglish(value);
+  return value;
+}
