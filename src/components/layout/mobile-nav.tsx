@@ -81,10 +81,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 sm:text-[10px] ${moreOpen || moreActive ? "text-violet-800" : "text-slate-500 hover:text-violet-700"}`}
+            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${moreOpen || moreActive ? "text-violet-900" : "text-slate-700 hover:text-violet-900"}`}
           >
-            <span className={`grid h-8 w-8 place-items-center rounded-xl bg-violet-50 shadow-[inset_0_0_0_1px_rgba(139,92,246,.10)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95 bg-violet-100" : "rotate-0 group-hover:scale-105"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[19px] w-[19px] text-violet-600" /></span>
-            <span>More</span>
+            <span className={`grid h-10 w-10 place-items-center rounded-xl bg-violet-100 shadow-[inset_0_0_0_1px_rgba(109,40,217,.16)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95 bg-violet-200" : "rotate-0 group-hover:scale-105"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[22px] w-[22px] text-violet-800" /></span>
           </button>
         </div>
       </div>
@@ -163,12 +162,12 @@ export function MobileNav({
 }
 
 const iconColor: Record<MobileNavLinkIcon, string> = {
-  home: "text-emerald-600",
-  mountain: "text-amber-600",
-  landmark: "text-blue-600",
-  droplet: "text-rose-600",
-  message: "text-indigo-600",
-  globe: "text-sky-600",
+  home: "text-emerald-800",
+  mountain: "text-amber-800",
+  landmark: "text-blue-800",
+  droplet: "text-rose-800",
+  message: "text-indigo-800",
+  globe: "text-sky-800",
 };
 type MobileNavLinkIcon = "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
 
@@ -190,17 +189,16 @@ function MobileNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className={`group relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 sm:text-[10px] ${active ? "text-emerald-900" : "text-slate-500 hover:text-slate-800"}`}
+      className={`group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${active ? "text-emerald-950" : "text-slate-700 hover:text-slate-950"}`}
     >
-      <span className={`relative grid h-8 w-8 place-items-center rounded-xl transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${active ? "scale-105 bg-white/90 shadow-[0_3px_10px_-4px_rgba(15,23,42,.22),inset_0_0_0_1px_rgba(15,23,42,.04)]" : "bg-transparent group-hover:scale-105 group-hover:bg-white/70"}`}>
-        <Icon name={icon} className={`h-[20px] w-[20px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-85 group-hover:-translate-y-0.5 group-hover:opacity-100"}`} />
+      <span className={`relative grid h-10 w-10 place-items-center rounded-xl border border-white/80 bg-white/75 shadow-[0_2px_8px_-4px_rgba(15,23,42,.2)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] dark:border-white/10 dark:bg-slate-900/70 ${active ? "scale-105 border-emerald-300 bg-emerald-100 shadow-[0_3px_10px_-4px_rgba(5,150,105,.3)] dark:border-emerald-700 dark:bg-emerald-950" : "group-hover:scale-105 group-hover:bg-white dark:group-hover:bg-slate-800"}`}>
+        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.22)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
           </span>
         )}
       </span>
-      <span className="max-w-full text-center">{label === "Blood Donation" ? "Blood" : label}</span>
     </Link>
   );
 }
