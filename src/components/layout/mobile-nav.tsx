@@ -50,7 +50,6 @@ export function MobileNav({
     ? PRIMARY_LINKS.findIndex((item) => isNavPathActive(pathname, item.href))
     : -1;
   const moreActive = routeReady && directIndex === -1;
-  const activeIndex = moreOpen || moreActive ? PRIMARY_LINKS.length : Math.max(0, directIndex);
 
   useEffect(() => setMoreOpen(false), [pathname]);
 
@@ -62,11 +61,7 @@ export function MobileNav({
     >
       <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-white/65 bg-white/55 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.28),0_3px_12px_-4px_rgba(15,23,42,.12)] backdrop-blur-2xl backdrop-saturate-150 ring-1 ring-white/35 supports-[backdrop-filter]:bg-white/45 dark:border-white/10 dark:bg-slate-950/45 dark:ring-white/10">
         <div className="relative grid grid-cols-7 items-stretch gap-0">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-xl bg-gradient-to-br from-emerald-50 via-white to-emerald-100/80 shadow-[0_3px_12px_-5px_rgba(5,150,105,.35),inset_0_0_0_1px_rgba(5,150,105,.12)] transition-[transform,background-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
-            style={{ left: 0, width: "14.285714%", transform: `translateX(${activeIndex * 100}%)` }}
-          />
+
           {PRIMARY_LINKS.map((item, index) => (
             <MobileNavLink
               key={item.href}
@@ -81,9 +76,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${moreOpen || moreActive ? "text-violet-900" : "text-slate-700 hover:text-violet-900"}`}
+            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
           >
-            <span className={`grid h-10 w-10 place-items-center rounded-xl bg-violet-100 shadow-[inset_0_0_0_1px_rgba(109,40,217,.16)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95 bg-violet-200" : "rotate-0 group-hover:scale-105"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[22px] w-[22px] text-violet-800" /></span>
+            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
           </button>
         </div>
       </div>
@@ -162,12 +157,12 @@ export function MobileNav({
 }
 
 const iconColor: Record<MobileNavLinkIcon, string> = {
-  home: "text-emerald-800",
-  mountain: "text-amber-800",
-  landmark: "text-blue-800",
-  droplet: "text-rose-800",
-  message: "text-indigo-800",
-  globe: "text-sky-800",
+  home: "text-emerald-600",
+  mountain: "text-amber-600",
+  landmark: "text-blue-600",
+  droplet: "text-rose-600",
+  message: "text-indigo-600",
+  globe: "text-sky-600",
 };
 type MobileNavLinkIcon = "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
 
@@ -189,10 +184,10 @@ function MobileNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className={`group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${active ? "text-emerald-950" : "text-slate-700 hover:text-slate-950"}`}
+      className="group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90"
     >
-      <span className={`relative grid h-10 w-10 place-items-center rounded-xl border border-white/80 bg-white/75 shadow-[0_2px_8px_-4px_rgba(15,23,42,.2)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] dark:border-white/10 dark:bg-slate-900/70 ${active ? "scale-105 border-emerald-300 bg-emerald-100 shadow-[0_3px_10px_-4px_rgba(5,150,105,.3)] dark:border-emerald-700 dark:bg-emerald-950" : "group-hover:scale-105 group-hover:bg-white dark:group-hover:bg-slate-800"}`}>
-        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.22)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
+      <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-transparent transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110">
+        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
