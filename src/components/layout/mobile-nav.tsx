@@ -60,7 +60,7 @@ export function MobileNav({
       className="fixed inset-x-2 top-[10px] z-[60] lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="relative mx-auto max-w-2xl rounded-[1.5rem] border border-white/80 bg-white/88 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.34),0_3px_12px_-4px_rgba(15,23,42,.14)] backdrop-blur-2xl ring-1 ring-slate-900/[0.03]">
+      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-white/65 bg-white/55 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.28),0_3px_12px_-4px_rgba(15,23,42,.12)] backdrop-blur-2xl backdrop-saturate-150 ring-1 ring-white/35 supports-[backdrop-filter]:bg-white/45 dark:border-white/10 dark:bg-slate-950/45 dark:ring-white/10">
         <div className="relative grid grid-cols-7 items-stretch gap-0">
           <span
             aria-hidden="true"
