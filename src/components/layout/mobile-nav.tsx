@@ -60,11 +60,11 @@ export function MobileNav({
       className="fixed inset-x-2 bottom-2 z-[60] lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="relative mx-auto max-w-2xl rounded-[1.35rem] border border-white/70 bg-white/90 px-1.5 py-1.5 shadow-[0_10px_38px_-12px_rgba(15,61,46,.28),0_2px_8px_-3px_rgba(15,23,42,.12)] backdrop-blur-2xl">
+      <div className="relative mx-auto max-w-2xl rounded-[1.5rem] border border-white/80 bg-white/88 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.34),0_3px_12px_-4px_rgba(15,23,42,.14)] backdrop-blur-2xl ring-1 ring-slate-900/[0.03]">
         <div className="relative grid grid-cols-7 items-stretch gap-0">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-xl bg-emerald-50 shadow-[inset_0_0_0_1px_rgba(5,150,105,.08)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]"
+            className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-xl bg-gradient-to-br from-emerald-50 via-white to-emerald-100/80 shadow-[0_3px_12px_-5px_rgba(5,150,105,.35),inset_0_0_0_1px_rgba(5,150,105,.12)] transition-[transform,background-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
             style={{ left: 0, width: "14.285714%", transform: `translateX(${activeIndex * 100}%)` }}
           />
           {PRIMARY_LINKS.map((item, index) => (
@@ -81,9 +81,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-colors duration-200 sm:text-[10px] ${moreOpen || moreActive ? "text-violet-800" : "text-slate-500 hover:text-violet-700"}`}
+            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 sm:text-[10px] ${moreOpen || moreActive ? "text-violet-800" : "text-slate-500 hover:text-violet-700"}`}
           >
-            <Icon name={moreOpen ? "close" : "menu"} className={`h-[21px] w-[21px] text-violet-600 transition-transform duration-300 ${moreOpen ? "rotate-90 scale-95" : "rotate-0"}`} />
+            <span className={`grid h-8 w-8 place-items-center rounded-xl bg-violet-50 shadow-[inset_0_0_0_1px_rgba(139,92,246,.10)] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95 bg-violet-100" : "rotate-0 group-hover:scale-105"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[19px] w-[19px] text-violet-600" /></span>
             <span>More</span>
           </button>
         </div>
@@ -99,7 +99,7 @@ export function MobileNav({
       <div
         id="dc-mobile-more-menu"
         aria-hidden={!moreOpen}
-        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-2xl border border-white/70 bg-white/95 p-3 shadow-[0_20px_60px_-18px_rgba(15,45,30,.35)] backdrop-blur-2xl transition-all duration-200 ease-out ${moreOpen ? "translate-y-[10px] scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[.98] opacity-0"}`}
+        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-[1.35rem] border border-white/80 bg-white/95 p-3 shadow-[0_24px_70px_-20px_rgba(15,45,30,.4)] backdrop-blur-2xl ring-1 ring-slate-900/[0.04] transition-all duration-350 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "translate-y-[5px] scale-100 opacity-100" : "pointer-events-none translate-y-2 scale-[.96] opacity-0"}`}
         style={{ visibility: moreOpen ? "visible" : "hidden" }}
       >
         <div className="mb-3 flex items-center justify-between px-1">
@@ -190,10 +190,10 @@ function MobileNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-200 sm:text-[10px] ${active ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700"}`}
+      className={`group relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 sm:text-[10px] ${active ? "text-emerald-900" : "text-slate-500 hover:text-slate-800"}`}
     >
-      <span className="relative transition-transform duration-200 group-active:scale-90">
-        <Icon name={icon} className={`h-[21px] w-[21px] transition-all duration-200 ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-sm" : "scale-100 opacity-90"}`} />
+      <span className={`relative grid h-8 w-8 place-items-center rounded-xl transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${active ? "scale-105 bg-white/90 shadow-[0_3px_10px_-4px_rgba(15,23,42,.22),inset_0_0_0_1px_rgba(15,23,42,.04)]" : "bg-transparent group-hover:scale-105 group-hover:bg-white/70"}`}>
+        <Icon name={icon} className={`h-[20px] w-[20px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-85 group-hover:-translate-y-0.5 group-hover:opacity-100"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
