@@ -81,9 +81,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-colors duration-200 sm:text-[10px] ${moreOpen || moreActive ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700"}`}
+            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-colors duration-200 sm:text-[10px] ${moreOpen || moreActive ? "text-violet-800" : "text-slate-500 hover:text-violet-700"}`}
           >
-            <Icon name={moreOpen ? "close" : "menu"} className={`h-[21px] w-[21px] transition-transform duration-300 ${moreOpen ? "rotate-90 scale-95" : "rotate-0"}`} />
+            <Icon name={moreOpen ? "close" : "menu"} className={`h-[21px] w-[21px] text-violet-600 transition-transform duration-300 ${moreOpen ? "rotate-90 scale-95" : "rotate-0"}`} />
             <span>More</span>
           </button>
         </div>
@@ -99,7 +99,7 @@ export function MobileNav({
       <div
         id="dc-mobile-more-menu"
         aria-hidden={!moreOpen}
-        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-2xl border border-white/70 bg-white/95 p-3 shadow-[0_20px_60px_-18px_rgba(15,45,30,.35)] backdrop-blur-2xl transition-all duration-200 ease-out ${moreOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[.98] opacity-0"}`}
+        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-2xl border border-white/70 bg-white/95 p-3 shadow-[0_20px_60px_-18px_rgba(15,45,30,.35)] backdrop-blur-2xl transition-all duration-200 ease-out ${moreOpen ? "translate-y-[10px] scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[.98] opacity-0"}`}
         style={{ visibility: moreOpen ? "visible" : "hidden" }}
       >
         <div className="mb-3 flex items-center justify-between px-1">
@@ -162,7 +162,7 @@ export function MobileNav({
   );
 }
 
-function MobileNavLink({
+const iconColor: Record<MobileNavLinkIcon, string> = {\n  home: "text-emerald-600",\n  mountain: "text-amber-600",\n  landmark: "text-blue-600",\n  droplet: "text-rose-600",\n  message: "text-indigo-600",\n  globe: "text-sky-600",\n};\ntype MobileNavLinkIcon = "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";\n\nfunction MobileNavLink({
   href,
   label,
   icon,
@@ -171,7 +171,7 @@ function MobileNavLink({
 }: {
   href: string;
   label: string;
-  icon: "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
+  icon: MobileNavLinkIcon;
   active: boolean;
   badge?: number;
 }) {
@@ -183,7 +183,7 @@ function MobileNavLink({
       className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-200 sm:text-[10px] ${active ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700"}`}
     >
       <span className="relative transition-transform duration-200 group-active:scale-90">
-        <Icon name={icon} className={`h-[21px] w-[21px] transition-all duration-200 ${active ? "-translate-y-0.5 scale-110" : "scale-100"}`} />
+        <Icon name={icon} className={`h-[21px] w-[21px] transition-all duration-200 ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-sm" : "scale-100 opacity-90"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
