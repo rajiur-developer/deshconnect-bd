@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
  import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
  import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+ import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
  import { Icon } from "@/components/ui/icons";
  export function ImageUpload({
  name,
@@ -41,8 +42,9 @@ import { useRef, useState } from "react";
  onUploadingChange?.(true);
  try {
  if (uploadToStorage && userId && storageFolder) {
- const image = await resizeToBlob(file);
- const key = `${userId}/${storageFolder}/${crypto.randomUUID()}.jpg`;
+ const image = await optimizeImageForUpload(file);
+ const extension = image.type === "image/webp" ? "webp" : "jpg";
+ const key = `${userId}/${storageFolder}/${crypto.randomUUID()}.${extension}`;
  const { data, error: uploadError } = await getInsForgeBrowserClient()
    .storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, image);
  if (uploadError) throw new Error(uploadError.message);
