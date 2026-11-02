@@ -3,17 +3,14 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 function decodeGoogleText(value: string): string {
-  return value.replace(/&(?:amp|lt|gt|quot|#39|#x[0-9a-f]+|#\\d+);/gi, (entity) => {
-    const named: Record<string, string> = {
-      "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'",
-    };
-    const known = named[entity.toLowerCase()];
-    if (known) return known;
-    const numeric = entity.match(/^&#(?:x([0-9a-f]+)|(\\d+));$/i);
-    if (!numeric) return entity;
-    const codePoint = numeric[1] ? Number.parseInt(numeric[1], 16) : Number.parseInt(numeric[2], 10);
-    return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : entity;
-  });
+  return value
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&#([0-9]+);/g, (_match, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_match, code: string) => String.fromCodePoint(Number.parseInt(code, 16)));
 }
 
 export async function POST(request: Request) {
