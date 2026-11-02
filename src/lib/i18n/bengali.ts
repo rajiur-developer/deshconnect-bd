@@ -129,7 +129,7 @@ const BENGALI_PHRASES = Object.entries(PHRASES)
 const BENGALI_WORDS = Object.fromEntries(
   Object.entries(WORDS).map(([english, bengali]) => [bengali, english]),
 );
-const BENGALI_TOKEN_PATTERN = /[\\u0980-\\u09FF]+/g;
+const BENGALI_TOKEN_PATTERN = /[\u0980-\u09FF]+/g;
 
 /** Translate known Bengali interface copy back to English without changing unknown text. */
 export function translateToEnglish(value: string): string {
@@ -143,6 +143,6 @@ export function translateToEnglish(value: string): string {
 /** Translate known interface text in either direction; unknown words stay untouched. */
 export function translateToLocale(value: string, locale: "en" | "bn"): string {
   if (locale === "bn" && /[A-Za-z]/.test(value)) return translateToBengali(value);
-  if (locale === "en" && /[\\u0980-\\u09FF]/.test(value)) return translateToEnglish(value);
+  if (locale === "en" && /[\u0980-\u09FF]/.test(value)) return translateToEnglish(value);
   return value;
 }
