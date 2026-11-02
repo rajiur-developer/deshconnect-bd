@@ -14,11 +14,11 @@ variant?: "default" | "messages"; }) {
 return (
 <section className={variant === "messages" ? "relative isolate overflow-hidden border-b border-brand-900/10 bg-gradient-to-r from-brand-50 via-white to-emerald-50" : "border-b border-slate-200 bg-white"}>
 {variant === "messages" && <><div className="absolute -right-16 -top-28 -z-0 h-72 w-72 rounded-full bg-brand-200/35 blur-3xl" /><div className="absolute -bottom-28 left-[48%] -z-0 h-56 w-56 rounded-full bg-emerald-200/25 blur-3xl" /></>}
-<div className={variant === "messages" ? "container-x py-3 sm:py-4" : "container-x py-8 sm:py-10"}>
+<div className={variant === "messages" ? "container-x py-2 sm:py-4" : "container-x py-8 sm:py-10"}>
 <div className="flex flex-wrap items-start justify-between gap-4">
 {variant === "messages" ? <div className="relative z-10 flex max-w-3xl items-center gap-4">
-<span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-800 text-white shadow-md shadow-brand-900/15"><Icon name="message" className="h-5 w-5" /></span>
-<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">Direct messages</p><h1 className="text-xl font-bold text-slate-900 sm:text-2xl">{title}</h1>{description && <p className="mt-0.5 text-sm text-slate-600">{description}</p>}</div>
+<span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-800 text-white shadow-md shadow-brand-900/15"><Icon name="message" className="h-4 w-4 sm:h-5 sm:w-5" /></span>
+<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">Direct messages</p><h1 className="text-lg font-bold text-slate-900 sm:text-2xl">{title}</h1>{description && <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">{description}</p>}</div>
 </div> : <div className="max-w-3xl"><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>{description && <p className="mt-2 text-slate-600">{description}</p>}</div>}
 {action && <div className="shrink-0">{action}</div>}
 </div>
