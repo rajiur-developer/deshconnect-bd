@@ -99,7 +99,7 @@ export function MobileNav({
       <div
         id="dc-mobile-more-menu"
         aria-hidden={!moreOpen}
-        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-[1.35rem] border border-white/80 bg-white/95 p-3 shadow-[0_24px_70px_-20px_rgba(15,45,30,.4)] backdrop-blur-2xl ring-1 ring-slate-900/[0.04] transition-all duration-350 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "translate-y-[5px] scale-100 opacity-100" : "pointer-events-none translate-y-2 scale-[.96] opacity-0"}`}
+        className={`absolute inset-x-1 top-[calc(100%+0.65rem)] z-20 mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-[1.35rem] border border-white/80 bg-white/95 p-3 shadow-[0_24px_70px_-20px_rgba(15,45,30,.4)] backdrop-blur-2xl ring-1 ring-slate-900/[0.04] transition-all duration-350 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-2 scale-[.96] opacity-0"}`}
         style={{ visibility: moreOpen ? "visible" : "hidden" }}
       >
         <div className="mb-3 flex items-center justify-between px-1">
