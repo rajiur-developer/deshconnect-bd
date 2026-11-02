@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { translateToBengali } from "@/lib/i18n/bengali";
+import { translateToLocale } from "@/lib/i18n/bengali";
 
 type Locale = "en" | "bn";
 type LanguageContextValue = {
@@ -63,12 +63,12 @@ export function LanguageProvider({
           if (original === undefined) {
             original = text.data;
             textOriginals.current.set(text, original);
-          } else if (text.data !== translateToBengali(original) && text.data !== original) {
+          } else if (text.data !== translateToLocale(original, locale) && text.data !== original) {
             original = text.data;
             textOriginals.current.set(text, original);
           }
           if (original.trim() && /[A-Za-z]/.test(original)) {
-            text.data = translateToBengali(original);
+            text.data = translateToLocale(original, locale);
           }
         }
         current = walker.nextNode();
@@ -88,18 +88,18 @@ export function LanguageProvider({
           if (original === undefined) {
             original = value;
             originals.set(name, original);
-          } else if (value !== translateToBengali(original) && value !== original) {
+          } else if (value !== translateToLocale(original, locale) && value !== original) {
             original = value;
             originals.set(name, original);
           }
           if (original.trim() && /[A-Za-z]/.test(original)) {
-            element.setAttribute(name, translateToBengali(original));
+            element.setAttribute(name, translateToLocale(original, locale));
           }
         }
       }
 
       if (titleOriginal.current === null) titleOriginal.current = document.title;
-      document.title = translateToBengali(titleOriginal.current);
+      document.title = translateToLocale(titleOriginal.current, locale);
     };
 
     const observer = new MutationObserver(() => {
