@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useEffect, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import { sendMessageAction, updateProfileAction, type AccountFormState } from "@/features/account/actions"; import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import { Icon } from "@/components/ui/icons";
 import { Spinner } from "@/components/ui/spinner";
 type LocationProps = {
@@ -47,14 +48,16 @@ uploadInProgress.current = true;
 setUploading(true);
 try {
 const client = getInsForgeBrowserClient();
-const key = `${userId}/${crypto.randomUUID()}-${safeFilename(file.name)}`;
-const { data, error } = await client.storage.from(PROFILE_IMAGE_BUCKET).upload(key, file);
+const optimizedImage = await optimizeImageForUpload(file);
+const optimizedFile = new File([optimizedImage], `avatar.${optimizedImage.type === "image/webp" ? "webp" : "jpg"}`, { type: optimizedImage.type });
+const key = `${userId}/${crypto.randomUUID()}-${safeFilename(optimizedFile.name)}`;
+const { data, error } = await client.storage.from(PROFILE_IMAGE_BUCKET).upload(key, optimizedFile);
 if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
 if (avatarUrlRef.current) avatarUrlRef.current.value = data.url;
 if (avatarKeyRef.current) avatarKeyRef.current.value = data.key;
-if (avatarMimeRef.current) avatarMimeRef.current.value = file.type;
-if (avatarSizeRef.current) avatarSizeRef.current.value = String(file.size);
-setPreview(URL.createObjectURL(file));
+if (avatarMimeRef.current) avatarMimeRef.current.value = optimizedFile.type;
+if (avatarSizeRef.current) avatarSizeRef.current.value = String(optimizedFile.size);
+setPreview(URL.createObjectURL(optimizedFile));
 if (fileRef.current) fileRef.current.value = "";
 submitAfterUpload.current = true;
 formRef.current?.requestSubmit();
@@ -370,14 +373,16 @@ const mimeType = selectedFile.type.toLowerCase().split(";")[0];
 const type = mimeType.startsWith("image/") ? "image" : mimeType.startsWith("audio/") ? "audio" : null;
 const allowed = new Set(["image/jpeg", "image/png", "image/webp", "audio/webm", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/wav", "audio/aac", "audio/x-wav"]);
 if (!type || !allowed.has(mimeType)) throw new Error("Choose an image or audio recording. Other file types are not supported.");
-const extension = selectedFile.name.split(".").pop()?.toLowerCase() || (type === "image" ? "jpg" : "webm");
+const optimizedAttachment = type === "image" ? await optimizeImageForUpload(selectedFile) : selectedFile;
+const uploadFile = optimizedAttachment instanceof File ? optimizedAttachment : new File([optimizedAttachment], `attachment.${optimizedAttachment.type === "image/webp" ? "webp" : type === "image" ? "jpg" : "webm"}`, { type: optimizedAttachment.type });
+const extension = uploadFile.name.split(".").pop()?.toLowerCase() || (type === "image" ? "jpg" : "webm");
 const key = `${viewerId}/${conversationId}/${crypto.randomUUID()}.${extension}`;
 const client = getInsForgeBrowserClient();
-const { data: upload, error: uploadError } = await client.storage.from("record-attachments").upload(key, selectedFile);
+const { data: upload, error: uploadError } = await client.storage.from("record-attachments").upload(key, uploadFile);
 if (uploadError) throw new Error(uploadError.message || "The attachment could not be uploaded. Check your connection and try again.");
 uploadedKey = key;
 if (!upload?.url) throw new Error("The attachment uploaded, but its link could not be saved. Please try again.");
-attachment = { key, url: upload.url, mimeType, type };
+attachment = { key, url: upload.url, mimeType: uploadFile.type, type };
 }
 const result = await sendMessageAction(conversationId, messageBody, attachment, replyToMessageId);
 if (!result.ok) {
