@@ -538,7 +538,7 @@ Object.assign(PHRASES, {
   "Return to home": "মূল পাতায় ফিরে যান"
 });
 Object.assign(WORDS, {
-  "welcome": "স্বাগতম", "back": "ফিরে", "account": "হিসাব", "strength": "শক্তিমাত্রা",
+  "welcome": "স্বাগতম", "back": "ফিরে", "strength": "শক্তিমাত্রা",
   "very": "অত্যন্ত", "weak": "দুর্বল", "medium": "মাঝারি", "strong": "শক্তিশালী",
   "current": "বর্তমান", "new": "নতুন", "confirm": "নিশ্চিত", "verify": "যাচাই",
   "email": "ইমেইল", "address": "ঠিকানা", "field": "ঘর", "valid": "সঠিক",
