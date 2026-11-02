@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { PublicUser } from "@/types/auth";
 import { isNavGroup, isNavPathActive, PRIMARY_NAV } from "@/config/site";
 import { Icon } from "@/components/ui/icons";
-import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } from "@/components/messaging/message-realtime-notifications";
 import { UserMenu } from "@/components/layout/user-menu";
 
@@ -29,11 +28,14 @@ export function MobileNav({
 
   const moreItems = useMemo(
     () =>
-      PRIMARY_NAV.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry])).filter(
-        (item) =>
-          !["/", "/places", "/community", "/messages", "/profile"].includes(item.href),
-      ),
-    [],
+      [
+        ...PRIMARY_NAV.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry])).filter(
+          (item) => !["/", "/places", "/government-services", "/blood-donation", "/messages", "/news"].includes(item.href),
+        ),
+        { label: "Community", href: "/community" },
+        { label: "Profile", href: user ? "/profile" : "/login" },
+      ].filter((item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index),
+    [user],
   );
   const moreActive = routeReady && moreItems.some((item) => isNavPathActive(pathname, item.href));
 
@@ -45,10 +47,11 @@ export function MobileNav({
       className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200/90 bg-white/95 px-1 pt-2 shadow-[0_-8px_28px_-22px_rgba(15,61,46,.45)] backdrop-blur-xl lg:hidden"
       style={{ paddingBottom: "max(.5rem, env(safe-area-inset-bottom))" }}
     >
-      <div className="mx-auto grid max-w-xl grid-cols-6 items-center gap-0.5">
+      <div className="mx-auto grid max-w-2xl grid-cols-7 items-center gap-0">
         <MobileNavLink href="/" label="Home" icon="home" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink href="/places" label="Explore" icon="mountain" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink href="/community" label="Community" icon="users" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink href="/places" label="Place" icon="mountain" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink href="/government-services" label="Services" icon="landmark" pathname={pathname} routeReady={routeReady} />
+        <MobileNavLink href="/blood-donation" label="Blood" icon="droplet" pathname={pathname} routeReady={routeReady} />
         <MobileNavLink
           href="/messages"
           label="Messages"
@@ -57,19 +60,7 @@ export function MobileNav({
           routeReady={routeReady}
           badge={unreadTotal}
         />
-        <Link
-          href={user ? "/profile" : "/login"}
-          aria-label="Profile"
-          aria-current={routeReady && (isNavPathActive(pathname, "/profile") || (!user && isNavPathActive(pathname, "/login"))) ? "page" : undefined}
-          className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${routeReady && (isNavPathActive(pathname, "/profile") || (!user && isNavPathActive(pathname, "/login"))) ? "text-brand-700" : "text-slate-500 hover:text-brand-700"}`}
-        >
-          {user ? (
-            <ProfileAvatar name={user.fullName} src={user.avatar} storageKey={user.avatarKey} className="h-6 w-6 text-[9px]" textClassName="text-[9px]" />
-          ) : (
-            <Icon name="users" className="h-6 w-6" />
-          )}
-          <span className="max-w-full truncate">Profile</span>
-        </Link>
+        <MobileNavLink href="/news" label="News" icon="globe" pathname={pathname} routeReady={routeReady} />
         <button
           type="button"
           onClick={() => setMoreOpen((value) => !value)}
@@ -161,7 +152,7 @@ function MobileNavLink({
 }: {
   href: string;
   label: string;
-  icon: "home" | "mountain" | "users" | "message";
+  icon: "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
   pathname: string;
   routeReady: boolean;
   badge?: number;
