@@ -119,6 +119,8 @@ async function insforgeRequest(table: string, method: string, params: Record<str
     },
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
+    // Never leave Server Actions pending forever when the database API stalls.
+    signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) {
     const text = await res.text();
