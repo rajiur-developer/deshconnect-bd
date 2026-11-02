@@ -409,8 +409,8 @@ upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const isHospital = formData.get("isHospital") === "true";
-if (!(await isContentCategory(isHospital ? "hospital" : "institution", parsed.data.category))) {
-return { error: isHospital ? "Please choose a valid hospital category." : "Please choose a valid institution category." };
+if (!isHospital && !(await isContentCategory("institution", parsed.data.category))) {
+return { error: "Please choose a valid institution category." };
 }
 const table = isHospital ? "hospitals" : "institutions";
 const entity = isHospital ? "hospital" : "institution";
@@ -750,8 +750,8 @@ upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const isHospital = formData.get("isHospital") === "true";
-if (!(await isContentCategory(isHospital ? "hospital" : "institution", parsed.data.category))) {
-return { error: isHospital ? "Please choose a valid hospital category." : "Please choose a valid institution category." };
+if (!isHospital && !(await isContentCategory("institution", parsed.data.category))) {
+return { error: "Please choose a valid institution category." };
 }
 const table = isHospital ? "hospitals" : "institutions";
 const entity = isHospital ? "hospital" : "institution";
