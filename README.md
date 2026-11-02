@@ -63,11 +63,7 @@ See [`.env.example`](.env.example). Set these InsForge variables in `.env.local`
 - `AUTH_SECRET` — signs the local session cookie. Required outside development and must be at least 32 characters; the app throws at runtime without it. Generate with `openssl rand -base64 48`.
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — enables embedded maps; without it the map falls back to an
   external Google Maps link.
-- `LIBRETRANSLATE_URL` / `LIBRETRANSLATE_API_KEY` — optional self-hosted LibreTranslate endpoint
-  for translating uncatalogued and user-submitted text. Common interface text uses the built-in
-  Bengali dictionary and does not require a translation service. When configured, visible page
-  text, including user-submitted content, is sent to this translation server while Bengali is
-  selected; the API key remains server-side.
+- Bengali and English interface text is translated locally using the manually maintained dictionary in `src/lib/i18n/bengali.ts`. No external translation service is configured or called. Unknown words and arbitrary user-written content are not automatically translated; add reviewed entries to the dictionary for interface copy. Private message bodies are intentionally excluded.
 
 The language preference is saved in a browser cookie. Admin and moderator accounts always see the
 English interface; other users can switch between English and Bengali. Admin content is excluded
