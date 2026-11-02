@@ -25,10 +25,10 @@ async function translateBatch(texts: string[], target: Locale): Promise<string[]
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ texts: batch, target }),
     });
-    if (!response.ok) throw new Error("Google Translation is not configured or the request failed.");
+    if (!response.ok) throw new Error("LibreTranslate is not configured or the request failed.");
     const payload = (await response.json()) as { translations?: string[] };
     if (!Array.isArray(payload.translations) || payload.translations.length !== batch.length) {
-      throw new Error("Google Translation returned an invalid response.");
+      throw new Error("LibreTranslate returned an invalid response.");
     }
     batch.forEach((value, index) => translationCache.set(`${target}:${value}`, payload.translations![index] ?? value));
   }
@@ -152,7 +152,7 @@ export function LanguageProvider({
         const lookup = new Map(unique.map((value, index) => [value, translations[index] ?? value]));
         entries.forEach((entry) => entry.apply(lookup.get(entry.key) ?? entry.key));
       } catch (error) {
-        console.error("[DeshConnect] Google Translation failed:", error);
+        console.error("[DeshConnect] LibreTranslate failed:", error);
       } finally {
         unique.forEach((value) => pending.delete(value));
       }
