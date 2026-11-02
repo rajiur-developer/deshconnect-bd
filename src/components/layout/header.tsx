@@ -130,7 +130,8 @@ export async function Header({
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">\n          <LanguageSwitcher className="hidden sm:flex" />
+        <div className="ml-auto flex items-center gap-2">
+          <LanguageSwitcher className="hidden sm:flex" />
           <form action="/search" className="hidden md:block">
             <div className="relative">
               <Icon
