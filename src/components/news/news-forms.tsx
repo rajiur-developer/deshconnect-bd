@@ -2,6 +2,7 @@
 import { useActionState, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
+import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import { submitNewsAction, type NewsFormState } from "@/features/news/actions"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { useFormStateToast } from "@/components/ui/toast";
 import type { ContentCategory } from "@/services/content-categories";
 export function NewsSubmitForm({ userId, categories }: { userId: string; categories: ContentCategory[] }) {
@@ -30,12 +31,14 @@ setUploading(true);
 try {
 const client = getInsForgeBrowserClient();
 const filename = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").slice(-80) || "news-image";
-const key = `${userId}/news/${crypto.randomUUID()}-${filename}`;
-const { data, error } = await client.storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, file);
+const optimized = await optimizeImageForUpload(file);
+const extension = optimized.type === "image/webp" ? "webp" : "jpg";
+const key = `${userId}/news/${crypto.randomUUID()}-${filename.replace(/\\.[^.]+$/, "")}.${extension}`;
+const { data, error } = await client.storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, optimized);
 if (error || !data?.url || !data?.key) throw new Error("Image upload failed. Please try again.");
 if (imageRef.current) imageRef.current.value = data.url;
 if (imageKeyRef.current) imageKeyRef.current.value = data.key;
-setPreview(URL.createObjectURL(file));
+setPreview(URL.createObjectURL(optimized));
 fileRef.current.value = "";
 submitAgain.current = true;
 formRef.current?.requestSubmit();
