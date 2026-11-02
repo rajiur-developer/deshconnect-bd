@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang={locale}>
-      <body suppressHydrationWarning className="flex min-h-screen flex-col">
+      <body suppressHydrationWarning className="flex min-h-screen flex-col pb-[calc(4.6rem+env(safe-area-inset-bottom))] lg:pb-0">
         <LanguageProvider
           initialLocale={locale}
           enabled={false}
