@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale}>
       <body suppressHydrationWarning className="flex min-h-screen flex-col pb-[calc(4.6rem+env(safe-area-inset-bottom))] lg:pb-0">
-        <LanguageProvider initialLocale={locale} enabled={true} translationConfigured={Boolean(process.env.LIBRETRANSLATE_URL)}>
+        <LanguageProvider initialLocale={locale} enabled={true}>
           <ToastProvider>
             <AuthFeedback />
             <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
