@@ -162,7 +162,17 @@ export function MobileNav({
   );
 }
 
-const iconColor: Record<MobileNavLinkIcon, string> = {\n  home: "text-emerald-600",\n  mountain: "text-amber-600",\n  landmark: "text-blue-600",\n  droplet: "text-rose-600",\n  message: "text-indigo-600",\n  globe: "text-sky-600",\n};\ntype MobileNavLinkIcon = "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";\n\nfunction MobileNavLink({
+const iconColor: Record<MobileNavLinkIcon, string> = {
+  home: "text-emerald-600",
+  mountain: "text-amber-600",
+  landmark: "text-blue-600",
+  droplet: "text-rose-600",
+  message: "text-indigo-600",
+  globe: "text-sky-600",
+};
+type MobileNavLinkIcon = "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
+
+function MobileNavLink({
   href,
   label,
   icon,
