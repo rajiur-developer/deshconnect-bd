@@ -774,12 +774,11 @@ division_id: parsed.data.divisionId ?? null,
 district_id: parsed.data.districtId ?? null,
 upazila_id: parsed.data.upazilaId ?? null,
 };
-if (process.env.NODE_ENV === "development" && (id.startsWith("inst_") || id.startsWith("hospital_"))) {
+// Use the same InsForge REST adapter in every environment. The SDK
+// maybeSingle() response path can report an empty result for valid UUID rows,
+ // which made the admin form look as if Save had done nothing.
 const result = await insforgeUpdate(table, id, values);
 updated = result.data?.[0] ? { id: result.data[0].id } : null;
-} else {
-updated = await updateAdminRow(table, id, values);
-}
 } catch (error) {
 console.error("Institution update failed.", error instanceof Error ? error.message : "Unknown error");
 return { error: "Could not save this institution. Please try again." };
