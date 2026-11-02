@@ -59,7 +59,7 @@ export function MobileNav({
       className="fixed inset-x-2 top-[10px] z-[60] lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-white/65 bg-white/55 px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.28),0_3px_12px_-4px_rgba(15,23,42,.12)] backdrop-blur-2xl backdrop-saturate-150 ring-1 ring-white/35 supports-[backdrop-filter]:bg-white/45 dark:border-white/10 dark:bg-slate-950/45 dark:ring-white/10">
+      <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-slate-200/80 bg-white px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.20),0_3px_12px_-4px_rgba(15,23,42,.10)] ring-1 ring-white">
         <div className="relative grid grid-cols-7 items-stretch gap-0">
 
           {PRIMARY_LINKS.map((item, index) => (
@@ -76,9 +76,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90 ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
+            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] active:scale-[.94] motion-reduce:transition-none ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
           >
-            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
+            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
           </button>
         </div>
       </div>
@@ -184,10 +184,10 @@ function MobileNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className="group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] active:scale-90"
+      className="group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] active:scale-[.96] motion-reduce:transition-none"
     >
       <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-transparent transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110">
-        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
+        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
