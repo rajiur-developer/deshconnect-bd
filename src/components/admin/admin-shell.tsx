@@ -76,7 +76,7 @@ export function AdminShell({
   );
 
   return (
-    <div className={`dc-admin-app min-h-[calc(100vh-4rem)] ${collapsed ? "is-sidebar-collapsed" : ""}`} data-no-translate>
+    <div className={`dc-admin-app min-h-[calc(100vh-4rem)] ${collapsed ? "is-sidebar-collapsed" : ""}`}>
       <aside className="dc-admin-sidebar-desktop hidden lg:block">{nav}</aside>
       {mobileOpen && <button type="button" aria-label="Close navigation" className="dc-admin-mobile-backdrop lg:hidden" onClick={() => setMobileOpen(false)} />}
       <aside className={`dc-admin-sidebar-mobile lg:hidden ${mobileOpen ? "is-open" : ""}`}>{nav}</aside>
