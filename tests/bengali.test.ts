@@ -8,8 +8,8 @@ describe("manual bidirectional translation", () => {
   });
 
   it("translates known Bengali interface phrases back to English", () => {
-    expect(translateToEnglish("রক্তদান")).toBe("Blood donation");
-    expect(translateToEnglish("খুঁজুন")).toBe("search");
+    expect(translateToEnglish("রক্তদান")).toBe("Blood Donation");
+    expect(translateToEnglish("খুঁজুন")).toBe("Search");
   });
 
   it("leaves unknown words unchanged in either direction", () => {
@@ -18,7 +18,7 @@ describe("manual bidirectional translation", () => {
   });
 
   it("selects the translation direction from the requested locale", () => {
-    expect(translateToLocale("রক্তদান", "en")).toBe("Blood donation");
+    expect(translateToLocale("রক্তদান", "en")).toBe("Blood Donation");
     expect(translateToLocale("Blood Donation", "bn")).toBe("রক্তদান");
   });
 });
