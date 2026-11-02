@@ -10,7 +10,7 @@ describe("manual bidirectional translation", () => {
     expect(translateToBengali("Reset all")).toBe("সব নতুন করে সাজান");
     expect(translateToBengali("Welcome back")).toBe("আবারও স্বাগতম");
     expect(translateToBengali("No notifications yet")).toBe("এখনো কোনো বিজ্ঞপ্তি নেই");
-    expect(translateToBengali("Total visitors")).toBe("মোট visitors");
+    expect(translateToBengali("Unique visitors")).toBe("স্বতন্ত্র দর্শনার্থী");
   });
 
   it("translates known Bengali interface phrases back to English", () => {
