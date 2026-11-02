@@ -107,7 +107,7 @@ const WORDS: Record<string, string> = {
   total: "মোট", read: "পড়ুন", unread: "অপঠিত", result: "ফলাফল", results: "ফলাফল",
   page: "পৃষ্ঠা", pages: "পৃষ্ঠাসমূহ", confirm: "নিশ্চিত", verification: "যাচাইকরণ",
   verify: "যাচাই", mobile: "মোবাইল", bangladesh: "বাংলাদেশ", district: "জেলা",
-  division: "বিভাগ", name: "নাম",
+  division: "বিভাগ",
 };
 const TOKEN_PATTERN = /[A-Za-z]+(?:['’][A-Za-z]+)?/g;
 const PHRASE_ENTRIES = Object.entries(PHRASES).sort(([a], [b]) => b.length - a.length);
