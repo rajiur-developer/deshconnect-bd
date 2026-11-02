@@ -3,7 +3,7 @@
 * Routes that are not listed fall back to DEFAULT_BANNER.
 */ export const DEFAULT_BANNER = "/images/banner/Travel.webp";
 export const PAGE_BANNERS: Record<string, string> = {
-"/": "/images/banner/homePage.mp4",
+"/": "/images/banner/homePage.mov",
 "/places": "/images/banner/Travel.webp",
 "/institutions": "/images/banner/Collage.webp",
 "/hospitals": "/images/banner/Hospital.webp",
