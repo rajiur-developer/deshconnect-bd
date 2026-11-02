@@ -41,7 +41,11 @@ export function InstitutionManager({
   userId,
 }: Props) {
   const categoryValues = new Set(categories.map((category) => category.value));
-  const managedRecords = records.filter((record) => categoryValues.has(record.category));
+  // Imported hospital categories may not yet exist in content_categories.
+  // Keep every hospital row manageable instead of hiding it behind that filter.
+  const managedRecords = isHospital
+    ? records
+    : records.filter((record) => categoryValues.has(record.category));
 
   return (
     <>
