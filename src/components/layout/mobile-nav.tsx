@@ -10,6 +10,14 @@ import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } fr
 import { UserMenu } from "@/components/layout/user-menu";
 
 const subscribeToHydration = () => () => {};
+const PRIMARY_LINKS = [
+  { href: "/", label: "Home", icon: "home" as const },
+  { href: "/places", label: "Place", icon: "mountain" as const },
+  { href: "/government-services", label: "Services", icon: "landmark" as const },
+  { href: "/blood-donation", label: "Blood Donation", icon: "droplet" as const },
+  { href: "/messages", label: "Message", icon: "message" as const },
+  { href: "/news", label: "News", icon: "globe" as const },
+];
 
 export function MobileNav({
   user,
@@ -37,107 +45,119 @@ export function MobileNav({
       ].filter((item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index),
     [user],
   );
-  const moreActive = routeReady && moreItems.some((item) => isNavPathActive(pathname, item.href));
+
+  const directIndex = routeReady
+    ? PRIMARY_LINKS.findIndex((item) => isNavPathActive(pathname, item.href))
+    : -1;
+  const moreActive = routeReady && directIndex === -1;
+  const activeIndex = moreOpen || moreActive ? PRIMARY_LINKS.length : Math.max(0, directIndex);
 
   useEffect(() => setMoreOpen(false), [pathname]);
 
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200/90 bg-white/95 px-1 pt-2 shadow-[0_-8px_28px_-22px_rgba(15,61,46,.45)] backdrop-blur-xl lg:hidden"
-      style={{ paddingBottom: "max(.5rem, env(safe-area-inset-bottom))" }}
+      className="fixed inset-x-2 bottom-2 z-[60] lg:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="mx-auto grid max-w-2xl grid-cols-7 items-center gap-0">
-        <MobileNavLink href="/" label="Home" icon="home" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink href="/places" label="Place" icon="mountain" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink href="/government-services" label="Services" icon="landmark" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink href="/blood-donation" label="Blood" icon="droplet" pathname={pathname} routeReady={routeReady} />
-        <MobileNavLink
-          href="/messages"
-          label="Messages"
-          icon="message"
-          pathname={pathname}
-          routeReady={routeReady}
-          badge={unreadTotal}
-        />
-        <MobileNavLink href="/news" label="News" icon="globe" pathname={pathname} routeReady={routeReady} />
-        <button
-          type="button"
-          onClick={() => setMoreOpen((value) => !value)}
-          aria-expanded={moreOpen}
-          aria-controls="dc-mobile-more-menu"
-          aria-label="More navigation options"
-          className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${moreOpen || moreActive ? "text-brand-700" : "text-slate-500 hover:text-brand-700"}`}
-        >
-          <Icon name={moreOpen ? "close" : "menu"} className="h-6 w-6" />
-          <span>More</span>
-        </button>
-      </div>
-
-      {moreOpen && (
-        <>
+      <div className="relative mx-auto max-w-2xl rounded-[1.35rem] border border-white/70 bg-white/90 px-1.5 py-1.5 shadow-[0_10px_38px_-12px_rgba(15,61,46,.28),0_2px_8px_-3px_rgba(15,23,42,.12)] backdrop-blur-2xl">
+        <div className="relative grid grid-cols-7 items-stretch gap-0">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-xl bg-emerald-50 shadow-[inset_0_0_0_1px_rgba(5,150,105,.08)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]"
+            style={{ left: 0, width: "14.285714%", transform: `translateX(${activeIndex * 100}%)` }}
+          />
+          {PRIMARY_LINKS.map((item, index) => (
+            <MobileNavLink
+              key={item.href}
+              {...item}
+              active={routeReady && directIndex === index}
+              badge={item.href === "/messages" ? unreadTotal : 0}
+            />
+          ))}
           <button
             type="button"
-            aria-label="Close more navigation"
-            className="fixed inset-0 -z-10 bg-slate-950/20"
-            onClick={() => setMoreOpen(false)}
-          />
-          <div
-            id="dc-mobile-more-menu"
-            className="absolute inset-x-3 bottom-[calc(100%+0.6rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-[0_18px_50px_-18px_rgba(15,45,30,.35)]"
+            onClick={() => setMoreOpen((value) => !value)}
+            aria-expanded={moreOpen}
+            aria-controls="dc-mobile-more-menu"
+            aria-label="More navigation options"
+            className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-colors duration-200 sm:text-[10px] ${moreOpen || moreActive ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700"}`}
           >
-            <div className="mb-2 flex items-center justify-between px-1">
-              <p className="text-sm font-bold text-slate-800">More from DeshConnect</p>
-              {user && <UserMenu user={user} unread={unread} />}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {moreItems.map((item) => {
-                const active = routeReady && isNavPathActive(pathname, item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    className={`rounded-xl border px-3 py-3 text-sm font-medium transition-colors ${active ? "border-brand-200 bg-brand-50 text-brand-800" : "border-slate-100 bg-slate-50 text-slate-700 hover:border-brand-100 hover:bg-brand-50"}`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-            <form action="/search" className="mt-3">
-              <label className="sr-only" htmlFor="dc-mobile-search">Search DeshConnect</label>
-              <div className="flex gap-2">
-                <input
-                  id="dc-mobile-search"
-                  name="q"
-                  placeholder="Search DeshConnect"
-                  className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-                />
-                <button type="submit" className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white">
-                  Search
-                </button>
-              </div>
-            </form>
-            <div className="mt-3 flex gap-2 border-t border-slate-100 pt-3">
-              {user ? (
-                <Link href="/dashboard" className="flex-1 rounded-xl bg-brand-600 px-3 py-2.5 text-center text-sm font-semibold text-white">
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link href="/login" className="flex-1 rounded-xl bg-brand-600 px-3 py-2.5 text-center text-sm font-semibold text-white">
-                    Login
-                  </Link>
-                  <Link href="/register" className="flex-1 rounded-xl border border-brand-200 px-3 py-2.5 text-center text-sm font-semibold text-brand-700">
-                    Create account
-                  </Link>
-                </>
-              )}
-            </div>
+            <Icon name={moreOpen ? "close" : "menu"} className={`h-[21px] w-[21px] transition-transform duration-300 ${moreOpen ? "rotate-90 scale-95" : "rotate-0"}`} />
+            <span>More</span>
+          </button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        aria-label="Close more navigation"
+        tabIndex={moreOpen ? 0 : -1}
+        className={`fixed inset-0 -z-10 bg-slate-950/25 backdrop-blur-[2px] transition-opacity duration-200 ${moreOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+        onClick={() => setMoreOpen(false)}
+      />
+      <div
+        id="dc-mobile-more-menu"
+        aria-hidden={!moreOpen}
+        className={`absolute inset-x-1 bottom-[calc(100%+0.65rem)] mx-auto max-h-[min(65dvh,34rem)] max-w-2xl overflow-y-auto rounded-2xl border border-white/70 bg-white/95 p-3 shadow-[0_20px_60px_-18px_rgba(15,45,30,.35)] backdrop-blur-2xl transition-all duration-200 ease-out ${moreOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[.98] opacity-0"}`}
+        style={{ visibility: moreOpen ? "visible" : "hidden" }}
+      >
+        <div className="mb-3 flex items-center justify-between px-1">
+          <div>
+            <p className="text-sm font-bold text-slate-900">More from DeshConnect</p>
+            <p className="mt-0.5 text-[11px] text-slate-500">Explore all features</p>
           </div>
-        </>
-      )}
+          {user && <UserMenu user={user} unread={unread} />}
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {moreItems.map((item) => {
+            const active = routeReady && isNavPathActive(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                tabIndex={moreOpen ? 0 : -1}
+                aria-current={active ? "page" : undefined}
+                className={`group flex min-h-12 items-center rounded-xl border px-3 py-3 text-sm font-medium transition-all duration-200 active:scale-[.98] ${active ? "border-emerald-200 bg-emerald-50 text-emerald-900 shadow-sm" : "border-slate-100 bg-slate-50/80 text-slate-700 hover:-translate-y-0.5 hover:border-emerald-100 hover:bg-emerald-50"}`}
+              >
+                <span className="mr-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+        <form action="/search" className="mt-3">
+          <label className="sr-only" htmlFor="dc-mobile-search">Search DeshConnect</label>
+          <div className="flex gap-2">
+            <input
+              id="dc-mobile-search"
+              name="q"
+              placeholder="Search DeshConnect"
+              className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+              tabIndex={moreOpen ? 0 : -1}
+            />
+            <button type="submit" tabIndex={moreOpen ? 0 : -1} className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 active:scale-95">
+              Search
+            </button>
+          </div>
+        </form>
+        <div className="mt-3 flex gap-2 border-t border-slate-100 pt-3">
+          {user ? (
+            <Link href="/dashboard" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl bg-emerald-700 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 active:scale-[.98]">
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl bg-emerald-700 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 active:scale-[.98]">
+                Login
+              </Link>
+              <Link href="/register" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl border border-emerald-200 px-3 py-2.5 text-center text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50 active:scale-[.98]">
+                Create account
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }
@@ -146,34 +166,31 @@ function MobileNavLink({
   href,
   label,
   icon,
-  pathname,
-  routeReady,
+  active,
   badge = 0,
 }: {
   href: string;
   label: string;
   icon: "home" | "mountain" | "landmark" | "droplet" | "message" | "globe";
-  pathname: string;
-  routeReady: boolean;
+  active: boolean;
   badge?: number;
 }) {
-  const active = routeReady && isNavPathActive(pathname, href);
   return (
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className={`relative flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold transition-colors ${active ? "bg-brand-50 text-brand-700" : "text-slate-500 hover:bg-slate-50 hover:text-brand-700"}`}
+      className={`relative z-10 flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 text-[9px] font-semibold leading-tight transition-all duration-200 sm:text-[10px] ${active ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700"}`}
     >
-      <span className="relative">
-        <Icon name={icon} className="h-6 w-6" />
+      <span className="relative transition-transform duration-200 group-active:scale-90">
+        <Icon name={icon} className={`h-[21px] w-[21px] transition-all duration-200 ${active ? "-translate-y-0.5 scale-110" : "scale-100"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
           </span>
         )}
       </span>
-      <span className="max-w-full truncate">{label}</span>
+      <span className="max-w-full text-center">{label === "Blood Donation" ? "Blood" : label}</span>
     </Link>
   );
 }
