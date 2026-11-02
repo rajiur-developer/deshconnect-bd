@@ -780,7 +780,11 @@ upazila_id: parsed.data.upazilaId ?? null,
 const result = await insforgeUpdate(table, id, values);
 updated = result.data?.[0] ? { id: result.data[0].id } : null;
 } catch (error) {
-console.error("Institution update failed.", error instanceof Error ? error.message : "Unknown error");
+const message = error instanceof Error ? error.message : "Unknown error";
+console.error("Institution update failed.", message);
+if (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")) {
+return { error: "Database response timed out. Please try again in a moment." };
+}
 return { error: "Could not save this institution. Please try again." };
 }
 if (!updated) return { error: "Institution not found." };
