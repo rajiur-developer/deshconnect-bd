@@ -26,7 +26,7 @@ The first start downloads the English/Bengali language models and can take sever
 After the container is running:
 
 ```bash
-docker compose exec libretranslate ltmanage keys add 120 --char-limit 5000
+docker compose exec libretranslate ltmanage keys --api-keys-db-path /app/db/api_keys.db add 120 --char-limit 5000
 ```
 
 Copy the generated key and store it as `LIBRETRANSLATE_API_KEY` in Vercel. Do not commit it to GitHub.
