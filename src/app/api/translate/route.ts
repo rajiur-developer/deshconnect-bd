@@ -12,7 +12,8 @@ function getTranslationEndpoint(): URL | null {
     const url = new URL(configuredUrl);
     const isLocal = url.hostname === "localhost" || url.hostname === "127.0.0.1";
     if (url.protocol !== "https:" && !(isLocal && url.protocol === "http:")) return null;
-    url.pathname = `${url.pathname.replace(/\\/+$/, "")}/translate`.replace(/^\\/\\/translate$/, "/translate");
+    while (url.pathname.length > 1 && url.pathname.endsWith("/")) url.pathname = url.pathname.slice(0, -1);
+    if (!url.pathname.endsWith("/translate")) url.pathname = `${url.pathname}/translate`;
     url.search = "";
     url.hash = "";
     return url;
