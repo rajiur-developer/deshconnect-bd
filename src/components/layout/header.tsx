@@ -100,7 +100,7 @@ export async function Header({
       <div className="dc-header-inner container-x flex h-[4.5rem] items-center gap-4">
         <Link
           href="/"
-          className="dc-header-logo flex shrink-0 items-center gap-2 font-bold text-brand-700 logoSize"
+          className="dc-header-logo hidden shrink-0 items-center gap-2 font-bold text-brand-700 logoSize lg:flex"
         >
           <span className="grid h-14 w-14 place-items-center rounded-lg text-white">
             <img
