@@ -107,7 +107,7 @@ export function LanguageProvider({
           if (locale === "en") {
             if (value === record.lastApplied && value !== record.original) element.setAttribute(name, record.original);
             record.lastApplied = record.original;
-          } else if (record.original.trim() && value !== record.lastApplied) {
+          } else if (record.original.trim() && value === record.original) {
             attributeNodes.push({ element, name, original: record.original });
           }
         }
@@ -121,7 +121,7 @@ export function LanguageProvider({
         return;
       }
 
-      const entries = [
+      const entries: Array<{ key: string; apply: (translated: string) => void }> = [
         ...textNodes.map((item) => ({ key: item.original, apply: (translated: string) => {
           if (item.node.isConnected && item.node.data === item.original) {
             item.node.data = translated;
@@ -136,8 +136,9 @@ export function LanguageProvider({
           }
         } })),
       ];
-      if (titleOriginal.current.trim()) entries.push({ key: titleOriginal.current, apply: (translated: string) => {
-        if (document.title === titleOriginal.current) {
+      const titleText = titleOriginal.current;
+      if (titleText && titleText.trim()) entries.push({ key: titleText, apply: (translated: string) => {
+        if (document.title === titleText) {
           document.title = translated;
           titleLastApplied.current = translated;
         }
