@@ -3,11 +3,12 @@ services:
     image: libretranslate/libretranslate:latest
     container_name: deshconnect-libretranslate
     restart: unless-stopped
-    command: ["--load-only", "en,bn", "--update-models", "--api-keys", "--req-limit", "60", "--batch-limit", "60", "--char-limit", "5000", "--disable-web-ui"]
+    command: ["--load-only", "en,bn", "--update-models", "--api-keys", "--api-keys-db-path", "/app/db/api_keys.db", "--req-limit", "60", "--batch-limit", "60", "--char-limit", "5000", "--disable-web-ui"]
     environment:
       LT_LOAD_ONLY: "en,bn"
       LT_UPDATE_MODELS: "true"
       LT_API_KEYS: "true"
+      LT_API_KEYS_DB_PATH: "/app/db/api_keys.db"
       LT_REQ_LIMIT: "60"
       LT_BATCH_LIMIT: "60"
       LT_CHAR_LIMIT: "5000"
