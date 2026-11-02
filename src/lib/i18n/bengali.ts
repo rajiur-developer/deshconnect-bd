@@ -513,7 +513,6 @@ Object.assign(PHRASES, {
   "Learn more": "আরও জানুন",
   "View details": "বিস্তারিত দেখুন",
   "View profile": "প্রোফাইল দেখুন",
-  "Visit website": "ওয়েবসাইট দেখুন",
   "Contact us": "যোগাযোগ করুন",
   "Get started": "শুরু করুন",
   "Find out more": "আরও জানুন",
