@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   const purpose = body.purpose as Purpose;
   const directoryFolder = body.directoryFolder as DirectoryFolder | undefined;
   if (!["profile", "community", "news", "directory"].includes(purpose)) return jsonError("Invalid image purpose.");
-  if (purpose === "directory" && !["places", "institutions", "hospitals"].includes(directoryFolder ?? "")) {
+  if (purpose === "directory" && !["places", "institutions", "hospitals", "businesses", "news"].includes(directoryFolder ?? "")) {
     return jsonError("Choose a valid directory image category.");
   }
   if (purpose === "directory" && user.role !== "admin" && user.role !== "moderator") {
