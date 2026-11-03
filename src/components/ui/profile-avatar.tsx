@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { initials } from "@/lib/utils";
 import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
+import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
 
 type ProfileAvatarProps = {
   name: string;
@@ -31,7 +32,7 @@ export function ProfileAvatar({ name, src, storageKey, className = "", textClass
     return () => { active = false; };
   }, [src, storageKey]);
   async function recoverImage() {
-    if (storageKey) {
+    if (storageKey && !isR2PublicMediaUrl(src ?? "", storageKey)) {
       try {
         const { data } = await getInsForgeBrowserClient().storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(storageKey, 3600);
         if (data?.signedUrl) { setImageSrc(data.signedUrl); setImageFailed(false); return; }
