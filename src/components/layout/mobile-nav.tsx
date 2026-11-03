@@ -30,6 +30,7 @@ export function MobileNav({
   initialUnreadMessages?: UnreadConversation[];
 }) {
   const [moreOpen, setMoreOpen] = useState(false);
+  const [optimisticPath, setOptimisticPath] = useState<string | null>(null);
   const routeReady = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const pathname = usePathname();
   const unreadTotal = useUnreadMessageTotal(initialUnreadMessages);
@@ -47,11 +48,16 @@ export function MobileNav({
   );
 
   const directIndex = routeReady
-    ? PRIMARY_LINKS.findIndex((item) => isNavPathActive(pathname, item.href))
+    ? PRIMARY_LINKS.findIndex((item) => isNavPathActive(activePath, item.href))
     : -1;
   const moreActive = routeReady && directIndex === -1;
 
-  useEffect(() => setMoreOpen(false), [pathname]);
+  useEffect(() => {
+    setMoreOpen(false);
+    setOptimisticPath(null);
+  }, [pathname]);
+
+  const activePath = optimisticPath ?? pathname;
 
   return (
     <nav
@@ -76,9 +82,9 @@ export function MobileNav({
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
             aria-label="More navigation options"
-            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-[1400ms] ease-[cubic-bezier(.25,.1,.25,1)] active:scale-[.94] motion-reduce:transition-none ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
+            className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-150 ease-out active:scale-[.94] motion-reduce:transition-none ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
           >
-            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-[1400ms] ease-[cubic-bezier(.25,.1,.25,1)] motion-reduce:transition-none ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
+            <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-150 ease-out motion-reduce:transition-none ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
           </button>
         </div>
       </div>
@@ -105,7 +111,7 @@ export function MobileNav({
         </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {moreItems.map((item) => {
-            const active = routeReady && isNavPathActive(pathname, item.href);
+            const active = routeReady && isNavPathActive(activePath, item.href);
             return (
               <Link
                 key={item.href}
@@ -184,10 +190,10 @@ function MobileNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={`${label}${badge > 0 ? `, ${badge} unread` : ""}`}
-      className="group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-transform duration-[1400ms] ease-[cubic-bezier(.25,.1,.25,1)] active:scale-[.96] motion-reduce:transition-none"
+      className="group relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-1.5 transition-transform duration-150 ease-out active:scale-[.96] motion-reduce:transition-none"
     >
-      <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-transparent transition-transform duration-[1400ms] ease-[cubic-bezier(.25,.1,.25,1)] group-hover:scale-110">
-        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-[1400ms] ease-[cubic-bezier(.25,.1,.25,1)] motion-reduce:transition-none ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
+      <span className="relative grid h-10 w-10 place-items-center rounded-xl bg-transparent transition-transform duration-150 ease-out group-hover:scale-110">
+        <Icon name={icon} className={`h-[22px] w-[22px] transition-all duration-150 ease-out motion-reduce:transition-none ${iconColor[icon]} ${active ? "-translate-y-0.5 scale-110 drop-shadow-[0_2px_4px_rgba(15,23,42,.18)]" : "scale-100 opacity-100 group-hover:-translate-y-0.5"}`} />
         {badge > 0 && (
           <span className="absolute -right-2 -top-1">
             <UnreadMessageBadge count={badge} />
