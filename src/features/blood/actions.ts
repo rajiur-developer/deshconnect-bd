@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { getDonationEligibility } from "@/lib/blood-donation";
-import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { formatZodError, bloodRequestSchema, donorSchema, messageSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications"; import { createBloodRequest, upsertDonor } from "@/services/blood";
+import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { formatZodError, bloodRequestSchema, donorSchema, messageSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications"; import { createBloodRequest, upsertDonor } from "@/services/blood";
 export type BloodFormState = { error?: string; success?: string };
 export async function registerDonorAction(_prev: BloodFormState, formData: FormData): Promise<BloodFormState> {
 const user = await requireUser();
@@ -97,7 +97,7 @@ upazilaId: formData.get("upazilaId") || undefined,
 if (!parsed.success) {
 return { error: formatZodError(parsed.error) };
 }
-const limit = rateLimit(`bloodrequest:${user.id}`, RATES.bloodRequestPerHour, 60 * 60_000);
+const limit = await rateLimitAsync(`bloodrequest:${user.id}`, RATES.bloodRequestPerHour, 60 * 60_000);
 if (!limit.ok) {
 return { error: `Too many requests. Try again in ${limit.retryAfterSeconds}s.` };
 }
@@ -293,7 +293,7 @@ return { error: "Could not send your message. Please try again." };
 if (!conversation) return { error: "You are not a participant in this blood donation chat." };
 const parsed = messageSchema.safeParse({ body });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-const limit = rateLimit(`bloodchat:${user.id}`, RATES.bloodChatPerMinute, 60_000);
+const limit = await rateLimitAsync(`bloodchat:${user.id}`, RATES.bloodChatPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many messages. Try again in ${limit.retryAfterSeconds}s.` };
 const { data: message, error } = await insforge.database
 .from("messages")
