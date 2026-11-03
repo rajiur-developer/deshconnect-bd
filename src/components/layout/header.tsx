@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { PublicUser } from "@/types/auth";
-import { isNavGroup, PRIMARY_NAV, SITE } from "@/config/site";
+import { PRIMARY_NAV, SITE } from "@/config/site";
 import { unreadNotificationCount } from "@/services/notifications";
 import {
   listConversations,
