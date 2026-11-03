@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { cookies } from "next/headers";
 
 import { SITE } from "@/config/site";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -9,7 +8,6 @@ import { Header } from "@/components/layout/header";
 import { PageTheme } from "@/components/layout/page-theme";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthFeedback } from "@/components/ui/auth-feedback";
-import { LanguageProvider } from "@/components/i18n/language-provider";
 import { VisitorTracker } from "@/components/analytics/visitor-tracker";
 import "./globals.css";
 
@@ -31,22 +29,17 @@ async function AuthenticatedShell() {
 function HeaderFallback() {
   return <div className="h-[4.5rem] border-b border-gray-200/50 bg-white/90" aria-hidden="true" />;
 }
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const savedLocale = cookieStore.get("deshconnect_locale_v2")?.value;
-  const locale = savedLocale === "bn" ? "bn" : "en";
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale}>
-      <body suppressHydrationWarning className="flex min-h-screen flex-col pb-[calc(4.6rem+env(safe-area-inset-bottom))] lg:pb-0">
-        <LanguageProvider initialLocale={locale} enabled={true}>
-          <ToastProvider>
-            <AuthFeedback />
-            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
-            <Suspense fallback={<HeaderFallback />}><AuthenticatedShell /></Suspense>
-            <main id="main-content" className="flex-1"><PageTheme>{children}</PageTheme></main>
-            <Footer />
-          </ToastProvider>
-        </LanguageProvider>
+    <html lang="en">
+      <body className="flex min-h-screen flex-col pb-[calc(4.6rem+env(safe-area-inset-bottom))] lg:pb-0">
+        <ToastProvider>
+          <AuthFeedback />
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+          <Suspense fallback={<HeaderFallback />}><AuthenticatedShell /></Suspense>
+          <main id="main-content" className="flex-1"><PageTheme>{children}</PageTheme></main>
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   );
