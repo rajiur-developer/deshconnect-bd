@@ -4,6 +4,7 @@ import { isValidAdminDirectoryImageUrl, isValidAdminPlaceImageUrl } from "@/feat
 describe("admin place image URLs", () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_INSFORGE_URL;
+    delete process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
   });
 
   it("accepts an image uploaded to the current admin's place folder", () => {
@@ -17,6 +18,19 @@ describe("admin place image URLs", () => {
       "https://backend.example/api/storage/buckets/community-post-images/objects/admin-1/places/image.jpg",
       "admin-1",
     )).toBe(true);
+  });
+
+  it("accepts images served from the configured R2 CDN domain", () => {
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = "https://media.example/assets";
+
+    expect(isValidAdminPlaceImageUrl(
+      "https://media.example/assets/admin-1/places/image.webp",
+      "admin-1",
+    )).toBe(true);
+    expect(isValidAdminPlaceImageUrl(
+      "https://media.example/assets/admin-2/places/image.webp",
+      "admin-1",
+    )).toBe(false);
   });
 
   it("rejects external, cross-user, and non-storage image URLs", () => {
