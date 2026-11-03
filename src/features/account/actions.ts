@@ -5,7 +5,7 @@ import { createServerClient } from "@insforge/sdk/ssr";
 import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants";
 import { messageSchema } from "@/lib/validation/schemas";
 import { sanitizeMultiline } from "@/lib/security/sanitize";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
 import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import {
 cancelConnection,
@@ -173,7 +173,7 @@ if (keyParts.length !== 3 || keyParts[0] !== user.id || keyParts[1] !== conversa
 return { ok: false, error: "The selected image or voice message is invalid. Please select it again." };
 }
 }
-const limit = rateLimit(`message:${user.id}`, RATES.bloodChatPerMinute, 60_000);
+const limit = await rateLimitAsync(`message:${user.id}`, RATES.bloodChatPerMinute, 60_000);
 if (!limit.ok) return { ok: false, error: `Too many messages. Try again in ${limit.retryAfterSeconds}s.` };
 const { data: message, error } = await insforge.database
 .from("messages")
