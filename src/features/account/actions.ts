@@ -29,7 +29,7 @@ const trustedUrl = isTrustedPublicImageUrl(avatarUrl, avatarKey, [PROFILE_IMAGE_
 const parts = avatarKey.split("/");
 const safeKey = avatarKey.startsWith(`${user.id}/`) && parts.length === 2 && /^[a-zA-Z0-9._-]{1,180}$/.test(parts[1] ?? "");
 if (!trustedUrl || !safeKey || !PROFILE_IMAGE_TYPES.includes(avatarMimeType as (typeof PROFILE_IMAGE_TYPES)[number]) || !Number.isInteger(avatarSize) || avatarSize < 1 || avatarSize > PROFILE_IMAGE_MAX_BYTES) {
-return { error: "The selected profile image is invalid. Choose a JPG, JPEG, or PNG image up to 5 MB." };
+return { error: "The selected profile image is invalid. Choose a JPG, PNG, or WebP image up to 5 MB." };
 }
 }
 const parsed = profileSchema.safeParse({
