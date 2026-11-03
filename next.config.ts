@@ -39,9 +39,10 @@ const nextConfig: NextConfig = {
   },
   images: {
     // Keep existing InsForge images working while new public media uses R2.
-    remotePatterns: [storageImagePattern, r2ImagePattern].filter(
-      (pattern): pattern is NonNullable<NonNullable<NextConfig["images"]>["remotePatterns"]>[number] => Boolean(pattern),
-    ),
+    remotePatterns: [
+      ...(storageImagePattern ? [storageImagePattern] : []),
+      ...(r2ImagePattern ? [r2ImagePattern] : []),
+    ],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     formats: ["image/avif", "image/webp"],
