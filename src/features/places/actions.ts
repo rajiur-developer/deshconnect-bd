@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { formatZodError, reviewSchema } from "@/lib/validation/schemas"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants";
+import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { formatZodError, reviewSchema } from "@/lib/validation/schemas"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants";
 export async function toggleSaveAction(placeId: string): Promise<{ saved: boolean }> {
 const user = await requireUser();
 const existing = await insforge.database
@@ -39,7 +39,7 @@ if (!placeId || !slug) return { error: "Place information is missing. Refresh th
 if (!parsed.success) {
 return { error: formatZodError(parsed.error) };
 }
-const limit = rateLimit(`review:${user.id}`, RATES.postPerMinute, 60_000);
+const limit = await rateLimitAsync(`review:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) {
 return { error: `Too many reviews. Try again in ${limit.retryAfterSeconds}s.` };
 }

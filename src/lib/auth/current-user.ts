@@ -5,6 +5,7 @@ import { createServerClient } from "@insforge/sdk/ssr";
 import { cookies } from "next/headers";
 import type { PublicUser } from "@/types/auth";
 import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
+import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
 
 function makeUsername(email: string, id: string) {
   const base = (email.split("@")[0] ?? "member").toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 16) || "member";
@@ -36,7 +37,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
   const row: any = profile ?? fallback;
   if (row.status && row.status !== "active") return null;
   let avatar = row.avatar ?? fallback.avatar;
-  if (row.avatar_key) {
+  if (row.avatar_key && !isR2PublicMediaUrl(row.avatar ?? "", row.avatar_key)) {
     const { data } = await client.storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(row.avatar_key, 3600);
     avatar = data?.signedUrl ?? avatar;
   }

@@ -63,6 +63,22 @@ See [`.env.example`](.env.example). Set these InsForge variables in `.env.local`
 - `AUTH_SECRET` — signs the local session cookie. Required outside development and must be at least 32 characters; the app throws at runtime without it. Generate with `openssl rand -base64 48`.
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — enables embedded maps; without it the map falls back to an
   external Google Maps link.
+- Optional Cloudflare R2 public-media settings: `NEXT_PUBLIC_R2_PUBLIC_URL`,
+  `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and
+  `R2_BUCKET_NAME`. `R2_ENDPOINT` is optional and defaults to the account's R2 endpoint.
+  Public profile, community, news and admin directory images use R2 when configured;
+  otherwise uploads continue to use InsForge Storage. Existing InsForge image URLs remain supported.
+- Optional Upstash Redis settings: `UPSTASH_REDIS_REST_URL` and
+  `UPSTASH_REDIS_REST_TOKEN`. When configured, application rate limits are shared
+  across serverless instances and public location lists are cached for ten minutes.
+  If Redis is unavailable or not configured, the app falls back to its in-process limiter
+  and direct database reads.
+- R2 bucket CORS must allow your production site origin and localhost development
+  origin, the `PUT` method, and the `Content-Type` and `Cache-Control` request
+  headers. Connect the bucket to a Cloudflare custom domain and set that URL as
+  `NEXT_PUBLIC_R2_PUBLIC_URL`. A public R2 domain must not be used for private records or chat attachments.
+- Private record attachments and chat media remain in InsForge Storage so their
+  existing user/participant RLS policies continue to protect them.
 - Bengali and English interface text is translated locally using the manually maintained dictionary in `src/lib/i18n/bengali.ts`. No external translation service is configured or called. Unknown words and arbitrary user-written content are not automatically translated; add reviewed entries to the dictionary for interface copy. Private message bodies are intentionally excluded.
 
 The language preference is saved in a browser cookie. Admin and moderator accounts always see the

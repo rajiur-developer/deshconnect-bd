@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+import { uploadPublicImage } from "@/lib/storage/upload-public-image";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
 import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import {
@@ -38,15 +39,20 @@ if (file.size < 1 || file.size > 3 * 1024 * 1024) { setUploadError("Image must b
 uploadBusy.current = true;
 setUploading(true);
 try {
-const client = getInsForgeBrowserClient();
-const filename = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").slice(-80) || "post-image";
 const optimized = await optimizeImageForUpload(file);
-const extension = optimized.type === "image/webp" ? "webp" : "jpg";
-const key = `${userId}/${crypto.randomUUID()}-${filename.replace(/\\.[^.]+$/, "")}.${extension}`;
-const { data, error } = await client.storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, optimized);
-if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
-if (imageUrlRef.current) imageUrlRef.current.value = data.url;
-if (imageKeyRef.current) imageKeyRef.current.value = data.key;
+let uploaded: { url: string; key: string };
+if (process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
+  uploaded = await uploadPublicImage(new File([optimized], file.name, { type: optimized.type }), "community");
+} else {
+  const filename = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").slice(-80) || "post-image";
+  const extension = optimized.type === "image/webp" ? "webp" : "jpg";
+  const key = `${userId}/${crypto.randomUUID()}-${filename.replace(/\\.[^.]+$/, "")}.${extension}`;
+  const { data, error } = await getInsForgeBrowserClient().storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, optimized);
+  if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
+  uploaded = { url: data.url, key: data.key };
+}
+if (imageUrlRef.current) imageUrlRef.current.value = uploaded.url;
+if (imageKeyRef.current) imageKeyRef.current.value = uploaded.key;
 if (imageMimeRef.current) imageMimeRef.current.value = file.type;
 if (imageSizeRef.current) imageSizeRef.current.value = String(file.size);
 setPreview(URL.createObjectURL(optimized));

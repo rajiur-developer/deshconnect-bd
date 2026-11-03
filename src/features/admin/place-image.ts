@@ -1,17 +1,31 @@
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
+import { isTrustedPublicImageUrl } from "@/lib/storage/media-url";
 
 export function isValidAdminDirectoryImageUrl(imageUrl: string, userId: string, folder: "places" | "institutions" | "hospitals"): boolean {
   try {
     const url = new URL(imageUrl);
-    const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL;
-    if (!baseUrl || url.origin !== new URL(baseUrl).origin) return false;
+    let key = "";
+    const r2BaseValue = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim();
+    if (r2BaseValue) {
+      const base = new URL(r2BaseValue);
+      const prefix = base.pathname.replace(/\/+$/, "");
+      if (url.origin === base.origin && url.pathname.startsWith(`${prefix}/`)) {
+        key = decodeURIComponent(url.pathname.slice(prefix.length + 1));
+      }
+    }
 
-    const prefix = `/api/storage/buckets/${COMMUNITY_POST_IMAGE_BUCKET}/objects/`;
-    if (!url.pathname.startsWith(prefix)) return false;
+    if (!key) {
+      const baseValue = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim();
+      if (!baseValue) return false;
+      const base = new URL(baseValue);
+      const prefix = `/api/storage/buckets/${COMMUNITY_POST_IMAGE_BUCKET}/objects/`;
+      if (url.origin !== base.origin || !url.pathname.startsWith(prefix)) return false;
+      key = decodeURIComponent(url.pathname.slice(prefix.length));
+    }
 
-    const key = decodeURIComponent(url.pathname.slice(prefix.length));
     const folderPrefix = `${userId}/${folder}/`;
-    return key.startsWith(folderPrefix)
+    return isTrustedPublicImageUrl(imageUrl, key, [COMMUNITY_POST_IMAGE_BUCKET])
+      && key.startsWith(folderPrefix)
       && key.slice(folderPrefix.length).length > 0
       && !key.slice(folderPrefix.length).includes("/");
   } catch {
