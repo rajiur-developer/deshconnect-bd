@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createAuthActions, createServerClient } from "@insforge/sdk/ssr";
 import { revalidatePath } from "next/cache";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
 import { formatZodError, loginSchema, registerSchema } from "@/lib/validation/schemas";
 
@@ -95,7 +95,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   const parsed = loginSchema.safeParse({ email: formData.get("email"), password: formData.get("password"), next: formData.get("next") ?? undefined });
   if (!parsed.success) return { error: formatZodError(parsed.error) };
   const { email, password, next } = parsed.data;
-  const limit = rateLimit(`login:${email}`, RATES.loginPerMinute, 60_000);
+  const limit = await rateLimitAsync(`login:${email}`, RATES.loginPerMinute, 60_000);
   if (!limit.ok) return { error: `Too many attempts. Try again in ${limit.retryAfterSeconds}s.` };
   let signInResult;
   try {
@@ -124,7 +124,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   });
   if (!parsed.success) return { error: formatZodError(parsed.error) };
   const data = parsed.data;
-  const limit = rateLimit(`register:${data.email}`, RATES.registerPerHour, 60 * 60_000);
+  const limit = await rateLimitAsync(`register:${data.email}`, RATES.registerPerHour, 60 * 60_000);
   if (!limit.ok) return { error: `Too many registrations. Try again in ${limit.retryAfterSeconds}s.` };
   let actions: Awaited<ReturnType<typeof freshAuth>>["actions"];
   let cookieStore: Awaited<ReturnType<typeof freshAuth>>["cookieStore"];
@@ -220,7 +220,7 @@ export async function googleOAuthAction(): Promise<void> {
 export async function requestPasswordResetAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
-  const limit = rateLimit(`reset:${email}`, RATES.resetPerHour, 60 * 60_000);
+  const limit = await rateLimitAsync(`reset:${email}`, RATES.resetPerHour, 60 * 60_000);
   if (!limit.ok) return { error: `Too many requests. Try again in ${limit.retryAfterSeconds}s.` };
   const client = createServerClient({ cookies: await cookies() });
   const { error } = await client.auth.sendResetPasswordEmail({ email });
