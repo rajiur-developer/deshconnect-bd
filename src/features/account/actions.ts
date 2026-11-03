@@ -126,6 +126,7 @@ if (error) throw error;
 if (!updated || updated.addressee_id !== user.id || updated.status !== action) return { ok: false };
 revalidatePath("/connections");
 revalidatePath("/friend-requests");
+revalidatePath("/dashboard");
 revalidatePath("/community");
 return { ok: true }; }
 export async function cancelConnectionAction(connectionId: string): Promise<{ ok: boolean }> {
