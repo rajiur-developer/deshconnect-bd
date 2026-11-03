@@ -1,4 +1,5 @@
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
+import { isTrustedPublicImageUrl } from "@/lib/storage/media-url";
 
 export function isValidAdminDirectoryImageUrl(imageUrl: string, userId: string, folder: "places" | "institutions" | "hospitals"): boolean {
   try {
