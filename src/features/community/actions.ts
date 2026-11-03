@@ -1,6 +1,8 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
+import { isR2PublicMediaUrl, isTrustedPublicImageUrl } from "@/lib/storage/media-url";
+import { deleteR2Object } from "@/lib/storage/r2";
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { requireUser } from "@/lib/auth/current-user"; import { insforgeDelete, insforgeSelectOne, insforgeUpdate } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import type { Report } from "@/types/community"; import { formatZodError, commentSchema, postSchema, reportSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { can } from "@/lib/auth/permissions"; import { getRolePermissionOverrides } from "@/services/role-permissions";
@@ -11,14 +13,7 @@ const imageKey = String(formData.get("imageKey") ?? "");
 const imageMimeType = String(formData.get("imageMimeType") ?? "");
 const imageSize = Number(formData.get("imageSize") ?? 0);
 const imageUrl = String(formData.get("image") ?? "");
-let validImageUrl = false;
-try {
-const parsedImageUrl = new URL(imageUrl);
-const expectedImagePrefix = `/api/storage/buckets/${COMMUNITY_POST_IMAGE_BUCKET}/objects/`;
-validImageUrl = parsedImageUrl.origin === new URL(process.env.NEXT_PUBLIC_INSFORGE_URL!).origin
-&& parsedImageUrl.pathname.startsWith(expectedImagePrefix)
-&& decodeURIComponent(parsedImageUrl.pathname.slice(expectedImagePrefix.length)) === imageKey;
-} catch {}
+const validImageUrl = isTrustedPublicImageUrl(imageUrl, imageKey, [COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET]);
 if (Boolean(imageKey) !== Boolean(imageUrl) || (imageKey && (!imageKey.startsWith(`${user.id}/`) || !["image/jpeg", "image/png", "image/webp"].includes(imageMimeType) || !Number.isSafeInteger(imageSize) || imageSize < 1 || imageSize > 3 * 1024 * 1024 || !validImageUrl))) {
 return { error: "The image is invalid. Please choose an image up to 3 MB and try again." };
 }
@@ -58,8 +53,10 @@ raw: error instanceof Error
 : JSON.stringify(error, Object.getOwnPropertyNames(error)),
 });
 if (imageKey) {
-try { await client.storage.from(COMMUNITY_POST_IMAGE_BUCKET).remove([imageKey]); }
-catch (cleanupError) { console.error("Failed to remove unused community post image", cleanupError); }
+try {
+  if (isR2PublicMediaUrl(imageUrl, imageKey)) await deleteR2Object(imageKey);
+  else await client.storage.from(COMMUNITY_POST_IMAGE_BUCKET).remove([imageKey]);
+} catch (cleanupError) { console.error("Failed to remove unused community post image", cleanupError); }
 }
 const errorText = error instanceof Error
 ? `${error.name}: ${error.message}`
@@ -156,8 +153,13 @@ const storageKey = post.image_key || getPostStorageKey(post.image);
 const storageBucket = getPostStorageBucket(post.image) || PROFILE_IMAGE_BUCKET;
 const client = createServerClient({ cookies: await cookies() });
 if (storageKey) {
-const { error: storageError } = await client.storage.from(storageBucket).remove([storageKey]);
-if (storageError) return { deleted: false, error: "The post image could not be deleted, so the post was kept." };
+  if (isR2PublicMediaUrl(post.image ?? "", storageKey)) {
+    try { await deleteR2Object(storageKey); }
+    catch { return { deleted: false, error: "The post image could not be deleted, so the post was kept." }; }
+  } else {
+    const { error: storageError } = await client.storage.from(storageBucket).remove([storageKey]);
+    if (storageError) return { deleted: false, error: "The post image could not be deleted, so the post was kept." };
+  }
 }
 try {
 await insforgeDelete("posts", postId);
