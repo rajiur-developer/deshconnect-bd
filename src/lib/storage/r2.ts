@@ -4,7 +4,6 @@ import { createHash, createHmac } from "node:crypto";
 
 type R2Config = {
   endpoint: URL;
-  accountId: string;
   accessKeyId: string;
   secretAccessKey: string;
   bucket: string;
@@ -33,7 +32,7 @@ function config(): R2Config {
     throw new Error("NEXT_PUBLIC_R2_PUBLIC_URL must be a valid HTTPS public media URL.");
   }
 
-  return { endpoint, accountId, accessKeyId, secretAccessKey, bucket, publicUrl };
+  return { endpoint, accessKeyId, secretAccessKey, bucket, publicUrl };
 }
 
 export function isR2Configured(): boolean {
@@ -135,8 +134,7 @@ export function createR2UploadUrl(key: string, contentType: string): { uploadUrl
 export function getR2PublicUrl(key: string): string {
   const { publicUrl } = config();
   const base = publicUrl.toString().replace(/\/+$/, "");
-  const prefix = publicUrl.pathname.replace(/\/+$/, "");
-  return `${base}${prefix ? "" : ""}/${encodeKey(key)}`;
+  return `${base}/${encodeKey(key)}`;
 }
 
 export async function verifyR2Object(key: string): Promise<{ size: number; contentType: string }> {
