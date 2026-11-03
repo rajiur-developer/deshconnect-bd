@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
+import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
 
 type CommunityPostImageProps = {
   src: string;
@@ -22,7 +23,7 @@ export function CommunityPostImage({ src, storageKey, className = "" }: Communit
   }, [src, storageKey]);
 
   async function recoverPrivateImage() {
-    if (!storageKey || signedAttempted) {
+    if (!storageKey || signedAttempted || isR2PublicMediaUrl(src, storageKey)) {
       setImageFailed(true);
       return;
     }
