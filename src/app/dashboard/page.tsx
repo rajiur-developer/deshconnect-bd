@@ -4,6 +4,7 @@ import { listSavedPlaces } from "@/services/places";
 import { listPosts, listUserComments } from "@/services/community";
 import { listNotifications } from "@/services/notifications";
 import { listUserBloodRequests } from "@/services/blood";
+import { listPendingRequests } from "@/services/messaging";
 import { AccountShell } from "@/components/layout/account-shell";
 import { DashboardSessionWidget } from "@/components/account/dashboard-session-widget";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
@@ -21,12 +22,13 @@ function formatNotificationDate(value?: string) {
 
 export default async function DashboardPage() {
   const user = await requireUser("/dashboard");
-  const [saved, posts, comments, notifications, requests] = await Promise.all([
+  const [saved, posts, comments, notifications, requests, incomingConnections] = await Promise.all([
     listSavedPlaces(user.id),
     listPosts({ authorId: user.id }).then((result) => result.items),
     listUserComments(user.id),
     listNotifications(user.id),
     listUserBloodRequests(user.id),
+    listPendingRequests(user.id),
   ]);
   const unreadCount = notifications.filter((item) => !item.read).length;
   const activeRequests = requests.filter((item) => item.status === "active").length;
@@ -34,6 +36,7 @@ export default async function DashboardPage() {
   const profileCompletion = Math.round((profileFields.filter(Boolean).length / profileFields.length) * 100);
 
   const stats = [
+    { label: "Connection requests", value: incomingConnections.length, href: "/friend-requests", icon: "users" as const, tint: "bg-emerald-50 text-emerald-700", detail: "People waiting for your response" },
     { label: "Saved places", value: saved.length, href: "/saved", icon: "save" as const, tint: "bg-sky-50 text-sky-700", detail: "Places bookmarked" },
     { label: "Your posts", value: posts.length, href: "/my-posts", icon: "message" as const, tint: "bg-violet-50 text-violet-700", detail: "Community contributions" },
     { label: "Your comments", value: comments.length, href: "/my-comments", icon: "edit" as const, tint: "bg-amber-50 text-amber-700", detail: "Conversations started" },
