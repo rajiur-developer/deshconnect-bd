@@ -502,7 +502,7 @@ html[lang="bn"] body {
 }
 
 .page-transition-enter {
-  animation: page-enter 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: page-enter 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .tab-panel-enter {
@@ -589,7 +589,7 @@ html[lang="bn"] body {
 }
 
 .page-enter {
-  animation: fade-in-up 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-in-up 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: opacity, transform;
 }
 
