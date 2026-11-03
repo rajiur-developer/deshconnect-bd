@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { rateLimitAsync } from "@/lib/security/rate-limit";
 import {
   createR2UploadUrl,
   deleteR2Object,
@@ -11,7 +12,7 @@ import {
 export const runtime = "nodejs";
 
 type Purpose = "profile" | "community" | "news" | "directory";
-type DirectoryFolder = "places" | "institutions" | "hospitals";
+type DirectoryFolder = "places" | "institutions" | "hospitals" | "businesses" | "news";
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function jsonError(message: string, status = 400) {
@@ -56,6 +57,8 @@ export async function POST(request: NextRequest) {
   }
 
   if (action === "create") {
+    const limit = await rateLimitAsync(`media-upload:${user.id}`, 20, 60_000);
+    if (!limit.ok) return jsonError(`Too many uploads. Try again in ${limit.retryAfterSeconds}s.`, 429);
     const contentType = String(body.contentType ?? "").toLowerCase();
     const size = Number(body.size ?? 0);
     const maxBytes = purpose === "community" ? 3 * 1024 * 1024 : 5 * 1024 * 1024;
@@ -85,6 +88,7 @@ export async function POST(request: NextRequest) {
       }
       return NextResponse.json({ key, url: getR2PublicUrl(key) });
     } catch {
+      await deleteR2Object(key).catch(() => undefined);
       return jsonError("The uploaded image could not be verified. Please try again.", 422);
     }
   }
