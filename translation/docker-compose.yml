@@ -6,7 +6,7 @@ services:
     command: ["--load-only", "en,bn", "--api-keys", "--api-keys-db-path", "/app/db/api_keys.db", "--req-limit", "0", "--batch-limit", "60", "--char-limit", "5000", "--disable-web-ui"]
     environment:
       LT_LOAD_ONLY: "en,bn"
-            LT_API_KEYS: "true"
+      LT_API_KEYS: "true"
       LT_API_KEYS_DB_PATH: "/app/db/api_keys.db"
       LT_REQ_LIMIT: "0"
       LT_BATCH_LIMIT: "60"
