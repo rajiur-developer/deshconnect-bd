@@ -69,7 +69,7 @@ export function MobileNav({
         <div className="relative grid grid-cols-7 items-stretch gap-0">
           <span
             aria-hidden="true"
-            className={`pointer-events-none absolute inset-y-0 left-0 z-0 w-[calc(100%/7)] rounded-xl border border-brand-200/80 bg-brand-50 shadow-[0_3px_12px_-7px_rgba(11,61,46,.35)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${activeIndicatorIndex < 0 ? "opacity-0" : "opacity-100"}`}
+            className={`pointer-events-none absolute inset-y-0 left-0 z-0 w-[calc(100%/7)] rounded-xl border border-brand-200/80 bg-brand-50 shadow-[0_3px_12px_-7px_rgba(11,61,46,.35)] transition-transform duration-[650ms] ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none ${activeIndicatorIndex < 0 ? "opacity-0" : "opacity-100"}`}
             style={{ transform: `translateX(${Math.max(0, activeIndicatorIndex) * 100}%)` }}
           />
 
