@@ -8,7 +8,6 @@ import { isNavGroup, isNavPathActive, PRIMARY_NAV } from "@/config/site";
 import { Icon } from "@/components/ui/icons";
 import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } from "@/components/messaging/message-realtime-notifications";
 import { UserMenu } from "@/components/layout/user-menu";
-import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 
 const subscribeToHydration = () => () => {};
 const PRIMARY_LINKS = [
@@ -136,10 +135,6 @@ export function MobileNav({
             </button>
           </div>
         </form>
-        <div className="mb-3 flex items-center justify-between border-t border-slate-100 pt-3">
-          <span className="text-xs font-semibold text-slate-500">Language / ভাষা</span>
-          <LanguageSwitcher />
-        </div>
         <div className="mt-3 flex gap-2 border-t border-slate-100 pt-3">
           {user ? (
             <Link href="/dashboard" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl bg-emerald-700 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 active:scale-[.98]">

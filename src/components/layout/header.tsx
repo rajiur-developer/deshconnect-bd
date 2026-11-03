@@ -15,7 +15,6 @@ import { MobileNav } from "./mobile-nav";
 import { NavMenu } from "./nav-menu";
 import { UserMenu } from "./user-menu";
 import MainLogo from "../../../public/logo/Main-Logo.webp";
-import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 
 export async function Header({
   user,
@@ -131,7 +130,6 @@ export async function Header({
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <LanguageSwitcher className="hidden sm:flex" />
           <form action="/search" className="hidden md:block">
             <div className="relative">
               <Icon
