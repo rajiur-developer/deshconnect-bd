@@ -1,7 +1,7 @@
 "use client";
 
 export type PublicImagePurpose = "profile" | "community" | "news" | "directory";
-export type DirectoryImageFolder = "places" | "institutions" | "hospitals";
+export type DirectoryImageFolder = "places" | "institutions" | "hospitals" | "businesses" | "news";
 
 type UploadResult = { url: string; key: string };
 
