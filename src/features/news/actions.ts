@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { createId } from "@/lib/utils";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
-import { requireUser } from "@/lib/auth/current-user"; import { formatZodError, newsSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications";
+import { requireUser } from "@/lib/auth/current-user"; import { formatZodError, newsSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications";
 import { isContentCategory } from "@/services/content-categories";
 export type NewsFormState = { error?: string; success?: string };
 export async function submitNewsAction(_prev: NewsFormState, formData: FormData): Promise<NewsFormState> {
@@ -34,7 +34,7 @@ if (!parsed.success) {
 return { error: formatZodError(parsed.error) };
 }
 if (!(await isContentCategory("news", parsed.data.category))) return { error: "Please choose a valid news category." };
-const limit = rateLimit(`news:${user.id}`, RATES.postPerMinute, 60_000);
+const limit = await rateLimitAsync(`news:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) {
 return { error: `Too many submissions. Try again in ${limit.retryAfterSeconds}s.` };
 }
