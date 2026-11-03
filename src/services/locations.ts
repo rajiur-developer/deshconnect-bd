@@ -1,40 +1,37 @@
 import "server-only";
+import { getOrSetRedisJson } from "@/lib/cache/redis";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 export async function insforgeListDivisions() {
-const { data } = await insforgeSelectMany("divisions", { order: "name.asc" });
-return (data || []).map((r: any) => ({
-id: r.id,
-slug: r.slug,
-name: r.name,
-capital: r.capital,
-districtsCount: r.districts_count,
-summary: r.summary,
-image: r.image,
-})); }
+return getOrSetRedisJson("public:locations:divisions", 600, async () => {
+  const { data } = await insforgeSelectMany("divisions", { order: "name.asc" });
+  return (data || []).map((r: any) => ({
+    id: r.id, slug: r.slug, name: r.name, capital: r.capital,
+    districtsCount: r.districts_count, summary: r.summary, image: r.image,
+  }));
+});
+}
 export async function insforgeListDistricts(divisionId?: string | null) {
-const params: Record<string, string> = { order: "name.asc" };
-if (divisionId) params["division_id"] = `eq.${divisionId}`;
-const { data } = await insforgeSelectMany("districts", params);
-return (data || []).map((r: any) => ({
-id: r.id,
-slug: r.slug,
-name: r.name,
-divisionId: r.division_id,
-summary: r.summary,
-image: r.image,
-})); }
+return getOrSetRedisJson(`public:locations:districts:${divisionId ?? "all"}`, 600, async () => {
+  const params: Record<string, string> = { order: "name.asc" };
+  if (divisionId) params["division_id"] = `eq.${divisionId}`;
+  const { data } = await insforgeSelectMany("districts", params);
+  return (data || []).map((r: any) => ({
+    id: r.id, slug: r.slug, name: r.name, divisionId: r.division_id,
+    summary: r.summary, image: r.image,
+  }));
+});
+}
 export async function insforgeListUpazilas(districtId?: string | null) {
-const params: Record<string, string> = { order: "name.asc" };
-if (districtId) params["district_id"] = `eq.${districtId}`;
-const { data } = await insforgeSelectMany("upazilas", params);
-return (data || []).map((r: any) => ({
-id: r.id,
-slug: r.slug,
-name: r.name,
-districtId: r.district_id,
-image: r.image,
-summary: r.summary,
-})); }
+return getOrSetRedisJson(`public:locations:upazilas:${districtId ?? "all"}`, 600, async () => {
+  const params: Record<string, string> = { order: "name.asc" };
+  if (districtId) params["district_id"] = `eq.${districtId}`;
+  const { data } = await insforgeSelectMany("upazilas", params);
+  return (data || []).map((r: any) => ({
+    id: r.id, slug: r.slug, name: r.name, districtId: r.district_id,
+    image: r.image, summary: r.summary,
+  }));
+});
+}
 export async function insforgeGetDivisionBySlug(slug: string) {
 const data = await insforgeSelectOne("divisions", { slug: `eq.${slug}` });
 if (!data) return null;

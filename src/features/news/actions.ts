@@ -4,22 +4,16 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { createId } from "@/lib/utils";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
-import { requireUser } from "@/lib/auth/current-user"; import { formatZodError, newsSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications";
+import { isTrustedPublicImageUrl } from "@/lib/storage/media-url";
+import { requireUser } from "@/lib/auth/current-user"; import { formatZodError, newsSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications";
 import { isContentCategory } from "@/services/content-categories";
 export type NewsFormState = { error?: string; success?: string };
 export async function submitNewsAction(_prev: NewsFormState, formData: FormData): Promise<NewsFormState> {
 const user = await requireUser();
 const imageKey = String(formData.get("imageKey") ?? "");
 const imageUrl = String(formData.get("image") ?? "");
-let validImageUrl = false;
 if (imageKey || imageUrl) {
-try {
-const parsedImageUrl = new URL(imageUrl);
-const expectedPrefix = `/api/storage/buckets/${COMMUNITY_POST_IMAGE_BUCKET}/objects/`;
-validImageUrl = parsedImageUrl.origin === new URL(process.env.NEXT_PUBLIC_INSFORGE_URL!).origin
-&& parsedImageUrl.pathname.startsWith(expectedPrefix)
-&& decodeURIComponent(parsedImageUrl.pathname.slice(expectedPrefix.length)) === imageKey;
-} catch {}
+const validImageUrl = isTrustedPublicImageUrl(imageUrl, imageKey, [COMMUNITY_POST_IMAGE_BUCKET]);
 if (!imageKey.startsWith(`${user.id}/news/`) || !validImageUrl) return { error: "The selected image could not be verified. Please choose it again." };
 }
 const parsed = newsSchema.safeParse({
@@ -34,7 +28,7 @@ if (!parsed.success) {
 return { error: formatZodError(parsed.error) };
 }
 if (!(await isContentCategory("news", parsed.data.category))) return { error: "Please choose a valid news category." };
-const limit = rateLimit(`news:${user.id}`, RATES.postPerMinute, 60_000);
+const limit = await rateLimitAsync(`news:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) {
 return { error: `Too many submissions. Try again in ${limit.retryAfterSeconds}s.` };
 }

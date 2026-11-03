@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useEffect, useRef, useState, type FormEvent } from "react";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+import { uploadPublicImage } from "@/lib/storage/upload-public-image";
 import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import { sendMessageAction, updateProfileAction, type AccountFormState } from "@/features/account/actions"; import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import { Icon } from "@/components/ui/icons";
 import { Spinner } from "@/components/ui/spinner";
@@ -47,14 +48,18 @@ if (file.size < 1 || file.size > PROFILE_IMAGE_MAX_BYTES) { setUploadError("The 
 uploadInProgress.current = true;
 setUploading(true);
 try {
-const client = getInsForgeBrowserClient();
 const optimizedImage = await optimizeImageForUpload(file);
 const optimizedFile = new File([optimizedImage], `avatar.${optimizedImage.type === "image/webp" ? "webp" : "jpg"}`, { type: optimizedImage.type });
-const key = `${userId}/${crypto.randomUUID()}-${safeFilename(optimizedFile.name)}`;
-const { data, error } = await client.storage.from(PROFILE_IMAGE_BUCKET).upload(key, optimizedFile);
-if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
-if (avatarUrlRef.current) avatarUrlRef.current.value = data.url;
-if (avatarKeyRef.current) avatarKeyRef.current.value = data.key;
+let uploaded: { url: string; key: string };
+if (process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
+  uploaded = await uploadPublicImage(optimizedFile, "profile");
+} else {
+  const { data, error } = await getInsForgeBrowserClient().storage.from(PROFILE_IMAGE_BUCKET).upload(`${userId}/${crypto.randomUUID()}-${safeFilename(optimizedFile.name)}`, optimizedFile);
+  if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
+  uploaded = { url: data.url, key: data.key };
+}
+if (avatarUrlRef.current) avatarUrlRef.current.value = uploaded.url;
+if (avatarKeyRef.current) avatarKeyRef.current.value = uploaded.key;
 if (avatarMimeRef.current) avatarMimeRef.current.value = optimizedFile.type;
 if (avatarSizeRef.current) avatarSizeRef.current.value = String(optimizedFile.size);
 setPreview(URL.createObjectURL(optimizedFile));

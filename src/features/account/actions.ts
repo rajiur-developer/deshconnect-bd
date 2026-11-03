@@ -3,9 +3,11 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants";
+import { isR2PublicMediaUrl, isTrustedPublicImageUrl } from "@/lib/storage/media-url";
+import { deleteR2Object } from "@/lib/storage/r2";
 import { messageSchema } from "@/lib/validation/schemas";
 import { sanitizeMultiline } from "@/lib/security/sanitize";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
 import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import {
 cancelConnection,
@@ -23,12 +25,11 @@ const avatarMimeType = String(formData.get("avatar_mime_type") ?? "").trim();
 const avatarSize = Number(formData.get("avatar_size") ?? 0);
 const hasNewAvatar = Boolean(avatarUrl || avatarKey || avatarMimeType || avatarSize);
 if (hasNewAvatar) {
-let trustedUrl = false;
-try { trustedUrl = new URL(avatarUrl).origin === new URL(process.env.NEXT_PUBLIC_INSFORGE_URL!).origin; } catch { trustedUrl = false; }
+const trustedUrl = isTrustedPublicImageUrl(avatarUrl, avatarKey, [PROFILE_IMAGE_BUCKET]);
 const parts = avatarKey.split("/");
 const safeKey = avatarKey.startsWith(`${user.id}/`) && parts.length === 2 && /^[a-zA-Z0-9._-]{1,180}$/.test(parts[1] ?? "");
 if (!trustedUrl || !safeKey || !PROFILE_IMAGE_TYPES.includes(avatarMimeType as (typeof PROFILE_IMAGE_TYPES)[number]) || !Number.isInteger(avatarSize) || avatarSize < 1 || avatarSize > PROFILE_IMAGE_MAX_BYTES) {
-return { error: "The selected profile image is invalid. Choose a JPG, JPEG, or PNG image up to 5 MB." };
+return { error: "The selected profile image is invalid. Choose a JPG, PNG, or WebP image up to 5 MB." };
 }
 }
 const parsed = profileSchema.safeParse({
@@ -42,7 +43,7 @@ upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const client = createServerClient({ cookies: await cookies() });
-const { data: previousProfile, error: profileReadError } = await client.database.from("profiles").select("avatar_key").eq("id", user.id).maybeSingle();
+const { data: previousProfile, error: profileReadError } = await client.database.from("profiles").select("avatar,avatar_key").eq("id", user.id).maybeSingle();
 if (profileReadError) return { error: "Could not load your profile. Please try again." };
 const update: Record<string, unknown> = {
 full_name: sanitizeText(parsed.data.fullName, 120),
@@ -56,11 +57,18 @@ updated_at: new Date().toISOString(),
 if (hasNewAvatar) { update.avatar = avatarUrl; update.avatar_key = avatarKey; }
 const { error } = await client.database.from("profiles").update(update).eq("id", user.id);
 if (error) {
-if (hasNewAvatar) await client.storage.from(PROFILE_IMAGE_BUCKET).remove(avatarKey);
+if (hasNewAvatar) {
+  if (isR2PublicMediaUrl(avatarUrl, avatarKey)) await deleteR2Object(avatarKey).catch(() => undefined);
+  else await client.storage.from(PROFILE_IMAGE_BUCKET).remove(avatarKey);
+}
 return { error: "Could not save profile changes. Please try again." };
 }
 if (hasNewAvatar && previousProfile?.avatar_key && previousProfile.avatar_key !== avatarKey) {
-await client.storage.from(PROFILE_IMAGE_BUCKET).remove(previousProfile.avatar_key);
+  if (isR2PublicMediaUrl(previousProfile.avatar ?? "", previousProfile.avatar_key)) {
+    await deleteR2Object(previousProfile.avatar_key).catch((cleanupError) => console.error("Could not clean up the previous R2 profile image.", cleanupError));
+  } else {
+    await client.storage.from(PROFILE_IMAGE_BUCKET).remove(previousProfile.avatar_key);
+  }
 }
 revalidatePath("/profile");
 revalidatePath("/profile/edit");
@@ -173,7 +181,7 @@ if (keyParts.length !== 3 || keyParts[0] !== user.id || keyParts[1] !== conversa
 return { ok: false, error: "The selected image or voice message is invalid. Please select it again." };
 }
 }
-const limit = rateLimit(`message:${user.id}`, RATES.bloodChatPerMinute, 60_000);
+const limit = await rateLimitAsync(`message:${user.id}`, RATES.bloodChatPerMinute, 60_000);
 if (!limit.ok) return { ok: false, error: `Too many messages. Try again in ${limit.retryAfterSeconds}s.` };
 const { data: message, error } = await insforge.database
 .from("messages")

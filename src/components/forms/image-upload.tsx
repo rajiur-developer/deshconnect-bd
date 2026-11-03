@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
  import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
  import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
+import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/upload-public-image";
  import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
  import { Icon } from "@/components/ui/icons";
  export function ImageUpload({
@@ -43,14 +44,20 @@ import { useRef, useState } from "react";
  try {
  if (uploadToStorage && userId && storageFolder) {
  const image = await optimizeImageForUpload(file);
- const extension = image.type === "image/webp" ? "webp" : "jpg";
- const key = `${userId}/${storageFolder}/${crypto.randomUUID()}.${extension}`;
- const { data, error: uploadError } = await getInsForgeBrowserClient()
-   .storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, image);
- if (uploadError) throw new Error(uploadError.message);
- if (!data?.url || !data.key) throw new Error("Image upload did not return a URL and storage key.");
- setValue(data.url);
- onValueChange?.(data.url);
+ let uploaded: { url: string; key: string };
+ if (process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
+   uploaded = await uploadPublicImage(new File([image], file.name, { type: image.type }), "directory", storageFolder as DirectoryImageFolder);
+ } else {
+   const extension = image.type === "image/webp" ? "webp" : "jpg";
+   const key = `${userId}/${storageFolder}/${crypto.randomUUID()}.${extension}`;
+   const { data, error: uploadError } = await getInsForgeBrowserClient()
+     .storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, image);
+   if (uploadError) throw new Error(uploadError.message);
+   if (!data?.url || !data.key) throw new Error("Image upload did not return a URL and storage key.");
+   uploaded = { url: data.url, key: data.key };
+ }
+ setValue(uploaded.url);
+ onValueChange?.(uploaded.url);
  setPreview(URL.createObjectURL(image));
  } else {
  const dataUrl = await resizeToDataUrl(file);

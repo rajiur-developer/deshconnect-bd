@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/lib/security/rate-limit";
+import { rateLimitAsync } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-real-ip") ??
     "unknown";
   const ipKey = hash(forwardedIp);
-  const limit = rateLimit(`analytics:${ipKey}`, 90, 60_000);
+  const limit = await rateLimitAsync(`analytics:${ipKey}`, 90, 60_000);
   if (!limit.ok) {
     return NextResponse.json({ ok: false }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } });
   }
