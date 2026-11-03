@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { listConnections } from "@/services/users";
 import { listIncomingRequests } from "@/services/messaging";
 import { RespondButtons } from "@/components/account/account-actions";
-import { getUserByUsername } from "@/services/users"; import { listPosts } from "@/services/community"; import { listSentRequests } from "@/services/messaging"; import { formatLocation } from "@/services/locations"; import { formatDate, relativeTime } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { ConnectButton, StartConversationButton } from "@/components/account/account-actions"; import { ProfileModerationControls } from "@/components/account/profile-moderation"; import { getCurrentUser } from "@/lib/auth/current-user"; import { ProfileAvatar } from "@/components/ui/profile-avatar"; import { cookies } from "next/headers"; import { createServerClient } from "@insforge/sdk/ssr"; import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
+import { getUserByUsername } from "@/services/users"; import { listPosts } from "@/services/community"; import { listSentRequests } from "@/services/messaging"; import { formatLocation } from "@/services/locations"; import { formatDate, relativeTime } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { ConnectButton, StartConversationButton } from "@/components/account/account-actions"; import { ProfileModerationControls } from "@/components/account/profile-moderation"; import { getCurrentUser } from "@/lib/auth/current-user"; import { ProfileAvatar } from "@/components/ui/profile-avatar"; import { cookies } from "next/headers"; import { createServerClient } from "@insforge/sdk/ssr"; import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants"; import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
 type Props = { params: Promise<{ username: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const { username } = await params;
@@ -15,7 +15,7 @@ const { username } = await params;
 const profile = await getUserByUsername(username);
 if (!profile) return <EmptyRecordPage title="Community profile" description="Connect with people and discover community activity." media="/images/banner/Collage.webp" backHref="/community" backLabel="Browse community" />;
 let profileAvatar = profile.avatar;
-if (profile.avatarKey) {
+if (profile.avatarKey && !isR2PublicMediaUrl(profile.avatar ?? "", profile.avatarKey)) {
 const client = createServerClient({ cookies: await cookies() });
 const { data } = await client.storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(profile.avatarKey, 3600);
 profileAvatar = data?.signedUrl ?? profileAvatar;
