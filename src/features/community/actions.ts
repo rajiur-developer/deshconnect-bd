@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
-import { requireUser } from "@/lib/auth/current-user"; import { insforgeDelete, insforgeSelectOne, insforgeUpdate } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import type { Report } from "@/types/community"; import { formatZodError, commentSchema, postSchema, reportSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimit } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { can } from "@/lib/auth/permissions"; import { getRolePermissionOverrides } from "@/services/role-permissions";
+import { requireUser } from "@/lib/auth/current-user"; import { insforgeDelete, insforgeSelectOne, insforgeUpdate } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import type { Report } from "@/types/community"; import { formatZodError, commentSchema, postSchema, reportSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { can } from "@/lib/auth/permissions"; import { getRolePermissionOverrides } from "@/services/role-permissions";
 export type CommunityFormState = { error?: string; success?: string };
 export async function createPostAction(_prev: CommunityFormState, formData: FormData): Promise<CommunityFormState> {
 const user = await requireUser();
@@ -30,7 +30,7 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-const limit = rateLimit(`post:${user.id}`, RATES.postPerMinute, 60_000);
+const limit = await rateLimitAsync(`post:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many posts. Try again in ${limit.retryAfterSeconds}s.` };
 const client = createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database
@@ -110,7 +110,7 @@ details: formData.get("details") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 if (!targetId) return { error: "Missing target." };
-const limit = rateLimit(`report:${user.id}`, RATES.reportPerMinute, 60_000);
+const limit = await rateLimitAsync(`report:${user.id}`, RATES.reportPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many reports. Try again in ${limit.retryAfterSeconds}s.` };
 const client = createServerClient({ cookies: await cookies() });
 const { error } = await client.database.from("reports").insert([{
