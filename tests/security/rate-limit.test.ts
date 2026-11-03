@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { rateLimit } from "../../src/lib/security/rate-limit";
+import { clearRateLimits, rateLimit, rateLimitAsync } from "../../src/lib/security/rate-limit";
 
 describe("rateLimit", () => {
   it("allows requests within the limit", () => {
