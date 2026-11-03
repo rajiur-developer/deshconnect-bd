@@ -12,7 +12,7 @@ import {
 } from "@/components/messaging/message-realtime-notifications";
 import { Icon } from "@/components/ui/icons";
 import { MobileNav } from "./mobile-nav";
-import { NavMenu } from "./nav-menu";
+import { DesktopNav } from "./desktop-nav";
 import { UserMenu } from "./user-menu";
 import MainLogo from "../../../public/logo/Main-Logo.webp";
 
@@ -111,23 +111,11 @@ export async function Header({
           </span>
         </Link>
 
-        <nav
-          className="ml-2 hidden items-center gap-1 lg:flex"
-          aria-label="Primary"
-        >
-          {PRIMARY_NAV.map((entry) => (
-            <NavMenu
-              key={isNavGroup(entry) ? entry.label : entry.href}
-              entry={entry}
-              unreadMessages={
-                !isNavGroup(entry) && entry.href === "/messages"
-                  ? unreadMessageTotal
-                  : 0
-              }
-              initialUnreadMessages={unreadMessages}
-            />
-          ))}
-        </nav>
+        <DesktopNav
+          entries={PRIMARY_NAV}
+          unreadMessages={unreadMessageTotal}
+          initialUnreadMessages={unreadMessages}
+        />
 
         <div className="ml-auto flex items-center gap-2">
           <form action="/search" className="hidden md:block">
