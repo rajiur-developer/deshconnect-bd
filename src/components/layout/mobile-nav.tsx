@@ -47,17 +47,17 @@ export function MobileNav({
     [user],
   );
 
+  const activePath = optimisticPath ?? pathname;
   const directIndex = routeReady
     ? PRIMARY_LINKS.findIndex((item) => isNavPathActive(activePath, item.href))
     : -1;
   const moreActive = routeReady && directIndex === -1;
+  const activeIndicatorIndex = directIndex >= 0 ? directIndex : moreActive ? PRIMARY_LINKS.length : -1;
 
   useEffect(() => {
     setMoreOpen(false);
     setOptimisticPath(null);
   }, [pathname]);
-
-  const activePath = optimisticPath ?? pathname;
 
   return (
     <nav
@@ -67,6 +67,11 @@ export function MobileNav({
     >
       <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-slate-200/80 bg-white px-1.5 py-1.5 shadow-[0_14px_44px_-14px_rgba(15,61,46,.20),0_3px_12px_-4px_rgba(15,23,42,.10)] ring-1 ring-white">
         <div className="relative grid grid-cols-7 items-stretch gap-0">
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-y-0 left-0 z-0 w-[calc(100%/7)] rounded-xl border border-brand-200/80 bg-brand-50 shadow-[0_3px_12px_-7px_rgba(11,61,46,.35)] transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${activeIndicatorIndex < 0 ? "opacity-0" : "opacity-100"}`}
+            style={{ transform: `translateX(${Math.max(0, activeIndicatorIndex) * 100}%)` }}
+          />
 
           {PRIMARY_LINKS.map((item, index) => (
             <MobileNavLink
