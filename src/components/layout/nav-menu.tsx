@@ -18,7 +18,7 @@ return (
 <Link
 href={entry.href}
 aria-current={isActive ? "page" : undefined}
-className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 hover:scale-[1.04] ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " bg-accent-50 text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " bg-brand-50 text-brand-700" : ""}`}`}
+className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 hover:scale-[1.04] ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
 >
 {isBloodDonation && <Icon name="droplet" aria-hidden="true" className="mr-1 inline h-4 w-4" />}
 {entry.label}{entry.href === "/messages" && <UnreadMessageBadge count={unreadTotal} />}
@@ -28,7 +28,7 @@ className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-
 const isGroupActive = routeReady && entry.items.some((item) => isNavPathActive(pathname, item.href));
 return (
 <div
-className="group relative"
+className="group relative z-10"
 onMouseEnter={() => setOpen(true)}
 onMouseLeave={() => setOpen(false)}
 >
@@ -38,7 +38,7 @@ aria-haspopup="menu"
 aria-expanded={open}
  onClick={() => setOpen((value) => !value)}
 aria-current={isGroupActive ? "page" : undefined}
-className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-[1.04] hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "bg-brand-50 text-brand-700" : "text-slate-600"}`}
+className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-[1.04] hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "text-brand-700" : "text-slate-600"}`}
 >
 {entry.label}
 <Icon
