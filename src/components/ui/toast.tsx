@@ -106,7 +106,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div
         aria-live="polite"
         aria-relevant="additions"
-        className="pointer-events-none fixed inset-x-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[200] flex flex-col items-stretch gap-3 sm:inset-x-auto sm:bottom-auto sm:right-5 sm:top-5 sm:w-[min( calc(100vw-2.5rem), 25rem)] sm:items-end"
+        className="pointer-events-none fixed inset-x-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[200] flex flex-col items-stretch gap-3 sm:inset-x-auto sm:bottom-auto sm:right-5 sm:top-5 sm:w-[min(25rem,calc(100vw-2.5rem))] sm:items-end"
       >
         {toasts.map((item) => {
           const style = toastStyles[item.type];
