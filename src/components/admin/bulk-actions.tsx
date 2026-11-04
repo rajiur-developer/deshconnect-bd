@@ -13,7 +13,7 @@ type Operation = "hide" | "unhide" | "delete";
 type SelectionContextValue = { selected: string[]; toggle: (id: string, checked: boolean) => void };
 const SelectionContext = createContext<SelectionContextValue | null>(null);
 
-const operationCopy: Record<Operation, { title: string; description: string; action: string; tone: string; icon: "trash" | "alert" }> = {
+const operationCopy: Record<Operation, { title: string; description: string; action: string; tone: string; icon: "trash" | "alert" | "check" }> = {
   delete: {
     title: "Confirm permanent deletion",
     description: "You are about to permanently delete the selected records. This action cannot be undone. Please review your selection before continuing.",
@@ -114,7 +114,7 @@ export function BulkActions({ entity, records, children }: { entity: Entity; rec
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={pending || !selected.length} onClick={() => requestOperation("hide")} className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-amber-200 bg-white px-3 py-2 text-xs font-semibold text-amber-800 transition hover:border-amber-300 hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40">
-            <Icon name="eye-off" className="h-4 w-4" /> Hide Selected
+            <Icon name="alert" className="h-4 w-4" /> Hide Selected
           </button>
           <button type="button" disabled={pending || !selected.length} onClick={() => requestOperation("unhide")} className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:cursor-not-allowed disabled:opacity-40">
             <Icon name="check" className="h-4 w-4" /> Unhide Selected
