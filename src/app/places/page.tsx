@@ -40,7 +40,7 @@ upazilas={options.upazilas}
 categories={categories.map((category) => ({ value: category.value, label: category.name }))}
 current={{ divisionId, districtId, upazilaId }}
 />
-<p className="mt-6 text-sm text-slate-500">
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">
 {meta.total} places found
 </p>
 {items.length ? (
