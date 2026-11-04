@@ -32,8 +32,9 @@ title="Businesses"
 description="Hotels, restaurants, transport, shops and local services."
 media="/images/banner/Busenees.webp"
 />
-<div className="container-x py-8">
+<div className="container-x pb-8 pt-0">
 <DirectoryFilters
+          overlapBanner
 action="/businesses"
 params={params}
 divisions={options.divisions}
