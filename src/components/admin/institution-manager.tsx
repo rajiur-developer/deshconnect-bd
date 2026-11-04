@@ -7,7 +7,7 @@ import { Pagination } from "@/components/ui/pagination";
 import type { PageMeta } from "@/lib/utils";
 import { InstitutionForm } from "@/components/admin/institution-form";
 import { RecordActions } from "@/components/admin/record-actions";
-import { BulkActions } from "@/components/admin/bulk-actions";
+import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions";
 import { formatDate } from "@/lib/utils";
 import type { LocationOption, DistrictOption, UpazilaOption } from "@/components/search/directory-filters";
 import type { Institution } from "@/types/content";
@@ -98,11 +98,12 @@ export function InstitutionManager({
           ? "No records found."
           : `Showing ${(meta.page - 1) * meta.pageSize + 1}-${Math.min(meta.page * meta.pageSize, meta.total)} of ${meta.total} records`}
       </p>
-      <BulkActions entity={isHospital ? "hospital" : "institution"} records={managedRecords.map((record) => ({ id: record.id, label: record.name, status: record.status }))} />
+      <BulkActions entity={isHospital ? "hospital" : "institution"} records={managedRecords.map((record) => ({ id: record.id, label: record.name, status: record.status }))}>
       <Card className="overflow-x-auto p-0">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
             <tr>
+              <th className="w-10 px-4 py-3" aria-label="Select records"></th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Status</th>
@@ -114,6 +115,7 @@ export function InstitutionManager({
           <tbody className="divide-y divide-slate-100">
             {managedRecords.map((record) => (
               <tr key={record.id}>
+              <td className="px-4 py-3"><BulkSelectCheckbox id={record.id} label={record.name} /></td>
                 <td className="px-4 py-3">
                   <div className="flex min-w-[14rem] items-center gap-3">
                     <RecordThumbnail src={record.image} alt={record.name} />
@@ -154,7 +156,7 @@ export function InstitutionManager({
             ))}
             {managedRecords.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
                   {query ? "No records match your search." : "No records yet."}
                 </td>
               </tr>
@@ -162,6 +164,7 @@ export function InstitutionManager({
           </tbody>
         </table>
       </Card>
+      </BulkActions>
       <Pagination
         meta={meta}
         hrefFor={(page) => {
