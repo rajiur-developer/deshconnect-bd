@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { BusinessForm } from "@/components/admin/business-form"; import { RecordActions } from "@/components/admin/record-actions"; import { businessCategoryLabel } from "@/components/cards/business-card"; import { formatDate } from "@/lib/utils"; import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions";
@@ -30,7 +31,7 @@ return (
 <tr key={business.id}>
               <td className="px-4 py-3"><BulkSelectCheckbox id={business.id} label={business.name} /></td>
 <td className="px-4 py-3">
-<Link href={`/businesses/${business.slug}`} className="font-medium text-slate-900 hover:text-brand-700">{business.name}</Link>
+<div className="flex min-w-[14rem] items-center gap-3"><div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">{business.image ? <Image src={business.image} alt={business.name} fill sizes="40px" unoptimized className="object-cover" /> : <span className="grid h-full w-full place-items-center text-xs font-bold text-slate-500">{business.name.trim().charAt(0).toUpperCase()}</span>}</div><Link href={`/businesses/${business.slug}`} className="font-semibold text-slate-900 transition hover:text-brand-700">{business.name}</Link></div>
 </td>
 <td className="px-4 py-3 text-slate-600">{businessCategoryLabel(business.category)}</td>
 <td className="px-4 py-3"><Badge tone={business.status === "published" ? "success" : "neutral"}>{business.status}</Badge></td>
