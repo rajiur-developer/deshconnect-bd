@@ -25,7 +25,8 @@ export default async function HospitalsPage({ searchParams }: { searchParams: Pr
   return (
     <>
       <PageBanner title="Hospitals and diagnostic centres" description="Find hospitals, clinics, health centres and diagnostic centres across Bangladesh." media="/images/banner/Hospital.webp" />
-      <div className="container-x py-8 sm:py-10">
+      <div className="container-x pb-8 pt-0 sm:pb-10">
+        <DirectoryFilters action="/hospitals" title="Find a facility" overlapBanner params={params} divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} current={{ divisionId, districtId, upazilaId }} />
         <div className="mb-7 flex flex-col gap-4 rounded-3xl border border-cyan-100 bg-gradient-to-br from-white via-white to-cyan-50 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-7">
           <div className="flex items-start gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-cyan-100 text-cyan-800"><Icon name="heart" className="h-6 w-6" /></span><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-cyan-800">Healthcare directory</p><h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Hospitals & diagnostic centres near your community</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Browse hospitals, clinics and diagnostic facilities by division, district and upazila.</p></div></div>
           <div className="rounded-2xl border border-cyan-100 bg-white px-5 py-3"><p className="text-2xl font-bold text-slate-950">{meta.total.toLocaleString()}</p><p className="text-xs font-medium text-slate-500">listed facilities</p></div>
