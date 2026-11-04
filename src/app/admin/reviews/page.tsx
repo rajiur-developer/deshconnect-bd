@@ -16,8 +16,6 @@ return (
 <div className="flex items-start gap-3">
 <BulkSelectCheckbox id={review.id} label={review.title || "Review"} />
 <div className="min-w-0 flex-1">
-<div className="flex items-start justify-between gap-3">
-<div>
 <div className="flex items-center gap-2">
 <Badge tone={review.status === "visible" ? "success" : "neutral"}>{review.status}</Badge>
 <span className="text-xs text-amber-500">★ {review.rating}</span>
@@ -30,7 +28,6 @@ return (
 {place.name}
 </Link>
 )}
-</div>
 </div>
 <ReviewStatusButton id={review.id} status={review.status} />
 </div>
