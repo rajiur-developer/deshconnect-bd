@@ -44,7 +44,7 @@ categories={CATEGORIES}
 showCategory
 current={{ divisionId, districtId, upazilaId }}
 />
-<p className="mt-6 text-sm text-slate-500">{meta.total} services found</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} services found</p>
 {items.length ? (
 <ListGrid className="mt-4">
 {items.map((service) => (
