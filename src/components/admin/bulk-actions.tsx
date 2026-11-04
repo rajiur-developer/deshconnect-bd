@@ -1,23 +1,44 @@
 "use client";
-import { useState, useTransition } from "react";
+
+import { createContext, useContext, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { adminBulkRecordAction } from "@/features/admin/actions";
 
 type Item = { id: string; label: string; status?: string };
 type Entity = "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor" | "review";
+type SelectionContextValue = { selected: string[]; toggle: (id: string, checked: boolean) => void };
+const SelectionContext = createContext<SelectionContextValue | null>(null);
 
-export function BulkActions({ entity, records }: { entity: Entity; records: Item[] }) {
+export function BulkSelectCheckbox({ id, label }: { id: string; label?: string }) {
+  const context = useContext(SelectionContext);
+  if (!context) return null;
+  return (
+    <input
+      type="checkbox"
+      checked={context.selected.includes(id)}
+      onChange={(event) => context.toggle(id, event.target.checked)}
+      aria-label={label ? `Select ${label}` : "Select record"}
+      className="h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-brand-700 accent-brand-700 focus:ring-brand-600"
+    />
+  );
+}
+
+export function BulkActions({ entity, records, children }: { entity: Entity; records: Item[]; children: ReactNode }) {
   const [selected, setSelected] = useState<string[]>([]);
-  const [operation, setOperation] = useState<"hide" | "unhide" | "delete">("hide");
   const [message, setMessage] = useState("");
   const [pending, startTransition] = useTransition();
   const router = useRouter();
   const allSelected = records.length > 0 && records.every((item) => selected.includes(item.id));
-  function toggleAll(checked: boolean) {
+  const toggle = (id: string, checked: boolean) => {
+    setSelected((current) => checked ? (current.includes(id) ? current : [...current, id]) : current.filter((value) => value !== id));
+    setMessage("");
+  };
+  const toggleAll = (checked: boolean) => {
     setSelected(checked ? records.map((item) => item.id) : []);
-  }
-  function run() {
-    if (!selected.length) { setMessage("Select at least one record."); return; }
+    setMessage("");
+  };
+  function run(operation: "hide" | "unhide" | "delete") {
+    if (!selected.length) return;
     const verb = operation === "delete" ? "permanently delete" : operation === "hide" ? "hide" : "unhide";
     if (!window.confirm(`Are you sure you want to ${verb} ${selected.length} selected record(s)?${operation === "delete" ? " This cannot be undone." : ""}`)) return;
     startTransition(async () => {
@@ -30,28 +51,26 @@ export function BulkActions({ entity, records }: { entity: Entity; records: Item
       }
     });
   }
-  return <section className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4" aria-label="Bulk actions">
-    <div className="flex flex-wrap items-center gap-3">
-      <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-        <input type="checkbox" checked={allSelected} onChange={(e) => toggleAll(e.target.checked)} />
-        Select all ({records.length})
-      </label>
-      <span className="text-sm text-slate-600">{selected.length} selected</span>
-      <select value={operation} onChange={(e) => setOperation(e.target.value as typeof operation)} className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm" aria-label="Bulk action">
-        <option value="hide">Hide selected</option>
-        <option value="unhide">Unhide selected</option>
-        <option value="delete">Delete selected</option>
-      </select>
-      <button type="button" disabled={pending || !selected.length} onClick={run} className="rounded-lg bg-brand-700 px-4 py-2 text-sm font-medium text-white disabled:opacity-50">{pending ? "Working…" : "Bulk Actions"}</button>
-    </div>
-    {entity === "donor" && <p className="mt-2 text-xs text-amber-700">Restoring a donor record does not restore public listing consent. The donor must have valid consent to appear publicly.</p>}
-    <div className="mt-3 max-h-44 overflow-y-auto border-t border-slate-200 pt-2">
-      {records.map((record) => <label key={record.id} className="flex items-center gap-2 py-1 text-sm text-slate-700">
-        <input type="checkbox" checked={selected.includes(record.id)} onChange={(e) => setSelected((current) => e.target.checked ? [...current, record.id] : current.filter((id) => id !== record.id))} />
-        <span>{record.label}</span>{record.status ? <span className="text-xs text-slate-500">({record.status})</span> : null}
-      </label>)}
-      {!records.length && <p className="text-sm text-slate-500">No records available.</p>}
-    </div>
-    {message && <p role="status" className="mt-2 text-sm text-slate-700">{message}</p>}
-  </section>;
+  return (
+    <SelectionContext.Provider value={{ selected, toggle }}>
+      <div className="mb-4 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-4">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-700">
+            <input type="checkbox" checked={allSelected} onChange={(event) => toggleAll(event.target.checked)} className="h-4 w-4 rounded border-slate-300 accent-brand-700 focus:ring-brand-600" />
+            Select All
+          </label>
+          <span className="text-sm text-slate-500">Total Items: <strong className="text-slate-800">{records.length}</strong></span>
+          <span className="text-sm text-slate-500">Selected Items: <strong className="text-brand-700">{selected.length}</strong></span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" disabled={pending || !selected.length} onClick={() => run("hide")} className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40">Hide Selected</button>
+          <button type="button" disabled={pending || !selected.length} onClick={() => run("unhide")} className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-40">Unhide Selected</button>
+          <button type="button" disabled={pending || !selected.length} onClick={() => run("delete")} className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-40">{pending ? "Working…" : "Delete Selected"}</button>
+        </div>
+        {message && <p role="status" className="text-xs text-slate-600 sm:basis-full">{message}</p>}
+      </div>
+      {entity === "donor" && <p className="mb-3 text-xs text-amber-700">Restoring a donor record does not restore public listing consent. The donor must have valid consent to appear publicly.</p>}
+      {children}
+    </SelectionContext.Provider>
+  );
 }
