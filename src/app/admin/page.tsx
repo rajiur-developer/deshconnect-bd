@@ -5,6 +5,7 @@ import { listAuditLogs } from "@/services/audit";
 import { listNews } from "@/services/news";
 import { formatDate } from "@/lib/utils";
 import { Badge, Card } from "@/components/ui/badge";
+import { getAppPageCount } from "@/lib/app-page-count";
 
 export const metadata = { title: "Admin Dashboard" };
 
@@ -35,7 +36,7 @@ function MetricCard({ item }) {
 }
 
 export default async function AdminDashboardPage() {
-  const [users, logs, newsResult, pendingNewsResult, places, institutions, hospitals, businesses, reports, donors, requests] = await Promise.all([
+  const [users, logs, newsResult, pendingNewsResult, places, institutions, hospitals, businesses, reports, donors, requests, appPageCount] = await Promise.all([
     listAdminUsers(),
     listAuditLogs(10).catch(() => []),
     listNews({ includeAll: true, page: 1, pageSize: 1 }),
@@ -47,6 +48,7 @@ export default async function AdminDashboardPage() {
     insforgeSelectMany("reports", { status: "eq.open", limit: "1" }).then((r) => r.count).catch(() => null),
     insforgeSelectMany("blood_donors", { limit: "1" }).then((r) => r.count),
     insforgeSelectMany("blood_requests", { status: "eq.active", limit: "1" }).then((r) => r.count),
+    getAppPageCount(),
   ]);
 
   const newsTotal = newsResult.meta.total;
@@ -65,6 +67,7 @@ export default async function AdminDashboardPage() {
     { label: "Open reports", value: reports ?? "—", href: "/admin/reports", tone: reports == null ? "blue" : reports ? "red" : "green" },
     { label: "Blood donors", value: donors, href: "/admin/blood-donors", tone: "red" },
     { label: "Active blood requests", value: requests, href: "/admin/blood-requests", tone: "violet" },
+    { label: "Total active pages", value: appPageCount ?? "—", href: "/admin/analytics", tone: "teal" },
   ];
 
   const quickActions = [
@@ -162,7 +165,7 @@ export default async function AdminDashboardPage() {
       <section className="dc-admin-metrics" aria-labelledby="metrics-heading">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
           <div><h2 id="metrics-heading" className="text-lg font-bold text-slate-900 sm:text-xl">Platform at a glance</h2><p className="mt-1 text-sm text-slate-500">Select any card to open its management page.</p></div>
-          <Badge tone="brand">11 key metrics</Badge>
+          <Badge tone="brand">12 key metrics</Badge>
         </div>
         <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {metrics.map((item) => <MetricCard key={item.label} item={item} />)}
