@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { PlaceForm } from "@/components/admin/place-form"; import { RecordActions } from "@/components/admin/record-actions"; import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions"; import { requireUser } from "@/lib/auth/current-user";
 export const metadata = { title: "Tourism" };
@@ -26,7 +27,7 @@ return (
 <tr key={place.id}>
               <td className="px-4 py-3"><BulkSelectCheckbox id={place.id} label={place.name} /></td>
 <td className="px-4 py-3">
-<Link href={`/places/${place.slug}`} className="font-medium text-slate-900 hover:text-brand-700">{place.name}</Link>
+<div className="flex min-w-[14rem] items-center gap-3"><div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">{place.image ? <Image src={place.image} alt={place.name} fill sizes="40px" unoptimized className="object-cover" /> : <span className="grid h-full w-full place-items-center text-xs font-bold text-slate-500">{place.name.trim().charAt(0).toUpperCase()}</span>}</div><Link href={`/places/${place.slug}`} className="font-semibold text-slate-900 transition hover:text-brand-700">{place.name}</Link></div>
 </td>
 <td className="px-4 py-3 text-slate-600">{categoryNames.get(place.category) ?? place.category}</td>
 <td className="px-4 py-3"><Badge tone="amber">{place.rating.toFixed(1)}</Badge></td>
