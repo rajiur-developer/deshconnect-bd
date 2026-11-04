@@ -16,7 +16,7 @@ if (meta.totalPages <= 1) return null;
 return (
 <nav aria-label="Pagination" className="mt-10 flex flex-wrap items-center justify-center gap-2">
 {meta.hasPrev ? (
-<Link href={hrefFor(meta.page - 1)} className={buttonClasses({ variant: "outline", size: "sm" })}>
+<Link href={`${hrefFor(meta.page - 1)}#directory-results`} className={buttonClasses({ variant: "outline", size: "sm" })}>
 Previous
 </Link>
 ) : (
@@ -30,7 +30,7 @@ item === "…" ? (
 ) : (
 <Link
 key={item}
-href={hrefFor(item)}
+href={`${hrefFor(item)}#directory-results`}
 aria-current={item === meta.page ? "page" : undefined}
 className={cn(
 "inline-flex h-9 min-w-9 items-center justify-center rounded-lg border px-3 text-sm font-medium",
@@ -44,7 +44,7 @@ item === meta.page
 )
 )}
 {meta.hasNext ? (
-<Link href={hrefFor(meta.page + 1)} className={buttonClasses({ variant: "outline", size: "sm" })}>
+<Link href={`${hrefFor(meta.page + 1)}#directory-results`} className={buttonClasses({ variant: "outline", size: "sm" })}>
 Next
 </Link>
 ) : (
