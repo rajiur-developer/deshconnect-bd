@@ -17,7 +17,9 @@ extraSelects?: Array<{ name: string; label: string; options: { value: string; la
 current: { divisionId?: string; districtId?: string; upazilaId?: string };
 labels?: { division?: string; district?: string; upazila?: string };
 icon?: IconName;
-title?: string; };
+title?: string;
+overlapBanner?: boolean;
+};
 function paramValue(value: string | string[] | undefined) {
 return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
@@ -37,7 +39,9 @@ extraSelects,
 current,
 labels,
 icon = "filter",
-title = "Filter", }: Props) {
+title = "Filter",
+overlapBanner = false,
+}: Props) {
 const formRef = useRef<HTMLFormElement>(null);
 const router = useRouter();
 const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
@@ -85,7 +89,7 @@ const hidden = Object.entries(params)
 .filter(([key, value]) => !managedKeys.has(key) && value !== undefined)
 .map(([key, value]) => [key, Array.isArray(value) ? value[0]! : value] as const);
 return (
-<form ref={formRef} action={action} method="get" onSubmit={(event) => { event.preventDefault(); submit(); }} className="rounded-xl border border-transparent bg-transparent p-2 shadow-none sm:rounded-2xl sm:border-slate-200/80 sm:bg-white sm:p-5 sm:shadow-[0_18px_50px_-24px_rgba(15,45,30,0.20)]">
+<form ref={formRef} action={action} method="get" onSubmit={(event) => { event.preventDefault(); submit(); }} className={`relative z-10 rounded-xl border border-transparent bg-transparent p-2 shadow-none sm:rounded-2xl sm:border-slate-200/80 sm:bg-white sm:p-5 sm:shadow-[0_18px_50px_-24px_rgba(15,45,30,0.20)] ${overlapBanner ? "-mt-8 sm:-mt-14" : ""}`}>
   <div className="mb-2 flex items-center justify-between gap-2 sm:mb-4 sm:gap-3">
     <div className="flex items-center gap-2.5">
       <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand-50 text-brand-700"><Icon name={icon} className="h-4 w-4" /></span>
