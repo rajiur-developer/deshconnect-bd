@@ -38,7 +38,7 @@ icon="globe"
 title="Filter news"
 current={{ divisionId, districtId, upazilaId }}
 />
-<p className="mt-6 text-sm text-slate-500">{result.meta.total} news</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{result.meta.total} news</p>
 {result.items.length ? (
 <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 {result.items.map((item) => (
