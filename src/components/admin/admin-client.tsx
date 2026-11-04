@@ -21,6 +21,7 @@ toggleModeratorAction, } from "@/features/admin/actions"; import { ALL_ACTIONS, 
 import { rolePermissions } from "@/lib/auth/permissions";
 import type { ContentCategory } from "@/services/content-categories";
 import { AnimatedDialog } from "@/components/ui/animated-dialog";
+import { useToast } from "@/components/ui/toast";
 const selectClass = "rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs focus-ring";
 type FormState = { error?: string; success?: string };
 export function NewsStatusButtons({ article, categories }: { article: { id: string; status: string; title: string; excerpt: string; body: string; category: string; source?: string | null; image: string }; categories: ContentCategory[] }) {
@@ -184,47 +185,68 @@ id: string;
 archived: boolean;
 }) {
 const [pending, startTransition] = useTransition();
+const [confirmation, setConfirmation] = useState<"visibility" | "delete" | null>(null);
 const [message, setMessage] = useState("");
 const router = useRouter();
-function setVisibility(visible: boolean) {
-const prompt = visible
-? "Restore this donor record? It will remain hidden until the donor consents again."
-: "Hide this donor from Find a donor? The record will remain in the admin list.";
-if (!window.confirm(prompt)) return;
+const { success, error } = useToast();
+const restoring = archived;
+
+function executeAction() {
+if (!confirmation) return;
+const action = confirmation;
+setConfirmation(null);
 startTransition(async () => {
 try {
-const result = await adminSetBloodDonorVisibilityAction(id, visible);
-setMessage(result.error ?? (visible ? "Donor record restored. Public listing still requires donor consent." : "Donor hidden from public listings."));
-if (result.ok) router.refresh();
-} catch {
-setMessage("Donor visibility could not be changed. Please try again.");
-}
-});
-}
-function permanentlyDelete() {
-if (!window.confirm("Permanently delete this donor record? This cannot be undone.")) return;
-startTransition(async () => {
-try {
+if (action === "delete") {
 const result = await adminDeleteBloodDonorAction(id);
-setMessage(result.error ?? "Donor record permanently deleted.");
-if (result.ok) router.refresh();
+if (!result.ok) { error(result.error ?? "Donor record could not be deleted."); return; }
+success("Donor record permanently deleted.");
+} else {
+const result = await adminSetBloodDonorVisibilityAction(id, restoring);
+if (!result.ok) { error(result.error ?? "Donor visibility could not be changed."); return; }
+success(restoring ? "Donor record restored. Public listing still requires donor consent." : "Donor hidden from public listings.");
+}
+setMessage("");
+router.refresh();
 } catch {
-setMessage("Donor record could not be deleted. Please try again.");
+error("The donor action could not be completed. Please try again.");
 }
 });
 }
+
 return (
+<>
 <div className="min-w-40 space-y-2">
 <div className="flex flex-wrap gap-1">
-<button type="button" disabled={pending} onClick={() => setVisibility(archived)} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50 disabled:opacity-50">
+<button type="button" disabled={pending} onClick={() => setConfirmation("visibility")} className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50">
 {archived ? "Restore record" : "Hide"}
 </button>
-<button type="button" disabled={pending} onClick={permanentlyDelete} className="rounded-lg border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50 disabled:opacity-50">
+<button type="button" disabled={pending} onClick={() => setConfirmation("delete")} className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 disabled:opacity-50">
 Delete
 </button>
 </div>
 {message && <p role="status" className="text-xs text-slate-600">{message}</p>}
 </div>
+<AnimatedDialog open={Boolean(confirmation)} onClose={() => setConfirmation(null)} label="Confirm donor action" panelClassName="max-w-md p-0">
+{confirmation && (
+<div className="p-6 sm:p-7">
+<div className={`mb-4 grid h-12 w-12 place-items-center rounded-2xl ${confirmation === "delete" ? "bg-rose-50 text-rose-600" : "bg-amber-50 text-amber-700"}`}>
+<span className="text-xl font-bold" aria-hidden="true">{confirmation === "delete" ? "!" : "↻"}</span>
+</div>
+<h2 className="pr-7 text-lg font-bold text-slate-900">{confirmation === "delete" ? "Confirm permanent deletion" : archived ? "Restore donor record?" : "Hide donor record?"}</h2>
+<p className="mt-2 text-sm leading-6 text-slate-600">
+{confirmation === "delete" ? "This will permanently delete this donor record. This action cannot be undone." : archived ? "The donor record will be restored in the admin list. Public visibility still requires the donor's consent." : "This donor will be hidden from public listings. The record will remain available in the admin list."}
+</p>
+<div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+<button type="button" onClick={() => setConfirmation(null)} className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+<button type="button" disabled={pending} onClick={executeAction} className={`inline-flex min-h-10 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 ${confirmation === "delete" ? "bg-rose-600 hover:bg-rose-700" : "bg-brand-700 hover:bg-brand-800"}`}>
+{confirmation === "delete" ? "Yes, Delete" : archived ? "Restore record" : "Yes, Hide"}
+</button>
+</div>
+</div>
+)}
+</AnimatedDialog>
+</>
 );
 }
 export function DeletePlaceButton({ id }: { id: string }) {
