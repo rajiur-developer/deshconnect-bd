@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { adminBulkRecordAction } from "@/features/admin/actions";
+import { useToast } from "@/components/ui/toast";
 
 type Item = { id: string; label: string; status?: string };
 type Entity = "place" | "institution" | "hospital" | "service" | "news" | "business" | "post" | "donor" | "review";
@@ -25,17 +26,15 @@ export function BulkSelectCheckbox({ id, label }: { id: string; label?: string }
 
 export function BulkActions({ entity, records, children }: { entity: Entity; records: Item[]; children: ReactNode }) {
   const [selected, setSelected] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
   const [pending, startTransition] = useTransition();
+  const { success, error } = useToast();
   const router = useRouter();
   const allSelected = records.length > 0 && records.every((item) => selected.includes(item.id));
   const toggle = (id: string, checked: boolean) => {
     setSelected((current) => checked ? (current.includes(id) ? current : [...current, id]) : current.filter((value) => value !== id));
-    setMessage("");
   };
   const toggleAll = (checked: boolean) => {
     setSelected(checked ? records.map((item) => item.id) : []);
-    setMessage("");
   };
   function run(operation: "hide" | "unhide" | "delete") {
     if (!selected.length) return;
@@ -44,10 +43,18 @@ export function BulkActions({ entity, records, children }: { entity: Entity; rec
     startTransition(async () => {
       try {
         const result = await adminBulkRecordAction(entity, selected, operation);
-        setMessage(`${result.processed} record(s) processed.${result.errors.length ? " Some actions failed: " + result.errors.slice(0, 3).join("; ") : ""}`);
-        if (result.processed) { setSelected([]); router.refresh(); }
-      } catch {
-        setMessage("Bulk action failed. Please try again.");
+        if (result.processed > 0) {
+          success(`${result.processed} record(s) processed successfully.`);
+          setSelected([]);
+          router.refresh();
+        }
+        if (result.errors.length > 0) {
+          error(`${result.errors.length} record(s) could not be processed. ${result.errors.slice(0, 2).join("; ")}`);
+        } else if (result.processed === 0) {
+          error("No records were processed. Please try again.");
+        }
+      } catch (cause) {
+        error(cause instanceof Error ? cause.message : "Bulk action failed. Please try again.");
       }
     });
   }
@@ -67,7 +74,6 @@ export function BulkActions({ entity, records, children }: { entity: Entity; rec
           <button type="button" disabled={pending || !selected.length} onClick={() => run("unhide")} className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-40">Unhide Selected</button>
           <button type="button" disabled={pending || !selected.length} onClick={() => run("delete")} className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-40">{pending ? "Working…" : "Delete Selected"}</button>
         </div>
-        {message && <p role="status" className="text-xs text-slate-600 sm:basis-full">{message}</p>}
       </div>
       {entity === "donor" && <p className="mb-3 text-xs text-amber-700">Restoring a donor record does not restore public listing consent. The donor must have valid consent to appear publicly.</p>}
       {children}
