@@ -5,7 +5,7 @@ import { listAdminUsers } from "@/services/users";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { can } from "@/lib/auth/permissions";
 import { getRolePermissionOverrides } from "@/services/role-permissions";
-import { Badge, Card } from "@/components/ui/badge"; import { BulkActions } from "@/components/admin/bulk-actions"; import { PageHeader } from "@/components/layout/page-header"; import { BloodDonorActions } from "@/components/admin/admin-client";
+import { Badge, Card } from "@/components/ui/badge"; import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions"; import { PageHeader } from "@/components/layout/page-header"; import { BloodDonorActions } from "@/components/admin/admin-client";
 
 export const metadata = { title: "Blood Donors" };
 
@@ -24,11 +24,12 @@ export default async function AdminBloodDonorsPage() {
         title="Blood Donors"
         description="Manage donor records within authorised limits. Full contact numbers are visible to authorised blood-donation staff."
       />
-      <BulkActions entity="donor" records={donors.map((donor) => ({ id: donor.id, label: `${userById.get(donor.userId)?.fullName ?? donor.userId} — ${donor.bloodGroup}`, status: donor.archivedAt ? "Archived" : (!donor.consentListed || !donor.consentContact ? "Hidden" : "Active") }))} />
+      <BulkActions entity="donor" records={donors.map((donor) => ({ id: donor.id, label: `${userById.get(donor.userId)?.fullName ?? donor.userId} — ${donor.bloodGroup}`, status: donor.archivedAt ? "Archived" : (!donor.consentListed || !donor.consentContact ? "Hidden" : "Active") }))}>
 <Card className="overflow-x-auto p-0">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
             <tr>
+              <th className="w-10 px-4 py-3" aria-label="Select records"></th>
               <th className="px-4 py-3">Donor</th>
               <th className="px-4 py-3">Group</th>
               <th className="px-4 py-3">Availability</th>
@@ -44,6 +45,7 @@ export default async function AdminBloodDonorsPage() {
               const user = userById.get(donor.userId);
               return (
                 <tr key={donor.id}>
+              <td className="px-4 py-3"><BulkSelectCheckbox id={donor.id} label={user?.fullName ?? donor.userId} /></td>
                   <td className="px-4 py-3">
                     <p className="font-medium text-slate-900">{user?.fullName ?? donor.userId}</p>
                     <p className="text-xs text-slate-500">@{user?.username}</p>
@@ -70,6 +72,7 @@ export default async function AdminBloodDonorsPage() {
           </tbody>
         </table>
       </Card>
+      </BulkActions>
     </>
   );
 }
