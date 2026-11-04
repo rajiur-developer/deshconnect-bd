@@ -93,7 +93,7 @@ export function InstitutionManager({
           </Link>
         )}
       </form>
-      <p className="mb-3 text-sm text-slate-500">
+      <p id="directory-results" className="scroll-mt-24 mb-3 text-sm text-slate-500">
         {meta.total === 0
           ? "No records found."
           : `Showing ${(meta.page - 1) * meta.pageSize + 1}-${Math.min(meta.page * meta.pageSize, meta.total)} of ${meta.total} records`}
