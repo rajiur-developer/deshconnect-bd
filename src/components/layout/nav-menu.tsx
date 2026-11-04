@@ -6,8 +6,10 @@ const linkClass =
 "block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-700";
 const subscribeToHydration = () => () => {};
 const useHydratedPathname = () => useSyncExternalStore(subscribeToHydration, () => true, () => false);
-/** Renders one top-level nav entry: a plain link, or a hover-triggered sub-menu. */ export function NavMenu({ entry, unreadMessages = 0, initialUnreadMessages = [] }: { entry: NavEntry; unreadMessages?: number; initialUnreadMessages?: UnreadConversation[] }) {
+/** Renders one top-level nav entry: a plain link, or a hover-triggered sub-menu. */
+export function NavMenu({ entry, unreadMessages = 0, initialUnreadMessages = [] }: { entry: NavEntry; unreadMessages?: number; initialUnreadMessages?: UnreadConversation[] }) {
 const [open, setOpen] = useState(false);
+const [dismissedByClick, setDismissedByClick] = useState(false);
 const routeReady = useHydratedPathname();
 const pathname = usePathname();
 const unreadTotal = useUnreadMessageTotal(!isNavGroup(entry) && entry.href === "/messages" ? initialUnreadMessages : []);
@@ -26,17 +28,24 @@ className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-
 );
 }
 const isGroupActive = routeReady && entry.items.some((item) => isNavPathActive(pathname, item.href));
+const dismissMenu = () => {
+  setOpen(false);
+  setDismissedByClick(true);
+};
 return (
 <div
 className="group relative z-10"
-onMouseEnter={() => setOpen(true)}
-onMouseLeave={() => setOpen(false)}
+onMouseEnter={() => { if (!dismissedByClick) setOpen(true); }}
+onMouseLeave={() => { setOpen(false); setDismissedByClick(false); }}
 >
 <button
 type="button"
 aria-haspopup="menu"
 aria-expanded={open}
- onClick={() => setOpen((value) => !value)}
+onClick={() => {
+  if (open) dismissMenu();
+  else { setDismissedByClick(false); setOpen(true); }
+}}
 aria-current={isGroupActive ? "page" : undefined}
 className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-[1.04] hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "text-brand-700" : "text-slate-600"}`}
 >
@@ -47,12 +56,12 @@ aria-hidden="true"
 className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
 />
 </button>
-<div className={`dropdown-in absolute left-0 top-full z-50 w-64 pt-1 transition-[opacity,visibility] duration-150 ${open ? "visible opacity-100" : "invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"}`}>
+<div className={`dropdown-in absolute left-0 top-full z-50 w-64 pt-1 transition-[opacity,visibility] duration-150 ${open ? "visible opacity-100" : "invisible opacity-0"}`}>
 <div className="rounded-xl border border-slate-200 bg-white p-1 shadow-lg">
 {entry.items.map((item) => {
 const isActive = routeReady && isNavPathActive(pathname, item.href);
 return (
-<Link key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={isActive ? "page" : undefined} className={`${linkClass}${isActive ? " bg-brand-50 text-brand-700" : ""}`}>
+<Link key={item.href} href={item.href} onClick={dismissMenu} aria-current={isActive ? "page" : undefined} className={`${linkClass}${isActive ? " bg-brand-50 text-brand-700" : ""}`}>
 {item.label}
 {item.description ? (
 <span className="block text-xs font-normal text-slate-500">{item.description}</span>
