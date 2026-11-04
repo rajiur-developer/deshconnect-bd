@@ -25,8 +25,9 @@ title="News"
 description="Approved and published news from across Bangladesh."
 media="/images/banner/News.webp"
 />
-<div className="container-x py-8">
+<div className="container-x pb-8 pt-0">
 <DirectoryFilters
+          overlapBanner
 action="/news"
 params={params}
 divisions={options.divisions}
