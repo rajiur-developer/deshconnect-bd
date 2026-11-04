@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/current-user";
-import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { NewsStatusButtons } from "@/components/admin/admin-client"; import { StaffNewsForm } from "@/components/admin/staff-news-form"; import { formatDate } from "@/lib/utils"; import { BulkActions } from "@/components/admin/bulk-actions";
+import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { Badge, Card } from "@/components/ui/badge"; import { PageHeader } from "@/components/layout/page-header"; import { NewsStatusButtons } from "@/components/admin/admin-client"; import { StaffNewsForm } from "@/components/admin/staff-news-form"; import { formatDate } from "@/lib/utils"; import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions";
 export const metadata = { title: "News" };
 const TONE: Record<string, "success" | "amber" | "accent" | "neutral"> = {
 published: "success",
@@ -30,12 +30,13 @@ description="Review, approve, publish and edit news. Submissions stay private un
 <Link href="/admin/news?view=requests" aria-current={view === "requests" ? "page" : undefined} className={`rounded-lg px-4 py-2 text-sm font-medium ${view === "requests" ? "bg-brand-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"}`}>Post requests ({requests.length})</Link>
 <Link href="/admin/news?view=all" aria-current={view === "all" ? "page" : undefined} className={`rounded-lg px-4 py-2 text-sm font-medium ${view === "all" ? "bg-brand-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"}`}>All news ({allNews.length})</Link>
 </div>
-<BulkActions entity="news" records={news.map((article) => ({ id: article.id, label: article.title, status: article.status }))} />
+<BulkActions entity="news" records={news.map((article) => ({ id: article.id, label: article.title, status: article.status }))}>
 <Card className="overflow-x-auto p-0">
 <table className="min-w-full divide-y divide-slate-100 text-sm">
 <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
 <tr>
-<th className="px-4 py-3">Title</th>
+<th className="w-10 px-4 py-3" aria-label="Select records"></th>
+              <th className="px-4 py-3">Title</th>
 <th className="px-4 py-3">Category</th>
 <th className="px-4 py-3">Status</th>
 <th className="px-4 py-3">Published</th>
@@ -45,6 +46,7 @@ description="Review, approve, publish and edit news. Submissions stay private un
 <tbody className="divide-y divide-slate-100">
 {news.map((article) => (
 <tr key={article.id}>
+              <td className="px-4 py-3"><BulkSelectCheckbox id={article.id} label={article.title} /></td>
 <td className="px-4 py-3">
 <p className="font-medium text-slate-900">{article.title}</p>
 {article.status === "published" && <Link href={`/news/${article.slug}`} className="text-xs text-brand-700">View live</Link>}
@@ -55,9 +57,10 @@ description="Review, approve, publish and edit news. Submissions stay private un
 <td className="px-4 py-3"><NewsStatusButtons article={article} categories={categories} /></td>
 </tr>
 ))}
-{news.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-slate-500">{view === "requests" ? "There are no news requests waiting for review." : "No news posts yet."}</td></tr>}
+{news.length === 0 && <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-500">{view === "requests" ? "There are no news requests waiting for review." : "No news posts yet."}</td></tr>}
 </tbody>
 </table>
 </Card>
+      </BulkActions>
 </>
 ); }
