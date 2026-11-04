@@ -10,7 +10,7 @@ import { PlaceForm } from "@/components/admin/place-form";
 import { RecordActions } from "@/components/admin/record-actions";
 import { formatDate } from "@/lib/utils";
 import { requireUser } from "@/lib/auth/current-user";
-import { BulkActions } from "@/components/admin/bulk-actions";
+import { BulkActions, BulkSelectCheckbox } from "@/components/admin/bulk-actions";
 
 export const metadata = { title: "Places" };
 
@@ -44,11 +44,12 @@ export default async function AdminPlacesPage() {
       <div className="mb-8">
         <PlaceForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} categories={categories} userId={user.id} />
       </div>
-      <BulkActions entity="place" records={places.map((place) => ({ id: place.id, label: place.name, status: place.status }))} />
+      <BulkActions entity="place" records={places.map((place) => ({ id: place.id, label: place.name, status: place.status }))}>
       <Card className="overflow-x-auto p-0">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
             <tr>
+              <th className="w-10 px-4 py-3" aria-label="Select records"></th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Status</th>
@@ -60,6 +61,7 @@ export default async function AdminPlacesPage() {
           <tbody className="divide-y divide-slate-100">
             {places.map((place) => (
               <tr key={place.id}>
+              <td className="px-4 py-3"><BulkSelectCheckbox id={place.id} label={place.name} /></td>
                 <td className="px-4 py-3">
                   <div className="flex min-w-[14rem] items-center gap-3">
                     <PlaceThumbnail src={place.image} alt={place.name} />
@@ -94,12 +96,13 @@ export default async function AdminPlacesPage() {
             ))}
             {places.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">No places found.</td>
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-500">No places found.</td>
               </tr>
             )}
           </tbody>
         </table>
       </Card>
+      </BulkActions>
     </>
   );
 }
