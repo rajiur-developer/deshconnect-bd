@@ -29,8 +29,9 @@ title="Institutions"
 description="Schools, colleges, madrasahs and other institutions across Bangladesh."
 media="/images/banner/Collage.webp"
 />
-<div className="container-x py-8">
+<div className="container-x pb-8 pt-0">
 <DirectoryFilters
+          overlapBanner
 action="/institutions"
 params={params}
 divisions={options.divisions}
