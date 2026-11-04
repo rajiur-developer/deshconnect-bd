@@ -40,7 +40,7 @@ categories={categories.map((category) => ({ value: category.value, label: catego
 showCategory
 current={{ divisionId, districtId, upazilaId }}
 />
-<p className="mt-6 text-sm text-slate-500">{meta.total} records found</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} records found</p>
 <p className="mt-2 text-xs text-slate-500">
   Listings include educational places from{" "}
   <a
