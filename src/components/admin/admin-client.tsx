@@ -22,11 +22,13 @@ import { rolePermissions } from "@/lib/auth/permissions";
 import type { ContentCategory } from "@/services/content-categories";
 import { AnimatedDialog } from "@/components/ui/animated-dialog";
 import { useToast } from "@/components/ui/toast";
+import { Icon } from "@/components/ui/icons";
 const selectClass = "rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs focus-ring";
 type FormState = { error?: string; success?: string };
 export function NewsStatusButtons({ article, categories }: { article: { id: string; status: string; title: string; excerpt: string; body: string; category: string; source?: string | null; image: string }; categories: ContentCategory[] }) {
 const [pending, startTransition] = useTransition();
 const [editing, setEditing] = useState(false);
+const [confirmDelete, setConfirmDelete] = useState(false);
 const [message, setMessage] = useState("");
 const router = useRouter();
 const act = (next: "published" | "pending_review" | "rejected" | "archived") =>
@@ -49,7 +51,7 @@ if (result.ok) { setEditing(false); router.refresh(); }
 });
 }
 function remove() {
-if (!window.confirm(`Delete “${article.title}” permanently?`)) return;
+setConfirmDelete(false);
 startTransition(async () => {
 try {
 const result = await adminDeleteNewsAction(article.id);
@@ -68,7 +70,7 @@ return (
 <button type="button" disabled={pending} onClick={() => act("pending_review")} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Unpublish</button>
 )}
 <button type="button" disabled={pending} onClick={() => setEditing(true)} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Update</button>
-<button type="button" disabled={pending} onClick={remove} className="rounded-lg border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50">Delete</button>
+<button type="button" disabled={pending} onClick={() => setConfirmDelete(true)} className="rounded-lg border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50">Delete</button>
 {article.status === "pending_review" && (
 <button type="button" disabled={pending} onClick={() => act("rejected")} className="rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50">Reject</button>
 )}
@@ -87,6 +89,18 @@ return (
 <button type="button" disabled={pending} onClick={() => setEditing(false)} className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 disabled:opacity-50">Cancel</button>
 </div>
 </form>
+</AnimatedDialog>
+<AnimatedDialog open={confirmDelete} onClose={() => setConfirmDelete(false)} label="Confirm permanent news deletion" panelClassName="max-w-md p-0">
+<div className="p-6 sm:p-7">
+<div className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-rose-50 text-rose-600"><Icon name="trash" className="h-6 w-6" /></div>
+<h2 className="pr-7 text-lg font-bold text-slate-900">Confirm permanent deletion</h2>
+<p className="mt-2 text-sm leading-6 text-slate-600">You are about to permanently delete this news post. This action cannot be undone.</p>
+<p className="mt-3 rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">{article.title}</p>
+<div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+<button type="button" onClick={() => setConfirmDelete(false)} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"><Icon name="close" className="h-4 w-4" /> Cancel</button>
+<button type="button" disabled={pending} onClick={remove} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60"><Icon name="trash" className="h-4 w-4" /> Yes, Delete</button>
+</div>
+</div>
 </AnimatedDialog>
 {message && <p role="status" className="text-xs text-slate-600">{message}</p>}
 </div>
