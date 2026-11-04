@@ -33,8 +33,9 @@ title="Government services"
 description="Government offices, required documents and opening hours."
 media="/images/banner/Gram_place.webp"
 />
-<div className="container-x py-8">
+<div className="container-x pb-8 pt-0">
 <DirectoryFilters
+          overlapBanner
 action="/government-services"
 params={params}
 divisions={options.divisions}
