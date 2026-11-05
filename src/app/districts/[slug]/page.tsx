@@ -1,4 +1,5 @@
 import type { Metadata } from "next"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { getDivisionById, getDistrictBySlug, listUpazilas } from "@/services/locations"; import { listInstitutions } from "@/services/institutions"; import { listHospitals } from "@/services/hospitals"; import { listBusinesses } from "@/services/businesses"; import { listPlaces } from "@/services/places"; import { Icon } from "@/components/ui/icons"; import { BusinessCard } from "@/components/cards/business-card"; import { InstitutionCard } from "@/components/cards/institution-card"; import { PlaceCard } from "@/components/cards/place-card"; import { ListGrid } from "@/components/layout/list-grid";
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -33,7 +34,7 @@ return (
 </p>
 </div>
 <section className="mt-10">
-<h2 className="text-xl font-semibold text-slate-900">Upazilas</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Upazilas" /></h2>
 <div className="mt-4 flex flex-wrap gap-2">
 {upazilas.map((upazila) => (
 <Link
@@ -48,7 +49,7 @@ className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-
 </section>
 {places.length > 0 && (
 <section className="mt-12">
-<h2 className="text-xl font-semibold text-slate-900">Places to visit</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Places to visit" /></h2>
 <ListGrid className="mt-4">
 {places.map((place) => (
 <PlaceCard key={place.id} place={place} />
@@ -58,7 +59,7 @@ className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-
 )}
 {institutions.length > 0 && (
 <section className="mt-12">
-<h2 className="text-xl font-semibold text-slate-900">Institutions</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Institutions" /></h2>
 <ListGrid className="mt-4">
 {institutions.map((institution) => (
 <InstitutionCard key={institution.id} institution={institution} />
@@ -68,7 +69,7 @@ className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-
 )}
 {hospitals.length > 0 && (
 <section className="mt-12">
-<h2 className="text-xl font-semibold text-slate-900">Hospitals & health centres</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Hospitals & health centres" /></h2>
 <ListGrid className="mt-4">
 {hospitals.map((hospital) => (
 <InstitutionCard key={hospital.id} institution={hospital} />
@@ -78,7 +79,7 @@ className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-
 )}
 {businesses.length > 0 && (
 <section className="mt-12">
-<h2 className="text-xl font-semibold text-slate-900">Businesses</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Businesses" /></h2>
 <ListGrid className="mt-4">
 {businesses.map((business) => (
 <BusinessCard key={business.id} business={business} />
