@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { requireUser } from "@/lib/auth/current-user"; import { listSavedPlaces } from "@/services/places"; import { AccountShell } from "@/components/layout/account-shell"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { PlaceCard } from "@/components/cards/place-card"; import { ListGrid } from "@/components/layout/list-grid";
 export const metadata = { title: "Saved places", robots: { index: false, follow: false } };
 export default async function SavedPage() {
@@ -10,7 +11,7 @@ return (
 <EmptyState
 title="Nothing saved yet"
 description="Save a place from any detail page, and it will appear here."
-action={<Link href="/places" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white">Visit places</Link>}
+action={<Link href="/places" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white"><TranslatedText text="Visit places" /></Link>}
 icon={<Icon name="save" className="h-10 w-10" />}
 />
 ) : (
