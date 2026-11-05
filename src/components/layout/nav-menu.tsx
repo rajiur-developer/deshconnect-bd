@@ -51,7 +51,7 @@ onClick={() => {
 aria-current={isGroupActive ? "page" : undefined}
 className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-[1.04] hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "text-brand-700" : "text-slate-600"}`}
 >
-{entry.label}
+{t(entry.label)}
 <Icon
 name="chevron-down"
 aria-hidden="true"
