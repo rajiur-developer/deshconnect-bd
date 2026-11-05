@@ -20,7 +20,7 @@ return (
 <div className="grid gap-3 sm:grid-cols-3">
 <div>
 <label htmlFor={`${idPrefix}divisionId`} className="mb-1.5 block text-sm font-medium text-slate-700">
-Division{required ? " *" : ""}
+{t("Division")}{required ? " *" : ""}
 </label>
 <select
 id={`${idPrefix}divisionId`}
