@@ -9,7 +9,7 @@ title="Get in Touch"
 description="Write to us for corrections, partnerships, feedback, or help."
 />
 <div className="container-x py-10">
-<Prose>
+<Prose translate>
 <div className="grid gap-6 sm:grid-cols-2">
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
 <Icon name="mail" className="h-6 w-6 text-brand-600" />
