@@ -136,14 +136,14 @@ return (
       <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t("Category")}</span>
       <select name="category" aria-label={t("Category")} value={categoryValue} onChange={(event) => { setCategoryValue(event.target.value); submit({ category: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
         <option value="">{t("All categories")}</option>
-        {categories.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+        {categories.map((item) => <option key={item.value} value={item.value}>{t(item.label)}</option>)}
       </select>
     </label>}
     {extraSelects?.map((extra) => <label key={extra.name} className="block min-w-0">
       <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(extra.label)}</span>
       <select name={extra.name} aria-label={t(extra.label)} value={extraValues[extra.name] ?? ""} onChange={(event) => { setExtraValues((currentValues) => ({ ...currentValues, [extra.name]: event.target.value })); submit({ [extra.name]: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
         <option value="">All {extra.label.toLowerCase()}</option>
-        {extra.options.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+        {extra.options.map((item) => <option key={item.value} value={item.value}>{t(item.label)}</option>)}
       </select>
     </label>)}
   </div>
