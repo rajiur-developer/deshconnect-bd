@@ -1,3 +1,4 @@
+import { normalizeSearchIdentity } from "@/lib/search-transliteration";
 import type { Business, GovernmentService, Institution, News, Place } from "@/types/content";
 import type { Post } from "@/types/community";
 import { listPlaces } from "@/services/places";
@@ -61,18 +62,7 @@ export type SearchSuggestion = {
 
 /** Normalize Bengali and Latin spellings so equivalent names can be shown together. */
 function suggestionIdentity(value: string): string {
-  const normalized = value.normalize("NFC").trim().toLocaleLowerCase();
-  const latin = /[\u0980-\u09FF]/.test(normalized)
-    ? normalized.replace(/[\u0980-\u09FF]/g, (character) => {
-        const map: Record<string, string> = {
-          "অ":"o","আ":"a","ই":"i","ঈ":"i","উ":"u","ঊ":"u","এ":"e","ঐ":"oi","ও":"o","ঔ":"ou",
-          "ক":"k","খ":"kh","গ":"g","ঘ":"gh","চ":"ch","ছ":"chh","জ":"j","ঝ":"jh","ট":"t","ঠ":"th","ড":"d","ঢ":"dh","ণ":"n","ত":"t","থ":"th","দ":"d","ধ":"dh","ন":"n","প":"p","ফ":"ph","ব":"b","ভ":"bh","ম":"m","য":"j","র":"r","ল":"l","শ":"sh","ষ":"sh","স":"s","হ":"h","ড়":"r","ঢ়":"rh","য়":"y","ং":"ng","ঃ":"h","ঁ":"n",
-          "া":"a","ি":"i","ী":"i","ু":"u","ূ":"u","ে":"e","ৈ":"oi","ো":"o","ৌ":"ou","ৃ":"ri","্":""
-        };
-        return map[character] ?? character;
-      })
-    : normalized;
-  return latin.replace(/[^a-z0-9]+/g, "");
+  return normalizeSearchIdentity(value) || value.trim().toLocaleLowerCase();
 }
 
 /** Fetch names in either script; when both spellings exist, expose both in one suggestion. */
