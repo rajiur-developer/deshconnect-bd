@@ -22,7 +22,7 @@ export function FormPendingButton({
   return (
     <Button type="submit" variant={variant} className={className} disabled={pending} aria-busy={pending}>
       {pending && <Spinner />}
-      {pending ? t(pendingLabel) : children}
+      {pending ? t(pendingLabel) : typeof children === "string" ? t(children) : children}
     </Button>
   );
 }
