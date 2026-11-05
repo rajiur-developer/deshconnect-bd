@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { requireUser } from "@/lib/auth/current-user";
 import { getUserById } from "@/services/users";
 import { formatLocation } from "@/services/locations";
@@ -28,7 +29,7 @@ export default async function ProfilePage() {
               <div className="flex min-w-0 items-end gap-4">
                 <ProfileAvatar name={user.fullName} src={user.avatar} storageKey={user.avatarKey} className="h-24 w-24 border-4 border-white text-2xl shadow-lg shadow-slate-900/10 sm:h-28 sm:w-28" textClassName="text-2xl" />
                 <div className="min-w-0 pb-1">
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">Member profile</p>
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700"><TranslatedText text="Member profile" /></p>
                   <h2 className="truncate text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">{user.fullName}</h2>
                   <p className="mt-1 truncate text-sm text-slate-500">@{user.username}</p>
                 </div>
@@ -49,7 +50,7 @@ export default async function ProfilePage() {
               <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-600">{user.bio}</p>
             ) : (
               <div className="mt-5 flex flex-col gap-2 rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div><p className="text-sm font-semibold text-slate-800">Add a short introduction</p><p className="mt-1 text-xs text-slate-500">Tell the community a little about yourself.</p></div>
+                <div><p className="text-sm font-semibold text-slate-800"><TranslatedText text="Add a short introduction" /></p><p className="mt-1 text-xs text-slate-500"><TranslatedText text="Tell the community a little about yourself." /></p></div>
                 <Link href="/profile/edit" className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:text-emerald-900">Complete profile <Icon name="arrow-right" className="h-4 w-4" /></Link>
               </div>
             )}
@@ -59,7 +60,7 @@ export default async function ProfilePage() {
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,.85fr)]">
           <Card className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-6">
             <div className="flex items-start justify-between gap-3">
-              <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">Personal information</p><h3 className="mt-1 text-lg font-bold text-slate-950">Profile details</h3><p className="mt-1 text-sm text-slate-500">The information visible on your member profile.</p></div>
+              <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700"><TranslatedText text="Personal information" /></p><h3 className="mt-1 text-lg font-bold text-slate-950"><TranslatedText text="Profile details" /></h3><p className="mt-1 text-sm text-slate-500"><TranslatedText text="The information visible on your member profile." /></p></div>
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700"><Icon name="users" className="h-5 w-5" /></span>
             </div>
             <dl className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -84,22 +85,22 @@ export default async function ProfilePage() {
 
           <Card className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-6">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">Account shortcuts</p>
-            <h3 className="mt-1 text-lg font-bold text-slate-950">Manage your space</h3>
-            <p className="mt-1 text-sm leading-6 text-slate-500">Keep your details current and stay connected with the community.</p>
+            <h3 className="mt-1 text-lg font-bold text-slate-950"><TranslatedText text="Manage your space" /></h3>
+            <p className="mt-1 text-sm leading-6 text-slate-500"><TranslatedText text="Keep your details current and stay connected with the community." /></p>
             <div className="mt-5 space-y-2">
               <Link href="/profile/edit" className="group flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white p-3 transition hover:border-emerald-200 hover:bg-emerald-50/60">
                 <span className="grid h-9 w-9 place-items-center rounded-lg bg-emerald-50 text-emerald-700"><Icon name="edit" className="h-4 w-4" /></span>
-                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800">Edit profile</span><span className="mt-0.5 block text-xs text-slate-500">Update your personal information</span></span>
+                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800"><TranslatedText text="Edit profile" /></span><span className="mt-0.5 block text-xs text-slate-500"><TranslatedText text="Update your personal information" /></span></span>
                 <Icon name="arrow-right" className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700" />
               </Link>
               <Link href="/settings" className="group flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white p-3 transition hover:border-emerald-200 hover:bg-emerald-50/60">
                 <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-100 text-slate-600"><Icon name="shield" className="h-4 w-4" /></span>
-                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800">Account settings</span><span className="mt-0.5 block text-xs text-slate-500">Manage account preferences</span></span>
+                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800"><TranslatedText text="Account settings" /></span><span className="mt-0.5 block text-xs text-slate-500"><TranslatedText text="Manage account preferences" /></span></span>
                 <Icon name="arrow-right" className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700" />
               </Link>
               <Link href="/connections" className="group flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white p-3 transition hover:border-emerald-200 hover:bg-emerald-50/60">
                 <span className="grid h-9 w-9 place-items-center rounded-lg bg-violet-50 text-violet-700"><Icon name="users" className="h-4 w-4" /></span>
-                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800">Connections</span><span className="mt-0.5 block text-xs text-slate-500">View your community network</span></span>
+                <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-800"><TranslatedText text="Connections" /></span><span className="mt-0.5 block text-xs text-slate-500"><TranslatedText text="View your community network" /></span></span>
                 <Icon name="arrow-right" className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700" />
               </Link>
             </div>
