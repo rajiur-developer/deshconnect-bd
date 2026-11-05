@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { listPlaces } from "@/services/places"; import { listContentCategories } from "@/services/content-categories"; import { getDirectoryLocationOptions } from "@/services/locations"; import { PlacesDirectoryFilters } from "@/components/search/directory-filters"; import { PlaceCard } from "@/components/cards/place-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
 export const metadata: Metadata = { title: "Places to visit" };
 export default async function PlacesPage({
@@ -41,7 +42,7 @@ categories={categories.map((category) => ({ value: category.value, label: catego
 current={{ divisionId, districtId, upazilaId }}
 />
 <p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">
-{meta.total} places found
+{meta.total} <TranslatedText text="places found" />
 </p>
 {items.length ? (
 <ListGrid className="mt-4">
