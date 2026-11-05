@@ -93,12 +93,12 @@ export function RecordForm({ userId }: { userId: string }) {
   return <form ref={formRef} action={action} onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
     <h2 className="text-lg font-semibold text-slate-900">Add a record</h2>
     <div className="mt-4 grid gap-4 sm:grid-cols-2">
-      <Field label=t("Title") htmlFor="title" required><Input id="title" name="title" required minLength={2} maxLength={120} /></Field>
-      <Field label=t("Category") htmlFor="category" required><Input id="category" name="category" required maxLength={40} placeholder=t("e.g. announcement") /></Field>
+      <Field label={t("Title")} htmlFor="title" required><Input id="title" name="title" required minLength={2} maxLength={120} /></Field>
+      <Field label={t("Category")} htmlFor="category" required><Input id="category" name="category" required maxLength={40} placeholder={t("e.g. announcement")} /></Field>
     </div>
-    <div className="mt-4"><Field label=t("Description") htmlFor="description"><textarea id="description" name="description" maxLength={2000} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-ring" /></Field></div>
+    <div className="mt-4"><Field label={t("Description")} htmlFor="description"><textarea id="description" name="description" maxLength={2000} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-ring" /></Field></div>
     <div className="mt-4">
-      <Field label=t("Attachment (optional)") htmlFor="attachment">
+      <Field label={t("Attachment (optional)")} htmlFor="attachment">
         <input ref={fileInputRef} id="attachment" name="attachment" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:font-medium file:text-brand-700 hover:file:bg-brand-100" />
       </Field>
       <p className="mt-1 text-xs text-slate-500">JPG, JPEG, or PNG · max 5 MB. Private to your account.</p>
