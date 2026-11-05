@@ -795,6 +795,18 @@ export const bnMessages: Record<string, string> = {
   "Change image": "ছবি পরিবর্তন করুন",
   "Select image": "ছবি নির্বাচন করুন",
 
+  "Keep it in your list for later.": "পরে দেখার জন্য এটি আপনার তালিকায় রাখুন।",
+  "Log in to write a review.": "রিভিউ লিখতে লগইন করুন।",
+  "Last updated": "সর্বশেষ হালনাগাদ",
+  "Hours": "সময়সূচি",
+  "Office details": "অফিসের বিবরণ",
+  "Required documents": "প্রয়োজনীয় কাগজপত্র",
+  "Facility details": "প্রতিষ্ঠানের বিবরণ",
+  "Review the available listing information below.": "নিচে তালিকাভুক্ত তথ্য পর্যালোচনা করুন।",
+  "All hospitals": "সব হাসপাতাল",
+  "Need a donor? Visit the blood donation directory to search or request blood.": "রক্তদাতা প্রয়োজন? রক্তদান ডিরেক্টরিতে গিয়ে রক্তদাতা খুঁজুন অথবা রক্তের অনুরোধ জানান।",
+  "Find blood donors →": "রক্তদাতা খুঁজুন →",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
