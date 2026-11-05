@@ -12,7 +12,7 @@ export type FormState = {
   fullName?: string; username?: string; phone?: string; divisionId?: string; districtId?: string;
   upazilaId?: string; bloodGroup?: string; gender?: string; dateOfBirth?: string; termsAccepted?: string;
 };
-const appUrl = () => (process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\\/+$/, "");
+const appUrl = () => (process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 const safeNext = (value: FormDataEntryValue | string | null) => {
   const path = typeof value === "string" ? value : "";
   return path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard";
@@ -117,7 +117,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
 export async function verifyRegistrationAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const token = String(formData.get("otp") ?? "").trim();
-  if (!email || !/^\\d{6}$/.test(token)) return { error: "Enter the 6-digit code sent to your email." };
+  if (!email || !/^\d{6}$/.test(token)) return { error: "Enter the 6-digit code sent to your email." };
   const client = await supabase();
   const { data, error } = await client.auth.verifyOtp({ email, token, type: "signup" });
   if (error || !data.user) return { error: error?.message ?? "The code is invalid or expired." };
@@ -149,7 +149,7 @@ export async function googleOAuthAction(): Promise<void> {
 
 export async function requestPasswordResetAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return { error: "Enter a valid email address." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
   const limit = await rateLimitAsync(`reset:${email}`, RATES.resetPerHour, 60 * 60_000);
   if (!limit.ok) return { error: `Too many requests. Try again in ${limit.retryAfterSeconds}s.` };
   const next = `/reset-password?email=${encodeURIComponent(email)}`;

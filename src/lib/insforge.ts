@@ -1,8 +1,10 @@
 import "server-only";
 
-import { createClient as createInsForgeClient } from "@insforge/sdk";\nimport { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createClient as createInsForgeClient } from "@insforge/sdk";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
-import { getDatabase, saveDatabase } from "@/lib/db/store";\nimport { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getDatabase, saveDatabase } from "@/lib/db/store";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // Trailing slashes must be stripped: paths below already start with "/", so
 // "https://host/" would produce "https://host//api/..." which InsForge answers
@@ -27,7 +29,7 @@ const legacyMediaClient = createInsForgeClient({
   baseUrl: INSFORGE_URL,
   anonKey: ANON_KEY,
 });
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\\/+$/, "");
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, "");
 const SUPABASE_KEY = (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)?.trim();
 if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Supabase URL and publishable key are required.");
 

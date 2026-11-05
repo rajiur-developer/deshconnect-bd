@@ -6,7 +6,7 @@ type CookieStore = {
   set: (name: string, value: string, options?: any) => void;
 };
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\\/+$/, "");
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, "");
 const SUPABASE_KEY = (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)?.trim();
 
 export function createSupabaseServerClient(cookieStore: CookieStore) {
