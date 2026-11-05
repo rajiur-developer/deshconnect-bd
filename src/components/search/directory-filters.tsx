@@ -226,7 +226,7 @@ export function PlacesDirectoryFilters({
             }}
             className="min-h-8 w-full rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-10 sm:rounded-xl sm:px-2.5 sm:text-xs outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           >
-            <option value="">All divisions</option>
+            <option value="">{t("All divisions")}</option>
             {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </label>
@@ -243,7 +243,7 @@ export function PlacesDirectoryFilters({
             }}
             className="min-h-8 w-full rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-12 sm:rounded-xl sm:px-3.5 sm:text-sm outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           >
-            <option value="">All districts</option>
+            <option value="">{t("All districts")}</option>
             {districtChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </label>
@@ -257,7 +257,7 @@ export function PlacesDirectoryFilters({
             onChange={(event) => setUpazilaId(event.target.value)}
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           >
-            <option value="">All upazilas</option>
+            <option value="">{t("All upazilas")}</option>
             {upazilaChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </label>
