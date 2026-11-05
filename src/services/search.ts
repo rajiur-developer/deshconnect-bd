@@ -55,11 +55,28 @@ export async function globalSearch(query: string, limit = 4): Promise<GlobalSear
 
 export type SearchSuggestion = {
   label: string;
+  alternateLabel?: string;
   category: string;
 };
 
-/** Fetch a small, resilient set of name suggestions while a user is typing. */
-export async function searchSuggestions(query: string, perCategory = 5, scope = "all"): Promise<SearchSuggestion[]> {
+/** Normalize Bengali and Latin spellings so equivalent names can be shown together. */
+function suggestionIdentity(value: string): string {
+  const normalized = value.normalize("NFC").trim().toLocaleLowerCase();
+  const latin = /[\u0980-\u09FF]/.test(normalized)
+    ? normalized.replace(/[\u0980-\u09FF]/g, (character) => {
+        const map: Record<string, string> = {
+          "অ":"o","আ":"a","ই":"i","ঈ":"i","উ":"u","ঊ":"u","এ":"e","ঐ":"oi","ও":"o","ঔ":"ou",
+          "ক":"k","খ":"kh","গ":"g","ঘ":"gh","চ":"ch","ছ":"chh","জ":"j","ঝ":"jh","ট":"t","ঠ":"th","ড":"d","ঢ":"dh","ণ":"n","ত":"t","থ":"th","দ":"d","ধ":"dh","ন":"n","প":"p","ফ":"ph","ব":"b","ভ":"bh","ম":"m","য":"j","র":"r","ল":"l","শ":"sh","ষ":"sh","স":"s","হ":"h","ড়":"r","ঢ়":"rh","য়":"y","ং":"ng","ঃ":"h","ঁ":"n",
+          "া":"a","ি":"i","ী":"i","ু":"u","ূ":"u","ে":"e","ৈ":"oi","ো":"o","ৌ":"ou","ৃ":"ri","্":""
+        };
+        return map[character] ?? character;
+      })
+    : normalized;
+  return latin.replace(/[^a-z0-9]+/g, "");
+}
+
+/** Fetch names in either script; when both spellings exist, expose both in one suggestion. */
+export async function searchSuggestions(query: string, perCategory = 8, scope = "all"): Promise<SearchSuggestion[]> {
   const q = query.trim();
   if (q.length < 2) return [];
 
@@ -76,13 +93,13 @@ export async function searchSuggestions(query: string, perCategory = 5, scope = 
   };
   const results = await Promise.allSettled(categories.map((category) => loaders[category]()));
 
-  const suggestions: SearchSuggestion[] = [];
+  const raw: SearchSuggestion[] = [];
   const add = (index: number, category: string, getLabel: (item: any) => string) => {
     const result = results[index];
     if (result.status !== "fulfilled") return;
     for (const item of result.value.items ?? []) {
       const label = String(getLabel(item) ?? "").trim();
-      if (label) suggestions.push({ label, category });
+      if (label) raw.push({ label, category });
     }
   };
 
@@ -99,11 +116,25 @@ export async function searchSuggestions(query: string, perCategory = 5, scope = 
     if (config) add(index, config.label, config.getLabel);
   });
 
-  const seen = new Set<string>();
-  return suggestions.filter((item) => {
-    const key = item.label.toLocaleLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).slice(0, 8);
+  const groups = new Map<string, SearchSuggestion[]>();
+  for (const item of raw) {
+    const key = `${item.category}:${suggestionIdentity(item.label)}`;
+    const group = groups.get(key) ?? [];
+    if (!group.some((entry) => entry.label.toLocaleLowerCase() === item.label.toLocaleLowerCase())) {
+      group.push(item);
+      groups.set(key, group);
+    }
+  }
+
+  const suggestions: SearchSuggestion[] = [];
+  for (const group of groups.values()) {
+    const english = group.find((item) => !/[\u0980-\u09FF]/.test(item.label));
+    const bengali = group.find((item) => /[\u0980-\u09FF]/.test(item.label));
+    if (english && bengali) {
+      suggestions.push({ label: english.label, alternateLabel: bengali.label, category: english.category });
+    } else if (group[0]) {
+      suggestions.push(group[0]);
+    }
+  }
+  return suggestions.slice(0, 10);
 }
