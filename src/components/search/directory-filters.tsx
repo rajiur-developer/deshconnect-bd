@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { IconName } from "@/components/ui/icons"; import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
+import type { IconName } from "@/components/ui/icons"; import { Icon } from "@/components/ui/icons";
+import { SearchAutocomplete } from "@/components/search/search-autocomplete";
 export type LocationOption = { id: string; name: string }; export type DistrictOption = LocationOption & { divisionId: string }; export type UpazilaOption = LocationOption & { districtId: string };
 const MANAGED_KEYS = new Set(["q", "divisionId", "districtId", "upazilaId", "category", "sort", "page"]);
 type Props = {
