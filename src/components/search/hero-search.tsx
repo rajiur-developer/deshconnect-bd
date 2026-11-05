@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicUser } from "@/types/auth";
-import { Icon } from "@/components/ui/icons";
+import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
 
 type Division = { id: string; slug: string; name: string; bnName?: string };
 
@@ -153,17 +153,13 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
       className="mx-auto w-full rounded-2xl border border-white/20 bg-black/40 p-3 shadow-2xl shadow-slate-950/30 backdrop-blur-md sm:p-4 md:rounded-3xl md:p-5"
     >
       <div className="flex w-full flex-col gap-2 sm:gap-2.5 md:flex-row md:items-center">
-        <div className="relative min-w-0 flex-1">
-          <Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 sm:left-3.5 sm:h-[18px] sm:w-[18px]" />
-          <input
-            name="q"
-            value={q}
-            onChange={(event) => setQ(event.target.value)}
-            placeholder={placeholder || "Search places, hospitals, businesses and services…"}
-            aria-label="Search DeshConnect"
-            className="h-9 w-full rounded-lg border border-white/40 bg-white/90 py-1.5 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 sm:h-11 sm:rounded-xl sm:py-2 sm:pl-11 sm:text-sm"
-          />
-        </div>
+        <SearchAutocomplete
+          value={q}
+          onValueChange={setQ}
+          placeholder={placeholder || "Search places, hospitals, businesses and services…"}
+          className="h-9 w-full rounded-lg border border-white/40 bg-white/90 py-1.5 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 sm:h-11 sm:rounded-xl sm:py-2 sm:pl-11 sm:text-sm"
+          wrapperClassName="relative min-w-0 flex-1"
+        />
 
         <div ref={dropdownRef} className="relative z-50 w-full overflow-visible md:w-48 md:shrink-0">
           <button
