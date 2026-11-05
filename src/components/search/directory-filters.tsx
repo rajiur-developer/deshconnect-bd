@@ -193,7 +193,7 @@ export function PlacesDirectoryFilters({
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-brand-700">
             <Icon name="filter" className="h-[18px] w-[18px]" />
           </span>
-          <h2 className="text-base font-semibold text-slate-900">Filter</h2>
+          <h2 className="text-base font-semibold text-slate-900">{t("Filter")}</h2>
         </div>
         <Link
           href={action}
@@ -207,8 +207,8 @@ export function PlacesDirectoryFilters({
       <SearchAutocomplete
         value={searchValue}
         onValueChange={setSearchValue}
-        placeholder="Search by name or keyword"
-        ariaLabel="Search by name or keyword"
+        placeholder={t("Search by name or keyword")}
+        ariaLabel={t("Search by name or keyword")}
         className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2.5 sm:pl-10 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
         wrapperClassName="relative mb-2 sm:mb-4"
       />
@@ -272,7 +272,7 @@ export function PlacesDirectoryFilters({
             onChange={(event) => setCategoryValue(event.target.value)}
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           >
-            <option value="">All categories</option>
+            <option value="">{t("All categories")}</option>
             {(categories ?? []).map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
           </select>
         </label>
