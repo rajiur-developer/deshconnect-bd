@@ -9,7 +9,7 @@ title="About DeshConnect"
 description={SITE.description}
 />
 <div className="container-x py-10">
-<Prose>
+<Prose translate>
 <h2>Our Mission</h2>
 <p>
 DeshConnect is an information and community platform built for the people of Bangladesh. Here you can find
