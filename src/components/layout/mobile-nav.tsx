@@ -79,6 +79,7 @@ export function MobileNav({
             <MobileNavLink
               key={item.href}
               {...item}
+              label={t(item.label)}
               active={routeReady && directIndex === index}
               badge={item.href === "/messages" ? unreadTotal : 0}
             />
@@ -98,7 +99,7 @@ export function MobileNav({
 
       <button
         type="button"
-        aria-label="Close more navigation"
+        aria-label={t("Close more navigation")}
         tabIndex={moreOpen ? 0 : -1}
         className={`fixed inset-0 -z-10 bg-slate-950/25 backdrop-blur-[2px] transition-opacity duration-200 ${moreOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
         onClick={() => setMoreOpen(false)}
@@ -128,13 +129,13 @@ export function MobileNav({
                 className={`group flex min-h-12 items-center rounded-xl border px-3 py-3 text-sm font-medium transition-all duration-200 active:scale-[.98] ${active ? "border-emerald-200 bg-emerald-50 text-emerald-900 shadow-sm" : "border-slate-100 bg-slate-50/80 text-slate-700 hover:-translate-y-0.5 hover:border-emerald-100 hover:bg-emerald-50"}`}
               >
                 <span className="mr-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500 opacity-0 transition-opacity group-hover:opacity-100" />
-                {item.label}
+                {t(item.label)}
               </Link>
             );
           })}
         </div>
         <form action="/search" className="mt-3">
-          <label className="sr-only" htmlFor="dc-mobile-search">Search DeshConnect</label>
+          <label className="sr-only" htmlFor="dc-mobile-search">{t("Search DeshConnect")}</label>
           <div className="flex gap-2">
             <input
               id="dc-mobile-search"
