@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icons";
 import { useLanguage } from "@/components/i18n/language-provider";
 
-type Suggestion = { label: string; category: string };
+type Suggestion = { label: string; alternateLabel?: string; category: string };
 
 type SearchAutocompleteProps = {
   name?: string;
@@ -159,7 +159,7 @@ export function SearchAutocomplete({
             >
               <span className="flex min-w-0 items-center gap-2.5">
                 <Icon name="search" className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                <span className="truncate text-sm font-medium text-slate-800">{suggestion.label}</span>
+                <span className="flex min-w-0 flex-col"><span className="truncate text-sm font-medium text-slate-800">{suggestion.label}</span>{suggestion.alternateLabel && <span className="truncate text-[11px] text-slate-500">{suggestion.alternateLabel}</span>}</span>
               </span>
               <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">{t(suggestion.category)}</span>
             </button>
