@@ -221,10 +221,10 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
                 <div className="mt-4"><LocationFields divisions={divisions} districts={districts} upazilas={upazilas} current={{}} /></div>
               </section>
               <section>
-                <h2 className="mb-3 font-semibold text-slate-900">{t("A little more about you")} <span className="font-normal text-slate-500">(optional)</span></h2>
+                <h2 className="mb-3 font-semibold text-slate-900">{t("A little more about you")} <span className="font-normal text-slate-500">{t("(optional)")}</span></h2>
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Field label="Blood group" htmlFor="bloodGroup" hint="Optional"><select id="bloodGroup" name="bloodGroup" className={selectClass}><option value="">{t("Select")}</option>{BLOOD_GROUPS.map((group) => <option key={group} value={group}>{group}</option>)}</select></Field>
-                  <Field label="Gender" htmlFor="gender" hint="Optional"><select id="gender" name="gender" className={selectClass}><option value="">Select</option>{GENDERS.map((gender) => <option key={gender.value} value={gender.value}>{t(gender.label)}</option>)}</select></Field>
+                  <Field label="Gender" htmlFor="gender" hint="Optional"><select id="gender" name="gender" className={selectClass}><option value="">{t("Select")}</option>{GENDERS.map((gender) => <option key={gender.value} value={gender.value}>{t(gender.label)}</option>)}</select></Field>
                   <Field label="Date of birth" htmlFor="dateOfBirth" hint="Optional"><DateInput id="dateOfBirth" name="dateOfBirth" /></Field>
                 </div>
               </section>
