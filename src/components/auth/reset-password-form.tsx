@@ -21,8 +21,8 @@ return (
 <Input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
 </Field>
 </div>
-{state.error && <p role="alert" className="motion-error mt-4 text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="motion-success mt-4 text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="motion-error mt-4 text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="motion-success mt-4 text-sm text-emerald-600">{t(state.success)}</p>}
 <div className="mt-6">
 <Button type="submit" className="w-full" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Updating…") : t("Update password")}</Button>
 </div>
