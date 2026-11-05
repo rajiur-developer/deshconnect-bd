@@ -62,8 +62,7 @@ html[lang="en"] {
 
 html[lang="bn"] body {
   font-family: var(--font-sans);
-  /* Optically tune Bengali glyph size while preserving declared CSS font sizes. */
-  font-size-adjust: 0.54;
+  /* Keep Bengali text at the same declared CSS size as the English interface. */
   font-synthesis: none;
   font-kerning: normal;
   letter-spacing: 0;
@@ -1823,3 +1822,13 @@ main :is(.dc-footer-blood, .dc-analytics-text-link, .dc-analytics-range):active 
 .dc-admin-content table input[type=checkbox]{accent-color:#14734d}
 @media(max-width:767px){.dc-admin-content table th,.dc-admin-content table td{padding:.7rem .75rem}}
 @media(prefers-reduced-motion:reduce){.dc-admin-content table tbody tr{transition:none}}
+
+/* Match the Bengali account link optically to the English 14px label. */
+html[lang="bn"] .auth-account-link { font-size: 0.8125rem; }
+
+/* Keep the Bengali hero headline on one line without changing English sizing. */
+html[lang="bn"] .dc-home-hero-title-primary {
+  white-space: nowrap;
+  font-size: clamp(1rem, 4.6vw, 3rem);
+  line-height: 1.25;
+}
