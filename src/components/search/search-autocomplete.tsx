@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icons";
 
 type Suggestion = { label: string; category: string };
@@ -24,6 +25,14 @@ export function SearchAutocomplete({
   className = "",
   wrapperClassName = "relative min-w-0",
 }: SearchAutocompleteProps) {
+  const pathname = usePathname();
+  const scope = pathname === "/" ? "all" :
+    pathname.startsWith("/places") || pathname.startsWith("/tourism") ? "places" :
+    pathname.startsWith("/institutions") ? "institutions" :
+    pathname.startsWith("/hospitals") ? "hospitals" :
+    pathname.startsWith("/businesses") ? "businesses" :
+    pathname.startsWith("/government-services") ? "government-services" :
+    pathname.startsWith("/news") ? "news" : "none";
   const [internalValue, setInternalValue] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -54,7 +63,7 @@ export function SearchAutocomplete({
     const timer = window.setTimeout(async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`, {
+        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}&scope=${scope}`, {
           signal: controller.signal,
           headers: { Accept: "application/json" },
         });
@@ -79,7 +88,7 @@ export function SearchAutocomplete({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [currentValue]);
+  }, [currentValue, scope]);
 
   function chooseSuggestion(suggestion: Suggestion) {
     updateValue(suggestion.label);
