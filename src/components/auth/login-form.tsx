@@ -51,5 +51,5 @@ aria-label={showPassword ? t("Hide password") : t("Show password")}
 </div>
 </form>
 <div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />{t("or continue with")}<span className="h-px flex-1 bg-slate-200" /></div>
-<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full rounded-xl border-slate-200 bg-white py-3 font-semibold transition hover:border-brand-200 hover:bg-brand-50/50" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>
+<form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full rounded-xl border-slate-200 bg-white py-3 font-semibold transition hover:border-brand-200 hover:bg-brand-50/50" pendingLabel={t("Connecting to Google…")}>{t("Continue with Google")}</FormPendingButton></form>
 </div>); }
