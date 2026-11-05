@@ -33,7 +33,7 @@ function ContactActions({
           href="/login?next=%2Fblood-donation"
           className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-800 hover:bg-rose-100"
         >
-          <Icon name="phone" className="h-3.5 w-3.5" /> Log in to view contact
+          <Icon name="phone" className="h-3.5 w-3.5" /> {t("Log in to view contact")}
         </Link>
       </div>
     );
@@ -47,7 +47,7 @@ function ContactActions({
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700"
         >
-          <Icon name="message" className="h-3.5 w-3.5" /> WhatsApp
+          <Icon name="message" className="h-3.5 w-3.5" /> {t("WhatsApp")}
         </a>
       )}
       {callNumber && (
@@ -55,7 +55,7 @@ function ContactActions({
           href={`tel:+${callNumber}`}
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
         >
-          <Icon name="phone" className="h-3.5 w-3.5" /> Call
+          <Icon name="phone" className="h-3.5 w-3.5" /> {t("Call")}
         </a>
       )}
       {viewerId && <BloodChatLauncher {...chat} viewerId={viewerId} />}
@@ -64,10 +64,10 @@ function ContactActions({
           href="/login?next=%2Fblood-donation"
           className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-medium text-brand-800 hover:bg-brand-50"
         >
-          <Icon name="message" className="h-3.5 w-3.5" /> Log in to chat
+          <Icon name="message" className="h-3.5 w-3.5" /> {t("Log in to chat")}
         </Link>
       )}
-      {!callNumber && !whatsappNumber && <span className="text-xs text-slate-500">Contact number not provided.</span>}
+      {!callNumber && !whatsappNumber && <span className="text-xs text-slate-500">{t("Contact number not provided.")}</span>}
     </div>
   );
 }
