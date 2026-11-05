@@ -83,7 +83,7 @@ export async function listAdminUsers() {
     .select("id,username,full_name,email,phone,avatar,bio,division_id,district_id,upazila_id,role,status,email_verified,terms_accepted_at,blood_group,gender,date_of_birth,created_at,updated_at")
     .order("created_at", { ascending: false }).limit(500);
   if (error) throw error;
-  return (data ?? []).map((r: any) => ({
+  return ((data ?? []) as any[]).map((r: any) => ({
     id: r.id, username: r.username, fullName: r.full_name, email: r.email, phone: r.phone,
     avatar: r.avatar, bio: r.bio, divisionId: r.division_id, districtId: r.district_id,
     upazilaId: r.upazila_id, role: r.role, status: r.status, emailVerified: r.email_verified,
