@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { listNews } from "@/services/news"; import { listContentCategories } from "@/services/content-categories"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { NewsCard } from "@/components/cards/news-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { Icon } from "@/components/ui/icons"; import { getDirectoryLocationOptions } from "@/services/locations";
 export const metadata: Metadata = { title: "News" };
 export default async function NewsPage({
@@ -39,7 +40,7 @@ icon="globe"
 title="Filter news"
 current={{ divisionId, districtId, upazilaId }}
 />
-<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{result.meta.total} news</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{result.meta.total} <TranslatedText text="news" /></p>
 {result.items.length ? (
 <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 {result.items.map((item) => (
