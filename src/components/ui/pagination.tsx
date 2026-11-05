@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import type { PageMeta } from "@/lib/utils"; import { cn } from "@/lib/utils"; import { buttonClasses } from "./button";
+import { useLanguage } from "@/components/i18n/language-provider";
 function pageList(current: number, total: number): (number | "…")[] {
 const pages = new Set<number>([1, total, current, current - 1, current + 1]);
 const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
@@ -12,15 +14,16 @@ prev = page;
 }
 return out; }
 export function Pagination({ meta, hrefFor }: { meta: PageMeta; hrefFor: (page: number) => string }) {
+const { t } = useLanguage();
 if (meta.totalPages <= 1) return null;
 return (
-<nav aria-label="Pagination" className="mt-10 flex flex-wrap items-center justify-center gap-2">
+<nav aria-label={t("Pagination")} className="mt-10 flex flex-wrap items-center justify-center gap-2">
 {meta.hasPrev ? (
 <Link href={`${hrefFor(meta.page - 1)}#directory-results`} className={buttonClasses({ variant: "outline", size: "sm" })}>
 Previous
 </Link>
 ) : (
-<span className={cn(buttonClasses({ variant: "outline", size: "sm" }), "pointer-events-none opacity-50")}>Previous</span>
+<span className={cn(buttonClasses({ variant: "outline", size: "sm" }), "pointer-events-none opacity-50")}>{t("Previous")}</span>
 )}
 {pageList(meta.page, meta.totalPages).map((item, index) =>
 item === "…" ? (
@@ -48,7 +51,7 @@ item === meta.page
 Next
 </Link>
 ) : (
-<span className={cn(buttonClasses({ variant: "outline", size: "sm" }), "pointer-events-none opacity-50")}>Next</span>
+<span className={cn(buttonClasses({ variant: "outline", size: "sm" }), "pointer-events-none opacity-50")}>{t("Next")}</span>
 )}
 </nav>
 ); }
