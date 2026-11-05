@@ -61,7 +61,7 @@ return (
 <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
 <input ref={imageRef} type="hidden" name="image" />
 <input ref={imageKeyRef} type="hidden" name="imageKey" />
-<h2 className="font-semibold text-slate-900">Submit news</h2>
+<h2 className="font-semibold text-slate-900">{t("Submit news")}</h2>
 <Field label={t("Headline")} htmlFor="news-title" required>
 <Input id="news-title" name="title" required />
 </Field>
@@ -80,9 +80,9 @@ return (
 <Textarea id="news-body" name="body" className="min-h-[160px]" required />
 </Field>
 <div>
-<label htmlFor="news-image" className="mb-1.5 block text-sm font-medium text-slate-700">Article image</label>
+<label htmlFor="news-image" className="mb-1.5 block text-sm font-medium text-slate-700">{t("Article image")}</label>
 <input ref={fileRef} id="news-image" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const file = event.currentTarget.files?.[0]; setUploadError(""); setPreview(file ? URL.createObjectURL(file) : ""); if (!file) { if (imageRef.current) imageRef.current.value = ""; if (imageKeyRef.current) imageKeyRef.current.value = ""; } }} className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700" />
-<p className="mt-1 text-xs text-slate-500">Optional — JPG, PNG, or WebP up to 5 MB</p>
+<p className="mt-1 text-xs text-slate-500">{t("Optional — JPG, PNG, or WebP up to 5 MB")}</p>
 {preview && <img src={preview} alt={t("Article image preview")} className="mt-3 h-24 rounded-lg object-cover" />}
 {uploadError && <p role="alert" className="mt-2 text-sm text-accent-600">{t(uploadError)}</p>}
 </div>
