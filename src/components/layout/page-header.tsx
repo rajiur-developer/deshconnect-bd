@@ -1,5 +1,7 @@
+"use client";
 import type { ReactNode } from "react";
 import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 export function PageHeader({
 title,
 description,
@@ -18,8 +20,8 @@ return (
 <div className="flex flex-wrap items-start justify-between gap-4">
 {variant === "messages" ? <div className="relative z-10 flex max-w-3xl items-center gap-4">
 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-800 text-white shadow-md shadow-brand-900/15"><Icon name="message" className="h-4 w-4 sm:h-5 sm:w-5" /></span>
-<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">Direct messages</p><h1 className="text-lg font-bold text-slate-900 sm:text-2xl">{title}</h1>{description && <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">{description}</p>}</div>
-</div> : <div className="max-w-3xl"><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>{description && <p className="mt-2 text-slate-600">{description}</p>}</div>}
+<div><p className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">{t("Direct messages")}</p><h1 className="text-lg font-bold text-slate-900 sm:text-2xl">{t(title)}</h1>{description && <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">{t(description)}</p>}</div>
+</div> : <div className="max-w-3xl"><h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{t(title)}</h1>{description && <p className="mt-2 text-slate-600">{t(description)}</p>}</div>}
 {action && <div className="shrink-0">{action}</div>}
 </div>
 {children && <div className="mt-4">{children}</div>}
