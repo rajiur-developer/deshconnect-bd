@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { AccountShell } from "@/components/layout/account-shell";
 import { RecordForm } from "@/components/records/record-form";
@@ -45,10 +46,10 @@ export default async function MyRecordsPage() {
               {record.attachment_name || "Open attachment"}
             </a>
             <span className="ml-2 text-xs text-slate-500">({Math.max(1, Math.round(Number(record.attachment_size ?? 0) / 1024))} KB)</span>
-          </> : <p className="text-sm text-slate-500">Attachment is currently unavailable.</p>}
+          </> : <p className="text-sm text-slate-500"><TranslatedText text="Attachment is currently unavailable." /></p>}
         </div>}
       </article>)}
-      {records.length === 0 && <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">You have no records yet. Add one above to get started.</div>}
+      {records.length === 0 && <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600"><TranslatedText text="You have no records yet. Add one above to get started." /></div>}
     </section>
   </AccountShell>;
 }
