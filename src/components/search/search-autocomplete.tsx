@@ -89,7 +89,7 @@ export function SearchAutocomplete({
     if (form) window.requestAnimationFrame(() => form.requestSubmit());
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+  function handleKeyDown(event: { key: string; preventDefault: () => void }) {
     if (!open || !suggestions.length) return;
     if (event.key === "ArrowDown") {
       event.preventDefault();
