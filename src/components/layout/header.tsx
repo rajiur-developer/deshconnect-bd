@@ -155,14 +155,14 @@ export async function Header({
                 href="/login"
                 className="rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700"
               >
-                Login
+                <TranslatedText text="Login" />
               </Link>
 
               <Link
                 href="/register"
                 className="rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
               >
-                Create account
+                <TranslatedText text="Create account" />
               </Link>
             </div>
           )}
