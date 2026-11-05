@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { NavMenu } from "./nav-menu";
 import type { NavEntry } from "@/config/site";
 import type { UnreadConversation } from "@/components/messaging/message-realtime-notifications";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 export function DesktopNav({
   entries,
@@ -18,6 +19,7 @@ export function DesktopNav({
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const nav = navRef.current;
@@ -60,7 +62,7 @@ export function DesktopNav({
     <nav
       ref={navRef}
       className="dc-desktop-nav relative ml-2 hidden items-center gap-1 lg:flex"
-      aria-label="Primary"
+      aria-label={t("Primary")}
     >
       <span
         ref={indicatorRef}
