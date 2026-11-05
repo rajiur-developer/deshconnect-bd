@@ -1,4 +1,5 @@
 import type { Metadata } from "next"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { getGovernmentServiceBySlug } from "@/services/government-services"; import { formatLocation } from "@/services/locations"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { serviceCategoryLabelBn } from "@/components/cards/service-card";
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,21 +32,21 @@ return (
 </div>
 <aside className="space-y-6">
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Office details</h2>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Office details" /></h2>
 <dl className="mt-4 space-y-4 text-sm">
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Address</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Address" /></dt>
 <dd className="mt-1 text-slate-900">{service.officeAddress}</dd>
 </div>
 {service.hours && (
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Hours</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Hours" /></dt>
 <dd className="mt-1 text-slate-900">{service.hours}</dd>
 </div>
 )}
 {service.phone && (
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Phone</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Phone" /></dt>
 <dd className="mt-1">
 <a href={`tel:${service.phone}`} className="font-medium text-brand-700">{service.phone}</a>
 </dd>
@@ -53,7 +54,7 @@ return (
 )}
 {service.website && (
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Website</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Website" /></dt>
 <dd className="mt-1">
 <a href={service.website} target="_blank" rel="noreferrer" className="break-all font-medium text-brand-700">
 {service.website}
@@ -65,7 +66,7 @@ return (
 </div>
 {service.requiredDocuments && service.requiredDocuments.length > 0 && (
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Required documents</h2>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Required documents" /></h2>
 <ul className="mt-3 space-y-2">
 {service.requiredDocuments.map((document) => (
 <li key={document} className="flex items-start gap-2 text-sm text-slate-700">
