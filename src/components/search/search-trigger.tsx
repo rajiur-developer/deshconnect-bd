@@ -84,9 +84,6 @@ export function SearchTrigger() {
                 className="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-100"
                 wrapperClassName="relative"
               />
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                <Icon name="search" className="h-5 w-5" />
-              </span>
               <p className="mt-3 text-xs text-slate-400">
                 {t("Type at least 2 characters to see suggestions. Press Enter to view all results.")}
               </p>
