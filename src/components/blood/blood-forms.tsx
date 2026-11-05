@@ -8,6 +8,7 @@ import { getDonationEligibility, isValidBloodDonationDate } from "@/lib/blood-do
 import { DateInput } from "@/components/ui/date-input";
 import type { DonorAvailability, ContactMethod } from "@/types/blood";
 import { DeleteDonorProfileButton } from "./donor-actions";
+import { useLanguage } from "@/components/i18n/language-provider";
 type LocationProps = {
 divisions: LocationOption[];
 districts: DistrictOption[];
@@ -41,6 +42,7 @@ if (days) return `${days} day${days === 1 ? "" : "s"}${remainingHours ? ` ${rema
 return `${Math.max(1, remainingHours)} hour${remainingHours === 1 ? "" : "s"}`;
 }
 export function DonorForm({ divisions, districts, upazilas, profile }: LocationProps & { profile?: DonorProfile | null }) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<BloodFormState, FormData>(registerDonorAction, {});
 const [lastDonationAt, setLastDonationAt] = useState(profile?.lastDonationAt ?? "");
 const [availability, setAvailability] = useState<DonorAvailability>(() => {
@@ -66,7 +68,7 @@ Your donor profile is archived and hidden from public listings. Your record rema
 <div className="grid gap-3 sm:grid-cols-2">
 <Field label="Blood group" htmlFor="bloodGroup" required>
 <select id="bloodGroup" name="bloodGroup" defaultValue={profile?.bloodGroup ?? ""} required className={selectClass}>
-<option value="">Select group</option>
+<option value="">{t("Select group")}</option>
 {BLOOD_GROUPS.map((group) => (
 <option key={group} value={group}>{group}</option>
 ))}
@@ -74,21 +76,21 @@ Your donor profile is archived and hidden from public listings. Your record rema
 </Field>
 <Field label="Availability" htmlFor="availability" required>
 <select id="availability" name="availability" value={availability} onChange={(event) => setAvailability(event.target.value as DonorAvailability)} required className={selectClass}>
-<option value="available" disabled={!canDonate}>Ready</option>
-<option value="busy">Busy</option>
-<option value="unavailable">Not available</option>
+<option value="available" disabled={!canDonate}>{t("Ready")}</option>
+<option value="busy">{t("Busy")}</option>
+<option value="unavailable">{t("Not available")}</option>
 </select>
 </Field>
 {lastDonationAt && eligibility && !eligibility.eligible && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 sm:col-span-2">
 You can mark yourself Ready in <strong>{cooldownLabel(eligibility.remainingMs)}</strong> (75 days after your last donation).
 </p>}
-{lastDonationAt && !eligibility && <p role="alert" className="text-sm text-accent-600 sm:col-span-2">Enter a valid last donation date.</p>}
+{lastDonationAt && !eligibility && <p role="alert" className="text-sm text-accent-600 sm:col-span-2">{t("Enter a valid last donation date.")}</p>}
 <Field label="Preferred contact method" htmlFor="preferredContact" required>
 <select id="preferredContact" name="preferredContact" defaultValue={profile?.preferredContact ?? "phone"} required className={selectClass}>
-<option value="phone">Phone</option>
-<option value="sms">SMS</option>
-<option value="email">Email</option>
-<option value="in-app">In-app</option>
+<option value="phone">{t("Phone")}</option>
+<option value="sms">{t("SMS")}</option>
+<option value="email">{t("Email")}</option>
+<option value="in-app">{t("In-app")}</option>
 </select>
 </Field>
 <Field label="Phone number" htmlFor="phone" required hint="Shown publicly on your donor card when you consent below.">
@@ -121,13 +123,14 @@ if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "
 <span>I consent to showing my phone and WhatsApp numbers publicly on my donor card.</span>
 </label>
 </div>
-{state.error && <p role="alert" className="text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="text-sm text-emerald-600">{state.success}</p>}
-<Button type="submit" disabled={pending}>{pending ? "Saving…" : profile?.archivedAt ? "Restore donor profile" : profile ? "Save changes" : "Register as donor"}</Button>
+{state.error && <p role="alert" className="text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="text-sm text-emerald-600">{t(state.success)}</p>}
+<Button type="submit" disabled={pending}>{pending ? t("Saving…") : profile?.archivedAt ? t("Restore donor profile") : profile ? t("Save changes") : t("Register as donor")}</Button>
 {profile && !profile.archivedAt && <DeleteDonorProfileButton />}
 </form>
 ); }
 export function BloodRequestForm({ divisions, districts, upazilas }: LocationProps) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<BloodFormState, FormData>(createBloodRequestAction, {});
 useFormStateToast(state);
 return (
@@ -135,7 +138,7 @@ return (
 <div className="grid gap-3 sm:grid-cols-2">
 <Field label="Blood group" htmlFor="req-bloodGroup" required>
 <select id="req-bloodGroup" name="bloodGroup" required className={selectClass}>
-<option value="">Select group</option>
+<option value="">{t("Select group")}</option>
 {BLOOD_GROUPS.map((group) => (
 <option key={group} value={group}>{group}</option>
 ))}
@@ -170,6 +173,6 @@ return (
 </Field>
 {state.error && <p role="alert" className="text-sm text-accent-600">{state.error}</p>}
 {state.success && <p role="status" className="text-sm text-emerald-600">{state.success}</p>}
-<Button type="submit" variant="accent" disabled={pending}>{pending ? "Submitting…" : "Post blood request"}</Button>
+<Button type="submit" variant="accent" disabled={pending}>{pending ? t("Submitting…") : t("Post blood request")}</Button>
 </form>
 ); }
