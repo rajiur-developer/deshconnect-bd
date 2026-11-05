@@ -1,13 +1,9 @@
-import { refreshAuth } from "@insforge/sdk/ssr";
-import { isTerminalAuthRefreshError, preserveCookiesOnRetryableRefreshFailure } from "@/lib/auth/refresh-failure";
+import { cookies } from "next/headers";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export async function POST(request: Request): Promise<Response> {
-  const { response, error } = await refreshAuth({ request });
-  if (!error || isTerminalAuthRefreshError(error)) return response;
-
-  console.error("Auth session refresh endpoint failed temporarily; keeping cookies for a later retry.", {
-    statusCode: error.statusCode,
-    code: error.error,
-  });
-  return preserveCookiesOnRetryableRefreshFailure(response);
+export async function POST(): Promise<Response> {
+  const client = createSupabaseServerClient(await cookies());
+  const { data, error } = await client.auth.getUser();
+  if (error || !data.user) return Response.json({ ok: false }, { status: 401 });
+  return Response.json({ ok: true });
 }
