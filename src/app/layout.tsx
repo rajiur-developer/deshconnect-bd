@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { LanguageProvider, type Language } from "@/components/i18n/language-provider";
+import { TranslatedText } from "@/components/i18n/translated-text";
 
 import { SITE } from "@/config/site";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -42,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <LanguageProvider initialLanguage={initialLanguage}>
         <ToastProvider>
           <AuthFeedback />
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white"><TranslatedText text="Skip to main content" /></a>
           <Suspense fallback={<HeaderFallback />}><AuthenticatedShell /></Suspense>
           <main id="main-content" className="flex-1"><PageTheme>{children}</PageTheme></main>
           <Footer />
