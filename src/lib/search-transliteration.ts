@@ -16,6 +16,25 @@ const BENGALI_TO_LATIN: Record<string, string> = {
   "ো": "o", "ৌ": "ou", "ৃ": "ri", "্": "",
 };
 
+const BENGALI_PLACE_ALIASES: Record<string, string> = {
+  "ঢাকা":"dhaka","ফরিদপুর":"faridpur","গাজীপুর":"gazipur","গোপালগঞ্জ":"gopalganj","কিশোরগঞ্জ":"kishoreganj","মাদারীপুর":"madaripur","মানিকগঞ্জ":"manikganj","মুন্সীগঞ্জ":"munshiganj","নারায়ণগঞ্জ":"narayanganj","নরসিংদী":"narsingdi","রাজবাড়ী":"rajbari","শরীয়তপুর":"shariatpur","টাঙ্গাইল":"tangail",
+  "চট্টগ্রাম":"chattogram","বান্দরবান":"bandarban","ব্রাহ্মণবাড়িয়া":"brahmanbaria","চাঁদপুর":"chandpur","কুমিল্লা":"cumilla","কক্সবাজার":"coxsbazar","ফেনী":"feni","খাগড়াছড়ি":"khagrachhari","লক্ষ্মীপুর":"lakshmipur","নোয়াখালী":"noakhali","রাঙামাটি":"rangamati",
+  "রাজশাহী":"rajshahi","বগুড়া":"bogura","জয়পুরহাট":"joypurhat","নওগাঁ":"naogaon","নাটোর":"natore","চাঁপাইনবাবগঞ্জ":"chapainawabganj","পাবনা":"pabna","সিরাজগঞ্জ":"sirajganj",
+  "খুলনা":"khulna","বাগেরহাট":"bagerhat","চুয়াডাঙ্গা":"chuadanga","যশোর":"jashore","ঝিনাইদহ":"jhenaidah","কুষ্টিয়া":"kushtia","মাগুরা":"magura","মেহেরপুর":"meherpur","নড়াইল":"narail","সাতক্ষীরা":"satkhira",
+  "বরিশাল":"barishal","বরগুনা":"barguna","ভোলা":"bhola","ঝালকাঠি":"jhalokati","পটুয়াখালী":"patuakhali","পিরোজপুর":"pirojpur",
+  "সিলেট":"sylhet","হবিগঞ্জ":"habiganj","মৌলভীবাজার":"moulvibazar","সুনামগঞ্জ":"sunamganj",
+  "রংপুর":"rangpur","দিনাজপুর":"dinajpur","গাইবান্ধা":"gaibandha","কুড়িগ্রাম":"kurigram","লালমনিরহাট":"lalmonirhat","নীলফামারী":"nilphamari","পঞ্চগড়":"panchagarh","ঠাকুরগাঁও":"thakurgaon",
+  "ময়মনসিংহ":"mymensingh","জামালপুর":"jamalpur","নেত্রকোণা":"netrokona","শেরপুর":"sherpur"
+};
+
+export function normalizeSearchIdentity(value: string): string {
+  const normalized = value.normalize("NFC").trim().toLocaleLowerCase();
+  const alias = BENGALI_PLACE_ALIASES[normalized];
+  if (alias) return alias.replace(/[^a-z0-9]+/g, "");
+  const latin = /[\u0980-\u09FF]/.test(normalized) ? bengaliToLatin(normalized) : normalized;
+  return latin.replace(/[^a-z0-9]+/g, "");
+}
+
 const COMMON_BANGLISH_ALIASES: Record<string, string> = {
   oprajeyo: "অপরাজেয়",
   oparajeyo: "অপরাজেয়",
@@ -71,7 +90,7 @@ export function expandSearchTerms(query: string): string[] {
   const terms = new Set([original]);
 
   if (/[\u0980-\u09FF]/.test(original)) {
-    const latin = bengaliToLatin(original).trim();
+    const latin = (BENGALI_PLACE_ALIASES[original] ?? bengaliToLatin(original)).trim();
     if (latin && latin.toLowerCase() !== original.toLowerCase()) terms.add(latin);
     if (original.includes("অপরাজেয়")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
   } else if (/[a-z]/i.test(original)) {
