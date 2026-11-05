@@ -6,12 +6,18 @@ describe("Bengali and Banglish search expansion", () => {
     expect(banglishToBengali("oprajeyo")).toBe("অপরাজেয়");
   });
 
-  it("recognizes common English transliteration variants too", () => {\n    expect(expandSearchTerms("Aparajeyo")).toContain("অপরাজেয়");\n  });\n\n  it("keeps the original query and adds a Bengali alternative", () => {
+  it("recognizes common English transliteration variants too", () => {
+    expect(expandSearchTerms("Aparajeyo")).toContain("অপরাজেয়");
+  });
+
+  it("keeps the original query and adds a Bengali alternative", () => {
     expect(expandSearchTerms("oprajeyo")).toContain("অপরাজেয়");
   });
 
-  it("adds a Latin alternative for Bengali input", () => {
-    expect(expandSearchTerms("অপরাজেয়")).toContain("aparajeyo");
+  it("adds English and Banglish alternatives for Bengali input", () => {
+    const terms = expandSearchTerms("অপরাজেয়");
+    expect(terms).toContain("oprajey");
+    expect(terms).toContain("aparajeyo");
   });
 
   it("does not expand an empty query", () => {
