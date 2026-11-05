@@ -137,7 +137,7 @@ setSending(false);
 };
 return (
 <section
-aria-label={t("Chat with")} + ` ${recipientName}`
+aria-label={`${t("Chat with")} ${recipientName}`}
 className="fixed bottom-4 right-4 z-50 flex h-[min(32rem,calc(100dvh-2rem))] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
 >
 <header className="flex items-center justify-between bg-brand-800 px-4 py-3 text-white">
