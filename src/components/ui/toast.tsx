@@ -62,6 +62,7 @@ const toastStyles: Record<ToastType, { icon: "check" | "alert" | "shield" | "bel
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const timers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
 
