@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { createId } from "@/lib/utils";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
 import { isTrustedPublicImageUrl } from "@/lib/storage/media-url";

@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import type { PublicUser } from "@/types/auth";
 import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
@@ -16,11 +16,11 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
   const fallback: PublicUser = {
     id: user.id,
     username: makeUsername(user.email, user.id),
-    fullName: user.profile?.name || user.email.split("@")[0] || "Member",
-    avatar: user.profile?.avatar_url || "",
+    fullName: user.user_metadata?.fullName || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Member",
+    avatar: user.user_metadata?.avatar_url || "",
     bio: "",
     role: "user",
-    createdAt: user.createdAt,
+    createdAt: user.created_at,
   };
   const client = createServerClient({ cookies: await cookies() });
   const { data: profile, error } = await client.database.from("profiles")

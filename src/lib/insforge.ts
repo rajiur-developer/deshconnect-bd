@@ -2,7 +2,7 @@ import "server-only";
 
 import { createClient } from "@insforge/sdk";
 import { cookies } from "next/headers";
-import { getDatabase, saveDatabase } from "@/lib/db/store";
+import { getDatabase, saveDatabase } from "@/lib/db/store";\nimport { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // Trailing slashes must be stripped: paths below already start with "/", so
 // "https://host/" would produce "https://host//api/..." which InsForge answers

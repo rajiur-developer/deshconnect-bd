@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function getRolePermissionOverrides(): Promise<Record<string, string[]>> {
   const client = createServerClient({ cookies: await cookies() });

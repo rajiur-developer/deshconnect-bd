@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/current-user";
 import { RECORD_ATTACHMENT_BUCKET, RECORD_ATTACHMENT_MAX_BYTES, RECORD_ATTACHMENT_TYPES } from "@/features/records/constants";
 
