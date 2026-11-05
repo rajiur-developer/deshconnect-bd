@@ -1,5 +1,6 @@
 "use client";
 import { useActionState, useRef, useState, type FormEvent } from "react";
+import { useLanguage } from "@/components/i18n/language-provider";
 import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { uploadPublicImage } from "@/lib/storage/upload-public-image";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
@@ -14,6 +15,7 @@ divisions: LocationOption[];
 districts: DistrictOption[];
 upazilas: UpazilaOption[]; };
 export function PostForm({ divisions, districts, upazilas, userId }: LocationProps & { userId: string }) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<CommunityFormState, FormData>(createPostAction, {});
 const [uploading, setUploading] = useState(false);
 const [uploadError, setUploadError] = useState("");
@@ -34,8 +36,8 @@ if (!file) return;
 event.preventDefault();
 if (uploadBusy.current) return;
 setUploadError("");
-if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) { setUploadError("Choose a JPG, PNG, or WebP image."); return; }
-if (file.size < 1 || file.size > 3 * 1024 * 1024) { setUploadError("Image must be 3 MB or smaller."); return; }
+if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) { setUploadError(t("Choose a JPG, PNG, or WebP image.")); return; }
+if (file.size < 1 || file.size > 3 * 1024 * 1024) { setUploadError(t("Image must be 3 MB or smaller.")); return; }
 uploadBusy.current = true;
 setUploading(true);
 try {
@@ -48,7 +50,7 @@ if (process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
   const extension = optimized.type === "image/webp" ? "webp" : "jpg";
   const key = `${userId}/${crypto.randomUUID()}-${filename.replace(/\\.[^.]+$/, "")}.${extension}`;
   const { data, error } = await getInsForgeBrowserClient().storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, optimized);
-  if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
+  if (error || !data?.url || !data?.key) { setUploadError(t("Image upload failed. Please try again.")); return; }
   uploaded = { url: data.url, key: data.key };
 }
 if (imageUrlRef.current) imageUrlRef.current.value = uploaded.url;
@@ -59,7 +61,7 @@ setPreview(URL.createObjectURL(optimized));
 fileRef.current.value = "";
 submitAgain.current = true;
 formRef.current?.requestSubmit();
-} catch { setUploadError("Image upload failed. Please try again."); }
+} catch { setUploadError(t("Image upload failed. Please try again.")); }
 finally { uploadBusy.current = false; setUploading(false); }
 }
 return (
@@ -70,7 +72,7 @@ return (
 <input ref={imageSizeRef} type="hidden" name="imageSize" />
 <h2 className="font-semibold text-slate-900">Share with the community</h2>
 <div className="mt-3">
-<Textarea name="body" placeholder="Ask a question, give advice or start a discussion…" aria-label="Post content" />
+<Textarea name="body" placeholder=t("Ask a question, give advice or start a discussion…") aria-label=t("Post content") />
 </div>
 <div className="mt-3">
 <LocationFields divisions={divisions} districts={districts} upazilas={upazilas} current={{}} />
@@ -78,28 +80,29 @@ return (
 <div className="mt-3">
 <label htmlFor="community-post-image" className="mb-1 block text-sm font-medium text-slate-700">Add an image (optional, up to 3 MB)</label>
 <input ref={fileRef} id="community-post-image" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const file = event.currentTarget.files?.[0]; setUploadError(""); setPreview(file ? URL.createObjectURL(file) : ""); if (!file) { if (imageUrlRef.current) imageUrlRef.current.value = ""; if (imageKeyRef.current) imageKeyRef.current.value = ""; if (imageMimeRef.current) imageMimeRef.current.value = ""; if (imageSizeRef.current) imageSizeRef.current.value = ""; } }} className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700" />
-{preview && <img src={preview} alt="Post image preview" className="mt-3 max-h-48 rounded-xl object-contain" />}
-{uploadError && <p role="alert" className="mt-2 text-sm text-accent-600">{uploadError}</p>}
+{preview && <img src={preview} alt=t("Post image preview") className="mt-3 max-h-48 rounded-xl object-contain" />}
+{uploadError && <p role="alert" className="mt-2 text-sm text-accent-600">{t(uploadError)}</p>}
 </div>
-{state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="mt-3 text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="mt-3 text-sm text-emerald-600">{t(state.success)}</p>}
 <div className="mt-4">
-<Button type="submit" disabled={pending || uploading}>{uploading ? "Uploading image…" : pending ? "Publishing…" : "Post"}</Button>
+<Button type="submit" disabled={pending || uploading}>{uploading ? t("Uploading image…") : pending ? t("Publishing…") : t("Post")}</Button>
 </div>
 </form>
 ); }
 export function CommentForm({ postId }: { postId: string }) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<CommunityFormState, FormData>(createCommentAction, {});
 useFormStateToast(state);
 return (
 <form action={formAction} className="rounded-2xl border border-slate-200 bg-white p-4">
 <input type="hidden" name="postId" value={postId} />
 <label htmlFor="comment-body" className="sr-only">Write a comment</label>
-<Textarea id="comment-body" name="body" placeholder="Write a comment…" className="min-h-[80px]" />
+<Textarea id="comment-body" name="body" placeholder=t("Write a comment…") className="min-h-[80px]" />
 {state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{state.error}</p>}
 {state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{state.success}</p>}
 <div className="mt-3 flex justify-end">
-<Button type="submit" size="sm" disabled={pending}>{pending ? "Publishing…" : "Comment"}</Button>
+<Button type="submit" size="sm" disabled={pending}>{pending ? t("Publishing…") : t("Comment")}</Button>
 </div>
 </form>
 ); }
@@ -110,6 +113,7 @@ onDone, }: {
 targetType: "post" | "comment" | "review" | "news" | "blood_request";
 targetId: string;
 onDone?: () => void; }) {
+const { t } = useLanguage();
 const [state, setState] = useState<CommunityFormState>({});
 const [pending, setPending] = useState(false);
 return (
@@ -135,7 +139,7 @@ className="rounded-2xl border border-slate-200 bg-white p-4"
 id="report-reason"
 name="reason"
 required
-placeholder="e.g. spam, harassment, incorrect info"
+placeholder=t("e.g. spam, harassment, incorrect info")
 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-ring"
 />
 </div>
@@ -146,7 +150,7 @@ className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-rin
 {state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{state.error}</p>}
 {state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{state.success}</p>}
 <div className="mt-3 flex justify-end">
-<Button type="submit" size="sm" variant="danger" disabled={pending}>{pending ? "Sending…" : "Submit report"}</Button>
+<Button type="submit" size="sm" variant="danger" disabled={pending}>{pending ? t("Sending…") : t("Submit report")}</Button>
 </div>
 </form>
 ); }
