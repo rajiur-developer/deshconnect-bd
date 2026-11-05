@@ -6,7 +6,7 @@ return (
 <>
 <PageHeader title="Terms of Use" />
 <div className="container-x py-10">
-<Prose>
+<Prose translate>
 <p>
 By using DeshConnect you agree to these terms. Please read them before submitting posts or content.
 </p>
