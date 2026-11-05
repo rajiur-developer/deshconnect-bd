@@ -7,7 +7,7 @@ export function addTextSearch(
   fields: string[],
 ) {
   const terms = expandSearchTerms(query ?? "")
-    .map((term) => term.replace(/[(),]/g, " ").replace(/[%_*]/g, "").replace(/\\s+/g, " ").trim())
+    .map((term) => term.replace(/[(),]/g, " ").replace(/[%_*]/g, "").replace(/\s+/g, " ").trim())
     .filter(Boolean);
   if (!terms.length || !fields.length) return;
   const clauses = terms.flatMap((term) => {
