@@ -63,7 +63,7 @@ if (lastDonationAt && !canDonate && availability === "available") setAvailabilit
 return (
 <form action={formAction} className="space-y-4">
 {profile?.archivedAt && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-Your donor profile is archived and hidden from public listings. Your record remains available to admins. Save this form to restore your listing.
+{t("Your donor profile is archived and hidden from public listings. Your record remains available to admins. Save this form to restore your listing.")}
 </p>}
 <div className="grid gap-3 sm:grid-cols-2">
 <Field label="Blood group" htmlFor="bloodGroup" required>
@@ -82,7 +82,7 @@ Your donor profile is archived and hidden from public listings. Your record rema
 </select>
 </Field>
 {lastDonationAt && eligibility && !eligibility.eligible && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 sm:col-span-2">
-You can mark yourself Ready in <strong>{cooldownLabel(eligibility.remainingMs)}</strong> (75 days after your last donation).
+{t("You can mark yourself Ready in")} <strong>{cooldownLabel(eligibility.remainingMs)}</strong> {t("(75 days after your last donation).")}
 </p>}
 {lastDonationAt && !eligibility && <p role="alert" className="text-sm text-accent-600 sm:col-span-2">{t("Enter a valid last donation date.")}</p>}
 <Field label="Preferred contact method" htmlFor="preferredContact" required>
@@ -116,11 +116,11 @@ if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "
 <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
 <label className="flex items-start gap-2 text-sm text-slate-700">
 <input type="checkbox" name="consentListed" defaultChecked={profile?.consentListed ?? false} required className="mt-1" />
-<span>I consent to my name being listed publicly as a blood donor.</span>
+<span>{t("I consent to my name being listed publicly as a blood donor.")}</span>
 </label>
 <label className="flex items-start gap-2 text-sm text-slate-700">
 <input type="checkbox" name="consentContact" defaultChecked={profile?.consentContact ?? false} required className="mt-1" />
-<span>I consent to showing my phone and WhatsApp numbers publicly on my donor card.</span>
+<span>{t("I consent to showing my phone and WhatsApp numbers publicly on my donor card.")}</span>
 </label>
 </div>
 {state.error && <p role="alert" className="text-sm text-accent-600">{t(state.error)}</p>}
@@ -171,8 +171,8 @@ return (
 <Field label="Additional info" htmlFor="req-notes" hint="Optional — add the patient's condition, hemoglobin level, ward, or other helpful details.">
 <Textarea id="req-notes" name="notes" placeholder="Patient condition, hemoglobin level, ward or doctor details" />
 </Field>
-{state.error && <p role="alert" className="text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="text-sm text-emerald-600">{t(state.success)}</p>}
 <Button type="submit" variant="accent" disabled={pending}>{pending ? t("Submitting…") : t("Post blood request")}</Button>
 </form>
 ); }
