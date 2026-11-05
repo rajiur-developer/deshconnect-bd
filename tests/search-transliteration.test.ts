@@ -6,7 +6,7 @@ describe("Bengali and Banglish search expansion", () => {
     expect(banglishToBengali("oprajeyo")).toBe("অপরাজেয়");
   });
 
-  it("keeps the original query and adds a Bengali alternative", () => {
+  it("recognizes common English transliteration variants too", () => {\n    expect(expandSearchTerms("Aparajeyo")).toEqual(["Aparajeyo", "অপরাজেয়"]);\n  });\n\n  it("keeps the original query and adds a Bengali alternative", () => {
     expect(expandSearchTerms("oprajeyo")).toEqual(["oprajeyo", "অপরাজেয়"]);
   });
 
