@@ -6,7 +6,7 @@ return (
 <>
 <PageHeader title="Privacy Policy" />
 <div className="container-x py-10">
-<Prose>
+<Prose translate>
 <p>
 This policy explains what information DeshConnect collects, why it collects it, and what choices you have.
 It applies to all users of the platform, including visitors who are not signed in.
