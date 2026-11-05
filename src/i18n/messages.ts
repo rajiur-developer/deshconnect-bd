@@ -788,6 +788,13 @@ export const bnMessages: Record<string, string> = {
   "Submit a correction, our team will review it.": "সংশোধনের তথ্য জমা দিন, আমাদের টিম তা পর্যালোচনা করবে।",
   "Could not open this chat.": "এই চ্যাটটি খোলা যায়নি।",
 
+  "Image must be 5 MB or smaller.": "ছবির আকার ৫ MB বা তার কম হতে হবে।",
+  "e.g. announcement": "যেমন: ঘোষণা",
+  "Image upload did not return a URL and storage key.": "ছবি আপলোড থেকে URL ও স্টোরেজ কী পাওয়া যায়নি।",
+  "This image could not be read. Please choose another image.": "ছবিটি পড়া যায়নি। অনুগ্রহ করে অন্য ছবি নির্বাচন করুন।",
+  "Change image": "ছবি পরিবর্তন করুন",
+  "Select image": "ছবি নির্বাচন করুন",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
