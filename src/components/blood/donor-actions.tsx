@@ -5,6 +5,7 @@ import { archiveOwnDonorProfileAction, cancelBloodRequestAction } from "@/featur
 import { useToast } from "@/components/ui/toast";
 
 export function DeleteDonorProfileButton() {
+const { t } = useLanguage();
 const router = useRouter();
 const { error, success } = useToast();
 const [pending, startTransition] = useTransition();
@@ -26,16 +27,17 @@ router.refresh();
 }}
 className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
 >
-{pending ? "Removing…" : "Delete donor profile"}
+{pending ? t("Removing…") : t("Delete donor profile")}
 </button>
 );
 }
 
 export function CancelRequestButton({ requestId }: { requestId: string }) {
+const { t } = useLanguage();
 const [cancelled, setCancelled] = useState(false);
 const [pending, startTransition] = useTransition();
 if (cancelled) {
-return <span className="text-xs text-slate-500">Request cancelled.</span>;
+return <span className="text-xs text-slate-500">{t("Request cancelled.")}</span>;
 }
 return (
 <button
