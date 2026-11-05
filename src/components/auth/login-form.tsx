@@ -47,7 +47,7 @@ aria-label={showPassword ? t("Hide password") : t("Show password")}
 </div>
 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
 <Link href="/forgot-password" className="text-brand-700 hover:text-brand-800">{t("Forgot password?")}</Link>
-<Link href="/register" className="text-brand-700 hover:text-brand-800">{t("Create an account")}</Link>
+<Link href="/register" className="auth-account-link text-brand-700 hover:text-brand-800">{t("Create an account")}</Link>
 </div>
 </form>
 <div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />{t("or continue with")}<span className="h-px flex-1 bg-slate-200" /></div>
