@@ -114,21 +114,21 @@ return (
     <label className="block min-w-0">
       <span className="mb-0.5 block text-[10px] font-semibold text-slate-600 sm:mb-1 sm:text-[11px]">{t(labels?.division ?? "Division")}</span>
       <select name="divisionId" aria-label={t("Division")} value={divisionId} onChange={(event) => { setDivisionId(event.target.value); setDistrictId(""); setUpazilaId(""); submit({ divisionId: event.target.value, districtId: "", upazilaId: "" }); }} className="min-h-8 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-10 sm:rounded-xl sm:px-2.5 sm:text-xs outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{t(labels?.division ? `All ${labels.division.toLowerCase()}` : "All divisions")}</option>
+        <option value="">{t("All divisions")}</option>
         {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
     <label className="block min-w-0">
       <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(labels?.district ?? "District")}</span>
       <select name="districtId" aria-label={t("District")} value={districtId} onChange={(event) => { setDistrictId(event.target.value); setUpazilaId(""); submit({ districtId: event.target.value, upazilaId: "" }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{t(labels?.district ? `All ${labels.district.toLowerCase()}` : "All districts")}</option>
+        <option value="">{t("All districts")}</option>
         {districtChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
     <label className="block min-w-0">
       <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(labels?.upazila ?? "Upazila")}</span>
       <select name="upazilaId" aria-label={t("Upazila")} value={upazilaId} onChange={(event) => { setUpazilaId(event.target.value); submit({ upazilaId: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{t(labels?.upazila ? `All ${labels.upazila.toLowerCase()}` : "All upazilas")}</option>
+        <option value="">{t("All upazilas")}</option>
         {upazilaChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
