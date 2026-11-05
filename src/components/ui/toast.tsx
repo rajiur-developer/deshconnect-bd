@@ -12,6 +12,7 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 import { Icon } from "./icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 type ToastType = "success" | "error" | "warning" | "info" | "permission";
 type ToastItem = { id: number; type: ToastType; message: string; closing?: boolean };
@@ -124,13 +125,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <Icon name={style.icon} className="h-5 w-5" />
               </span>
               <div className="min-w-0 flex-1 pt-0.5">
-                <p className="text-sm font-bold leading-5">{style.label}</p>
-                <p className="mt-1 break-words text-[13px] leading-5 text-slate-600">{item.message}</p>
+                <p className="text-sm font-bold leading-5">{t(style.label)}</p>
+                <p className="mt-1 break-words text-[13px] leading-5 text-slate-600">{t(item.message)}</p>
               </div>
               <button
                 type="button"
                 onClick={() => closeToast(item.id)}
-                aria-label="Dismiss notification"
+                aria-label={t("Dismiss notification")}
                 className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
               >
                 <Icon name="close" className="h-4 w-4" />
