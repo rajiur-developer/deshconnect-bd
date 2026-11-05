@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import type { BloodRequest } from "@/types/blood"; import { DEFAULT_MAPS_LINK } from "@/lib/constants"; import { formatDate } from "@/lib/utils"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { BloodGroupBadge } from "./blood-group-badge";
 const STATUS_TONE: Record<BloodRequest["status"], "success" | "accent" | "amber" | "info" | "neutral"> = {
 active: "accent",
@@ -25,7 +26,7 @@ return (
 <BloodGroupBadge group={request.bloodGroup} />
 <div className="min-w-0">
 <p className="text-sm font-semibold text-slate-900">
-{request.units} bags needed
+{request.units} <TranslatedText text="bags needed" />
 </p>
 <p className="text-xs text-slate-500">{request.hospital}</p>
 </div>
@@ -38,7 +39,7 @@ return (
 <dl className="mt-3 space-y-1.5 text-sm">
 <div className="flex items-center gap-2 text-slate-600">
 <Icon name="calendar" className="h-4 w-4 text-slate-400" />
-Needed {formatDate(request.neededBy)}
+<TranslatedText text="Needed" /> {formatDate(request.neededBy)}
 </div>
 {locationLabel && (
 <div className="flex items-center gap-2 text-slate-600">
