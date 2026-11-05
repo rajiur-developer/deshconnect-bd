@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import type { GovernmentService } from "@/types/content"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 const SERVICE_LABELS: Record<string, string> = {
 identity: "Identity",
