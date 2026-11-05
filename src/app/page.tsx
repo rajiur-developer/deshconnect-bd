@@ -32,8 +32,8 @@ async function HomeHeroActions() {
   if (user) return null;
   return (
     <>
-      <Link href="/login" className="rounded-lg border border-white/30 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm">Log in</Link>
-      <Link href="/register" className="rounded-lg border border-white/30 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-white/10 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-sm">Create account</Link>
+      <Link href="/login" className="rounded-lg border border-white/30 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"><TranslatedText text="Log in" /></Link>
+      <Link href="/register" className="rounded-lg border border-white/30 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-white/10 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-sm"><TranslatedText text="Create account" /></Link>
     </>
   );
 }
