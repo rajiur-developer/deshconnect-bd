@@ -59,18 +59,22 @@ export type SearchSuggestion = {
 };
 
 /** Fetch a small, resilient set of name suggestions while a user is typing. */
-export async function searchSuggestions(query: string, perCategory = 5): Promise<SearchSuggestion[]> {
+export async function searchSuggestions(query: string, perCategory = 5, scope = "all"): Promise<SearchSuggestion[]> {
   const q = query.trim();
   if (q.length < 2) return [];
 
-  const results = await Promise.allSettled([
-    listPlaces({ q, page: 1, pageSize: perCategory }),
-    listInstitutions({ q, page: 1, pageSize: perCategory }),
-    listHospitals({ q, page: 1, pageSize: perCategory }),
-    listBusinesses({ q, page: 1, pageSize: perCategory }),
-    listGovernmentServices({ q, page: 1, pageSize: perCategory }),
-    listNews({ q, page: 1, pageSize: perCategory }),
-  ]);
+  const categories = scope === "all"
+    ? ["places", "institutions", "hospitals", "businesses", "government-services", "news"]
+    : [scope];
+  const loaders: Record<string, () => Promise<any>> = {
+    places: () => listPlaces({ q, page: 1, pageSize: perCategory }),
+    institutions: () => listInstitutions({ q, page: 1, pageSize: perCategory }),
+    hospitals: () => listHospitals({ q, page: 1, pageSize: perCategory }),
+    businesses: () => listBusinesses({ q, page: 1, pageSize: perCategory }),
+    "government-services": () => listGovernmentServices({ q, page: 1, pageSize: perCategory }),
+    news: () => listNews({ q, page: 1, pageSize: perCategory }),
+  };
+  const results = await Promise.allSettled(categories.map((category) => loaders[category]()));
 
   const suggestions: SearchSuggestion[] = [];
   const add = (index: number, category: string, getLabel: (item: any) => string) => {
@@ -82,12 +86,18 @@ export async function searchSuggestions(query: string, perCategory = 5): Promise
     }
   };
 
-  add(0, "Places", (item) => item.name);
-  add(1, "Institutions", (item) => item.name);
-  add(2, "Hospitals", (item) => item.name);
-  add(3, "Businesses", (item) => item.name);
-  add(4, "Government services", (item) => item.name);
-  add(5, "News", (item) => item.title);
+  const categoryLabels: Record<string, { label: string; getLabel: (item: any) => string }> = {
+    places: { label: "Places", getLabel: (item) => item.name },
+    institutions: { label: "Institutions", getLabel: (item) => item.name },
+    hospitals: { label: "Hospitals", getLabel: (item) => item.name },
+    businesses: { label: "Businesses", getLabel: (item) => item.name },
+    "government-services": { label: "Government services", getLabel: (item) => item.name },
+    news: { label: "News", getLabel: (item) => item.title },
+  };
+  categories.forEach((category, index) => {
+    const config = categoryLabels[category];
+    if (config) add(index, config.label, config.getLabel);
+  });
 
   const seen = new Set<string>();
   return suggestions.filter((item) => {
