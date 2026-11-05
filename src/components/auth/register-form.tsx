@@ -19,6 +19,7 @@ import type { DistrictOption, LocationOption, UpazilaOption } from "@/components
 import { Spinner } from "@/components/ui/spinner";
 import { FormPendingButton } from "@/components/ui/form-pending-button";
 import { DateInput } from "@/components/ui/date-input";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 type Props = {
   divisions: LocationOption[];
@@ -30,13 +31,14 @@ const selectClass = "w-full rounded-xl border border-slate-300 bg-white px-3 py-
 const inputClass = "rounded-xl py-2.5";
 
 function StepHeading({ step }: { step: number }) {
+  const { t } = useLanguage();
   return (
     <div className="mb-6">
       <div className="mb-3 flex items-center justify-between text-xs font-semibold text-slate-500">
-        <span>STEP {step} OF 2</span>
-        <span>{step === 1 ? "Account details" : "Personal details"}</span>
+        <span>{t("STEP")} {step} {t("OF")} 2</span>
+        <span>{t(step === 1 ? "Account details" : "Personal details")}</span>
       </div>
-      <div className="grid grid-cols-2 gap-2" aria-label={`Registration step ${step} of 2`}>
+      <div className="grid grid-cols-2 gap-2" aria-label={`${t("Registration step")} ${step} ${t("OF")} 2`}>
         <div className={`h-1.5 rounded-full ${step >= 1 ? "bg-brand-600" : "bg-slate-200"}`} />
         <div className={`h-1.5 rounded-full ${step >= 2 ? "bg-brand-600" : "bg-slate-200"}`} />
       </div>
@@ -45,6 +47,7 @@ function StepHeading({ step }: { step: number }) {
 }
 
 export function RegisterForm({ divisions, districts, upazilas }: Props) {
+  const { t } = useLanguage();
   const [state, formAction, pending] = useActionState<FormState, FormData>(registerAction, {});
   const [verifyState, verifyAction, verifyPending] = useActionState<FormState, FormData>(verifyRegistrationAction, {});
   const [resendState, resendAction, resendPending] = useActionState<FormState, FormData>(resendRegistrationCodeAction, {});
@@ -61,7 +64,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
   useFormStateToast(resendState);
 
   const passwordStrength = password.length < 8 ? 0 : password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password) ? 3 : /[A-Za-z]/.test(password) && /[0-9]/.test(password) ? 2 : 1;
-  const strengthLabel = ["Enter a password", "Weak", "Good", "Strong"][passwordStrength];
+  const strengthLabel = t(["Enter a password", "Weak", "Good", "Strong"][passwordStrength]);
 
   if (state.verificationRequired) {
     const fields = ["fullName", "username", "phone", "divisionId", "districtId", "upazilaId", "bloodGroup", "gender", "dateOfBirth", "termsAccepted"] as const;
@@ -72,18 +75,18 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
           <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-700" aria-hidden="true">
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Verify your email</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Enter the 6-digit verification code sent to <strong className="break-all text-slate-800">{state.email}</strong>.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t("Verify your email")}</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{t("Enter the 6-digit verification code sent to")} <strong className="break-all text-slate-800">{state.email}</strong>.</p>
           <form action={verifyAction} className="mt-6">
             <input type="hidden" name="email" value={state.email ?? ""} />
             {fields.map((key) => <input key={key} type="hidden" name={key} value={state[key] ?? ""} />)}
             <input type="hidden" name="otp" value={otp} />
-            <div className="grid grid-cols-6 gap-2 sm:gap-3" aria-label="Six digit verification code">
+            <div className="grid grid-cols-6 gap-2 sm:gap-3" aria-label={t("Six digit verification code")}>
               {Array.from({ length: 6 }, (_, index) => (
                 <input
                   key={index}
                   ref={(node) => { otpRefs.current[index] = node; }}
-                  aria-label={`Verification digit ${index + 1}`}
+                  aria-label={`${t("Verification digit")} ${index + 1}`}
                   inputMode="numeric"
                   autoComplete={index === 0 ? "one-time-code" : "off"}
                   pattern="[0-9]*"
@@ -110,16 +113,16 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
                 />
               ))}
             </div>
-            {verifyState.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{verifyState.error}</p>}
-            <div className="mt-6"><Button type="submit" className="w-full rounded-xl py-3" disabled={verifyPending || otp.length !== 6} aria-busy={verifyPending}>{verifyPending && <Spinner />}{verifyPending ? "Verifying…" : "Verify email"}</Button></div>
+            {verifyState.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{t(verifyState.error)}</p>}
+            <div className="mt-6"><Button type="submit" className="w-full rounded-xl py-3" disabled={verifyPending || otp.length !== 6} aria-busy={verifyPending}>{verifyPending && <Spinner />}{verifyPending ? t("Verifying…") : t("Verify email")}</Button></div>
           </form>
           <form action={resendAction} className="mt-4 text-center">
             <input type="hidden" name="email" value={state.email ?? ""} />
-            <button type="submit" disabled={resendPending} className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline disabled:opacity-60">{resendPending ? "Sending new code…" : "Resend verification code"}</button>
-            {resendState.error && <p role="alert" className="mt-2 text-sm text-red-700">{resendState.error}</p>}
-            {resendState.success && <p role="status" className="mt-2 text-sm text-emerald-700">{resendState.success}</p>}
+            <button type="submit" disabled={resendPending} className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline disabled:opacity-60">{resendPending ? t("Sending new code…") : t("Resend verification code")}</button>
+            {resendState.error && <p role="alert" className="mt-2 text-sm text-red-700">{t(resendState.error)}</p>}
+            {resendState.success && <p role="status" className="mt-2 text-sm text-emerald-700">{t(resendState.success)}</p>}
           </form>
-          <p className="mt-5 text-center text-sm text-slate-600"><Link href="/login" className="font-semibold text-brand-700 hover:underline">Return to login</Link></p>
+          <p className="mt-5 text-center text-sm text-slate-600"><Link href="/login" className="font-semibold text-brand-700 hover:underline">{t("Return to login")}</Link></p>
         </div>
       </div>
     );
@@ -137,7 +140,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
     if (password !== confirmPassword) {
       const confirm = form.querySelector<HTMLInputElement>("#confirmPassword");
       if (confirm) {
-        confirm.setCustomValidity("Passwords do not match.");
+        confirm.setCustomValidity(t("Passwords do not match."));
         confirm.reportValidity();
         confirm.focus();
       }
@@ -171,7 +174,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             requestAnimationFrame(() => {
               const field = form.querySelector<HTMLInputElement>("#confirmPassword");
               if (!field) return;
-              field.setCustomValidity("Passwords do not match.");
+              field.setCustomValidity(t("Passwords do not match."));
               field.reportValidity();
               field.focus();
             });
@@ -181,8 +184,8 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
       >
         <StepHeading step={step} />
         <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{step === 1 ? "Create your account" : "Personalise your profile"}</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">{step === 1 ? "Start with your account details. It only takes a minute." : "Add optional details to make your DeshConnect profile more useful."}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{t(step === 1 ? "Create your account" : "Personalise your profile")}</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{t(step === 1 ? "Start with your account details. It only takes a minute." : "Add optional details to make your DeshConnect profile more useful.")}</p>
         </div>
 
         {step === 1 ? (
@@ -195,16 +198,16 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Password" htmlFor="password" required hint="At least 8 characters">
-                <div className="relative"><Input className={`${inputClass} pr-16`} id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required data-final-required data-step="1" minLength={8} maxLength={128} value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100" aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button></div>
+                <div className="relative"><Input className={`${inputClass} pr-16`} id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required data-final-required data-step="1" minLength={8} maxLength={128} value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100" aria-label={showPassword ? t("Hide password") : t("Show password")}>{showPassword ? t("Hide") : t("Show")}</button></div>
                 <div className="mt-2 flex items-center gap-2" aria-live="polite"><div className="flex flex-1 gap-1">{[1, 2, 3].map((level) => <span key={level} className={`h-1.5 flex-1 rounded-full ${passwordStrength >= level ? (passwordStrength === 1 ? "bg-amber-400" : passwordStrength === 2 ? "bg-lime-500" : "bg-emerald-600") : "bg-slate-200"}`} />)}</div><span className="text-xs text-slate-500">{strengthLabel}</span></div>
               </Field>
               <Field label="Confirm password" htmlFor="confirmPassword" required>
-                <div className="relative"><Input className={`${inputClass} pr-16`} id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" required data-final-required data-step="1" minLength={8} maxLength={128} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); e.currentTarget.setCustomValidity(""); }} /><button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100" aria-label={showConfirmPassword ? "Hide password" : "Show password"}>{showConfirmPassword ? "Hide" : "Show"}</button></div>
-                {confirmPassword && <p className={`mt-1.5 text-xs ${confirmPassword === password ? "text-emerald-700" : "text-amber-700"}`}>{confirmPassword === password ? "Passwords match" : "Passwords do not match yet"}</p>}
+                <div className="relative"><Input className={`${inputClass} pr-16`} id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" required data-final-required data-step="1" minLength={8} maxLength={128} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); e.currentTarget.setCustomValidity(""); }} /><button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100" aria-label={showConfirmPassword ? t("Hide password") : t("Show password")}>{showConfirmPassword ? t("Hide") : t("Show")}</button></div>
+                {confirmPassword && <p className={`mt-1.5 text-xs ${confirmPassword === password ? "text-emerald-700" : "text-amber-700"}`}>{t(confirmPassword === password ? "Passwords match" : "Passwords do not match yet")}</p>}
               </Field>
             </div>
-            <div className="pt-2"><Button type="button" className="w-full rounded-xl py-3" onClick={goToDetails}>Continue to profile details <span aria-hidden="true" className="ml-2">→</span></Button></div>
-            <p className="text-center text-sm text-slate-600">Already have an account? <Link href="/login" className="font-semibold text-brand-700 hover:underline">Log in</Link></p>
+            <div className="pt-2"><Button type="button" className="w-full rounded-xl py-3" onClick={goToDetails}>{t("Continue to profile details")} <span aria-hidden="true" className="ml-2">→</span></Button></div>
+            <p className="text-center text-sm text-slate-600">{t("Already have an account?")} <Link href="/login" className="font-semibold text-brand-700 hover:underline">{t("Log in")}</Link></p>
           </div>
         ) : (
           <>
@@ -213,33 +216,33 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             <input type="hidden" name="confirmPassword" value={confirmPassword} />
             <div className="space-y-5">
               <section className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
-                <h2 className="font-semibold text-slate-900">Your location <span className="font-normal text-slate-500">(optional)</span></h2>
-                <p className="mt-1 text-xs leading-5 text-slate-500">Choose your area to make local information more relevant.</p>
+                <h2 className="font-semibold text-slate-900">{t("Your location")} <span className="font-normal text-slate-500">{t("(optional)")}</span></h2>
+                <p className="mt-1 text-xs leading-5 text-slate-500">{t("Choose your area to make local information more relevant.")}</p>
                 <div className="mt-4"><LocationFields divisions={divisions} districts={districts} upazilas={upazilas} current={{}} /></div>
               </section>
               <section>
-                <h2 className="mb-3 font-semibold text-slate-900">A little more about you <span className="font-normal text-slate-500">(optional)</span></h2>
+                <h2 className="mb-3 font-semibold text-slate-900">{t("A little more about you")} <span className="font-normal text-slate-500">(optional)</span></h2>
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <Field label="Blood group" htmlFor="bloodGroup" hint="Optional"><select id="bloodGroup" name="bloodGroup" className={selectClass}><option value="">Select</option>{BLOOD_GROUPS.map((group) => <option key={group} value={group}>{group}</option>)}</select></Field>
-                  <Field label="Gender" htmlFor="gender" hint="Optional"><select id="gender" name="gender" className={selectClass}><option value="">Select</option>{GENDERS.map((gender) => <option key={gender.value} value={gender.value}>{gender.label}</option>)}</select></Field>
+                  <Field label="Blood group" htmlFor="bloodGroup" hint="Optional"><select id="bloodGroup" name="bloodGroup" className={selectClass}><option value="">{t("Select")}</option>{BLOOD_GROUPS.map((group) => <option key={group} value={group}>{group}</option>)}</select></Field>
+                  <Field label="Gender" htmlFor="gender" hint="Optional"><select id="gender" name="gender" className={selectClass}><option value="">Select</option>{GENDERS.map((gender) => <option key={gender.value} value={gender.value}>{t(gender.label)}</option>)}</select></Field>
                   <Field label="Date of birth" htmlFor="dateOfBirth" hint="Optional"><DateInput id="dateOfBirth" name="dateOfBirth" /></Field>
                 </div>
               </section>
               <label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-700">
                 <input type="checkbox" name="termsAccepted" data-final-required data-step="2" className="mt-1 h-4 w-4 rounded border-slate-300 accent-emerald-700" required />
-                <span>I agree to the <Link href="/terms" className="font-semibold text-brand-700 hover:underline">Terms of Use</Link> and <Link href="/privacy-policy" className="font-semibold text-brand-700 hover:underline">Privacy Policy</Link>.</span>
+                <span>{t("I agree to the")} <Link href="/terms" className="font-semibold text-brand-700 hover:underline">{t("Terms of Use")}</Link> {t("and")} <Link href="/privacy-policy" className="font-semibold text-brand-700 hover:underline">{t("Privacy Policy")}</Link>.</span>
               </label>
             </div>
-            {state.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{state.error}</p>}
+            {state.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{t(state.error)}</p>}
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <Button type="button" variant="outline" className="rounded-xl py-3" onClick={() => setStep(1)}>← Back</Button>
-              <Button type="submit" className="rounded-xl py-3" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? "Creating account…" : "Create account"}</Button>
+              <Button type="button" variant="outline" className="rounded-xl py-3" onClick={() => setStep(1)}>{t("← Back")}</Button>
+              <Button type="submit" className="rounded-xl py-3" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Creating account…") : t("Create account")}</Button>
             </div>
-            <p className="mt-4 text-center text-xs leading-5 text-slate-500">You can leave optional profile details blank and add them later.</p>
+            <p className="mt-4 text-center text-xs leading-5 text-slate-500">{t("You can leave optional profile details blank and add them later.")}</p>
           </>
         )}
       </form>
-      {step === 1 && <div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />or sign up with<span className="h-px flex-1 bg-slate-200" /></div>}
+      {step === 1 && <div className="my-5 flex items-center gap-3 text-xs font-medium text-slate-400"><span className="h-px flex-1 bg-slate-200" />{t("or sign up with")}<span className="h-px flex-1 bg-slate-200" /></div>}
       {step === 1 && <form action={googleOAuthAction}><FormPendingButton variant="outline" className="w-full rounded-xl border-slate-200 bg-white py-3 font-semibold transition hover:border-brand-200 hover:bg-brand-50/50" pendingLabel="Connecting to Google…">Continue with Google</FormPendingButton></form>}
     </div>
   );
