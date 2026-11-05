@@ -69,8 +69,9 @@ export function DesktopNav({
   return (
     <nav
       ref={navRef}
-      className="dc-desktop-nav relative ml-2 hidden items-center gap-1 lg:flex"
+      className="dc-desktop-nav relative ml-2 hidden min-w-0 flex-1 grid items-center gap-0 lg:grid"
       aria-label={t("Primary")}
+      style={{ gridTemplateColumns: `repeat(${entries.length}, minmax(0, 1fr))` }}
     >
       <span
         ref={indicatorRef}
