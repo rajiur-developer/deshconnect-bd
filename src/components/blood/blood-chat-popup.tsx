@@ -143,21 +143,21 @@ className="fixed bottom-4 right-4 z-50 flex h-[min(32rem,calc(100dvh-2rem))] w-[
 <header className="flex items-center justify-between bg-brand-800 px-4 py-3 text-white">
 <div className="min-w-0">
 <p className="truncate text-sm font-semibold">{recipientName}</p>
-<p className="text-xs text-brand-100">Blood donation chat</p>
+<p className="text-xs text-brand-100">{t("Blood donation chat")}</p>
 </div>
 <button
 type="button"
 onClick={onClose}
-aria-label=t("Close chat")
+aria-label={t("Close chat")}
 className="rounded-lg p-2 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
 >
 <Icon name="close" className="h-4 w-4" />
 </button>
 </header>
 <div className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
-{loading && <p className="text-center text-sm text-slate-500">Loading messages…</p>}
+{loading && <p className="text-center text-sm text-slate-500">{t("Loading messages…")}</p>}
 {!loading && messages.length === 0 && (
-<p className="text-center text-sm text-slate-500">No messages yet. Say hello.</p>
+<p className="text-center text-sm text-slate-500">{t("No messages yet. Say hello.")}</p>
 )}
 {messages.map((message) => {
 const mine = message.senderId === viewerId;
@@ -174,14 +174,14 @@ className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 te
 })}
 <div ref={endOfMessages} />
 </div>
-{error && <p role="alert" className="px-4 pb-2 text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="px-4 pb-2 text-xs text-accent-600">{t(error)}</p>}
 <form onSubmit={send} className="flex gap-2 border-t border-slate-100 p-3">
 <input
 value={body}
 onChange={(event) => setBody(event.target.value)}
 maxLength={2000}
 aria-label={t("Message")}
-placeholder=t("Write a message…")
+placeholder={t("Write a message…")}
 className="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
 />
 <button
