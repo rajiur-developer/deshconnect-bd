@@ -1,4 +1,5 @@
 "use client";
+import { useLanguage } from "@/components/i18n/language-provider";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icons";
 import { BloodChatLauncher } from "./blood-chat-popup";
