@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listInstitutions } from "@/services/institutions"; import { listContentCategories } from "@/services/content-categories"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { InstitutionCard } from "@/components/cards/institution-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
 export const metadata: Metadata = { title: "Institutions" };
 export default async function InstitutionsPage({
@@ -41,7 +42,7 @@ categories={categories.map((category) => ({ value: category.value, label: catego
 showCategory
 current={{ divisionId, districtId, upazilaId }}
 />
-<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} records found</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} <TranslatedText text="records found" /></p>
 <p className="mt-2 text-xs text-slate-500">
   Listings include educational places from{" "}
   <a
