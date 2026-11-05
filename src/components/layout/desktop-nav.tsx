@@ -27,6 +27,7 @@ export function DesktopNav({
     if (!nav || !indicator) return;
 
     let frame = 0;
+
     const updateIndicator = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
@@ -39,14 +40,21 @@ export function DesktopNav({
           return;
         }
 
+        // A grouped nav button is nested inside its menu wrapper. offsetLeft
+        // is relative to that wrapper, not the nav, so use viewport rectangles
+        // to calculate the indicator position in the nav's coordinate space.
+        const navRect = nav.getBoundingClientRect();
+        const activeRect = active.getBoundingClientRect();
+
         indicator.style.opacity = "1";
-        indicator.style.width = `${active.offsetWidth}px`;
-        indicator.style.height = `${active.offsetHeight}px`;
-        indicator.style.transform = `translate3d(${active.offsetLeft}px, ${active.offsetTop}px, 0)`;
+        indicator.style.width = `${activeRect.width}px`;
+        indicator.style.height = `${activeRect.height}px`;
+        indicator.style.transform = `translate3d(${activeRect.left - navRect.left + nav.scrollLeft}px, ${activeRect.top - navRect.top + nav.scrollTop}px, 0)`;
       });
     };
 
     updateIndicator();
+
     const observer = new ResizeObserver(updateIndicator);
     observer.observe(nav);
     window.addEventListener("resize", updateIndicator);
