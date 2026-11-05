@@ -13,6 +13,7 @@ description?: string;
 action?: ReactNode;
 children?: ReactNode;
 variant?: "default" | "messages"; }) {
+const { t } = useLanguage();
 return (
 <section className={variant === "messages" ? "relative isolate overflow-hidden border-b border-brand-900/10 bg-gradient-to-r from-brand-50 via-white to-emerald-50" : "border-b border-slate-200 bg-white"}>
 {variant === "messages" && <><div className="absolute -right-16 -top-28 -z-0 h-72 w-72 rounded-full bg-brand-200/35 blur-3xl" /><div className="absolute -bottom-28 left-[48%] -z-0 h-56 w-56 rounded-full bg-emerald-200/25 blur-3xl" /></>}
