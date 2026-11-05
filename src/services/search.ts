@@ -51,3 +51,49 @@ export async function globalSearch(query: string, limit = 4): Promise<GlobalSear
     posts: mapDbRow(postRows.data || []),
   };
 }
+
+
+export type SearchSuggestion = {
+  label: string;
+  category: string;
+};
+
+/** Fetch a small, resilient set of name suggestions while a user is typing. */
+export async function searchSuggestions(query: string, perCategory = 5): Promise<SearchSuggestion[]> {
+  const q = query.trim();
+  if (q.length < 2) return [];
+
+  const results = await Promise.allSettled([
+    listPlaces({ q, page: 1, pageSize: perCategory }),
+    listInstitutions({ q, page: 1, pageSize: perCategory }),
+    listHospitals({ q, page: 1, pageSize: perCategory }),
+    listBusinesses({ q, page: 1, pageSize: perCategory }),
+    listGovernmentServices({ q, page: 1, pageSize: perCategory }),
+    listNews({ q, page: 1, pageSize: perCategory }),
+  ]);
+
+  const suggestions: SearchSuggestion[] = [];
+  const add = (index: number, category: string, getLabel: (item: any) => string) => {
+    const result = results[index];
+    if (result.status !== "fulfilled") return;
+    for (const item of result.value.items ?? []) {
+      const label = String(getLabel(item) ?? "").trim();
+      if (label) suggestions.push({ label, category });
+    }
+  };
+
+  add(0, "Places", (item) => item.name);
+  add(1, "Institutions", (item) => item.name);
+  add(2, "Hospitals", (item) => item.name);
+  add(3, "Businesses", (item) => item.name);
+  add(4, "Government services", (item) => item.name);
+  add(5, "News", (item) => item.title);
+
+  const seen = new Set<string>();
+  return suggestions.filter((item) => {
+    const key = item.label.toLocaleLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 8);
+}
