@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { requireUser } from "@/lib/auth/current-user"; import { insforgeSelectMany } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { listPlaces } from "@/services/places"; import { relativeTime } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons";
 export const metadata = { title: "My reviews", robots: { index: false, follow: false } };
 export default async function MyReviewsPage() {
@@ -12,7 +13,7 @@ return (
 <EmptyState
 title="No reviews yet"
 description="Visit a place and share your experience."
-action={<Link href="/places" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white">Visit places</Link>}
+action={<Link href="/places" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white"><TranslatedText text="Visit places" /></Link>}
 icon={<Icon name="star" className="h-10 w-10" />}
 />
 ) : (
