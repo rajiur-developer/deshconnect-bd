@@ -1,4 +1,5 @@
 import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import type { Metadata } from "next";
 import { listConnections } from "@/services/users";
 import { listIncomingRequests } from "@/services/messaging";
@@ -46,14 +47,14 @@ return (
 {profile.bio && <p className="mt-4 text-slate-700">{profile.bio}</p>}
 <dl className="mt-6 space-y-3 text-sm">
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Location</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Location" /></dt>
 <dd className="mt-1 flex items-center gap-1 text-slate-900">
 <Icon name="map-pin" className="h-4 w-4 text-slate-400" />
 {locationLabel ?? "Not set"}
 </dd>
 </div>
 <div>
-<dt className="text-xs uppercase tracking-wide text-slate-500">Member since</dt>
+<dt className="text-xs uppercase tracking-wide text-slate-500"><TranslatedText text="Member since" /></dt>
 <dd className="mt-1 text-slate-900">{formatDate(profile.createdAt)}</dd>
 </div>
 </dl>
@@ -64,9 +65,9 @@ return (
 )}
 </Card>
 <div className="lg:col-span-2">
-<h2 className="text-lg font-semibold text-slate-900">Public posts</h2>
+<h2 className="text-lg font-semibold text-slate-900"><TranslatedText text="Public posts" /></h2>
 <div className="mt-3 space-y-3">
-{posts.length === 0 && <p className="text-sm text-slate-600">No public posts yet.</p>}
+{posts.length === 0 && <p className="text-sm text-slate-600"><TranslatedText text="No public posts yet." /></p>}
 {posts.map((post) => (
 <Link key={post.id} href={`/community/${post.id}`} className="block rounded-2xl border border-slate-200 bg-white p-4 hover:border-brand-300">
 <p className="text-sm text-slate-800 line-clamp-3">{post.body}</p>
