@@ -58,6 +58,7 @@ export function AccountShell({
   minimalDashboard?: boolean;
   children: React.ReactNode;
 }) {
+  const { t } = useLanguage();
   const navGroups = messagesOnly
     ? [{ title: "Social", links: NAV_GROUPS[2].links.filter((item) => item.href === "/friend-requests") }]
     : NAV_GROUPS;
@@ -100,7 +101,7 @@ export function AccountShell({
                 </div>
               </div>
             )}
-            <nav className="rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 shadow-sm backdrop-blur-xl" aria-label="Account navigation">
+            <nav className="rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 shadow-sm backdrop-blur-xl" aria-label={t("Account navigation")}>
               {navGroups.map((group) => (
                 <div key={group.title} className="py-2 first:pt-1">
                   <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t(group.title)}</p>
