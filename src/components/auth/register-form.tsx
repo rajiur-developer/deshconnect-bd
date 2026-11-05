@@ -7,7 +7,6 @@ import {
   googleOAuthAction,
   registerAction,
   resendRegistrationCodeAction,
-  verifyRegistrationAction,
   type FormState,
 } from "@/features/auth/actions";
 import { BLOOD_GROUPS, GENDERS } from "@/lib/constants";
