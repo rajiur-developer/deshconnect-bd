@@ -16,7 +16,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
   const fallback: PublicUser = {
     id: user.id,
     username: makeUsername(user.email, user.id),
-    fullName: user.user_metadata?.fullName || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Member",
+    fullName: user.user_metadata?.fullName || user.user_metadata?.full_name || user.user_metadata?.name || email.split("@")[0] || "Member",
     avatar: user.user_metadata?.avatar_url || "",
     bio: "",
     role: "user",
@@ -58,7 +58,7 @@ export const getCurrentUser = cache(async (): Promise<PublicUser | null> => {
   return resolveProfile(data.user);
 });
 
-/** Require an InsForge Auth session, otherwise redirect to /login. */
+/** Require a Supabase Auth session, otherwise redirect to /login. */
 export async function requireUser(redirectTo?: string): Promise<PublicUser> {
   const user = await getCurrentUser();
   if (!user) redirect(redirectTo ? `/login?next=${encodeURIComponent(redirectTo)}` : "/login");

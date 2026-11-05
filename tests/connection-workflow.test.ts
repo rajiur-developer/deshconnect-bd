@@ -8,7 +8,7 @@ const queryState = vi.hoisted(() => ({ target: null as any, existing: [] as any[
 vi.mock("@/lib/auth/current-user", () => ({ requireUser }));
 vi.mock("next/cache", () => ({ revalidatePath }));
 vi.mock("next/headers", () => ({ cookies: async () => ({}) }));
-vi.mock("@insforge/sdk/ssr", () => ({ createServerClient }));
+vi.mock("@/lib/supabase/server", () => ({ createServerClient }));
 vi.mock("@/lib/insforge", () => ({ insforge: {} }));
 vi.mock("@/services/messaging", () => ({ cancelConnection: vi.fn(), getOrCreateConversation: vi.fn(), requestConnection: vi.fn(), respondToConnection: vi.fn(), sendMessage: vi.fn() }));
 vi.mock("@/services/notifications", () => ({ markAllNotificationsRead: vi.fn(), markNotificationRead: vi.fn() }));
