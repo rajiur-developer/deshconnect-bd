@@ -17,7 +17,7 @@ const router = useRouter();
 if (pendingConnectionId) {
 return (
 <button type="button" disabled className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 disabled:opacity-60">
-Request sent
+{t("Request sent")}
 </button>
 );
 }
@@ -66,7 +66,7 @@ disabled={pending}
 onClick={() => respond("accepted")}
 className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
 >
-Accept
+{t("Accept")}
 </button>
 <button
 type="button"
@@ -74,7 +74,7 @@ disabled={pending}
 onClick={() => respond("rejected")}
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Decline
+{t("Decline")}
 </button>
 </div>
 ); }
@@ -94,7 +94,7 @@ if (result.ok) router.refresh();
 }
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Cancel request
+{t("Cancel request")}
 </button>
 ); }
 export function StartConversationButton({ username }: { username: string }) {
@@ -115,9 +115,9 @@ router.push(`/messages?to=${encodeURIComponent(username)}`);
 }
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Message
+{t("Message")}
 </button>
-{error && <p role="alert" className="basis-full text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="basis-full text-xs text-accent-600">{t(error)}</p>}
 </>
 ); }
 export function MarkAllReadButton() {
@@ -136,7 +136,7 @@ router.refresh();
 }
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Mark all as read
+{t("Mark all as read")}
 </button>
 ); }
 export function MarkReadButton({ id }: { id: string }) {
@@ -155,6 +155,6 @@ router.refresh();
 }
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Mark as read
+{t("Mark as read")}
 </button>
 ); }
