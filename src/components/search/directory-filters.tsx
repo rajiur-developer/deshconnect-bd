@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { IconName } from "@/components/ui/icons"; import { Icon } from "@/components/ui/icons";
+import type { IconName } from "@/components/ui/icons"; import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
 export type LocationOption = { id: string; name: string }; export type DistrictOption = LocationOption & { divisionId: string }; export type UpazilaOption = LocationOption & { districtId: string };
 const MANAGED_KEYS = new Set(["q", "divisionId", "districtId", "upazilaId", "category", "sort", "page"]);
 type Props = {
@@ -98,10 +98,14 @@ return (
     <Link href={action} scroll={false} className="rounded-lg px-2 py-1 text-[10px] font-semibold text-brand-700 transition hover:bg-brand-50 focus-ring sm:px-3 sm:py-2 sm:text-xs">Reset all</Link>
   </div>
 
-  <div className="relative mb-2 sm:mb-3">
-    <Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-    <input id="q" name="q" value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder="Search by name or keyword" aria-label="Search by name or keyword" className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2 sm:pl-9 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10" />
-  </div>
+  <SearchAutocomplete
+    value={searchValue}
+    onValueChange={setSearchValue}
+    placeholder="Search by name or keyword"
+    ariaLabel="Search by name or keyword"
+    className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2 sm:pl-9 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+    wrapperClassName="relative mb-2 sm:mb-3"
+  />
 
   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
     <label className="block min-w-0">
@@ -196,18 +200,14 @@ export function PlacesDirectoryFilters({
         </Link>
       </div>
 
-      <div className="relative mb-2 sm:mb-4">
-        <Icon name="search" className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 sm:left-3.5 sm:h-[18px] sm:w-[18px] -translate-y-1/2 text-slate-400" />
-        <input
-          id="q"
-          name="q"
-          value={searchValue}
-          onChange={(event) => setSearchValue(event.target.value)}
-          placeholder="Search by name or keyword"
-          aria-label="Search by name or keyword"
-          className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2.5 sm:pl-10 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
-        />
-      </div>
+      <SearchAutocomplete
+        value={searchValue}
+        onValueChange={setSearchValue}
+        placeholder="Search by name or keyword"
+        ariaLabel="Search by name or keyword"
+        className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2.5 sm:pl-10 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+        wrapperClassName="relative mb-2 sm:mb-4"
+      />
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <label className="block">
