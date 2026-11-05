@@ -10,6 +10,7 @@ import { DashboardSessionWidget } from "@/components/account/dashboard-session-w
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { Badge, Card } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icons";
+import { TranslatedText } from "@/components/i18n/translated-text";
 
 export const metadata = { title: "Dashboard", robots: { index: false, follow: false } };
 
@@ -40,7 +41,7 @@ export default async function DashboardPage() {
     { label: "Saved places", value: saved.length, href: "/saved", icon: "save" as const, tint: "bg-sky-50 text-sky-700", detail: "Places bookmarked" },
     { label: "Your posts", value: posts.length, href: "/my-posts", icon: "message" as const, tint: "bg-violet-50 text-violet-700", detail: "Community contributions" },
     { label: "Your comments", value: comments.length, href: "/my-comments", icon: "edit" as const, tint: "bg-amber-50 text-amber-700", detail: "Conversations started" },
-    { label: "Unread notifications", value: unreadCount, href: "/notifications", icon: "bell" as const, tint: "bg-blue-50 text-blue-700", detail: "Updates waiting for you" },
+    { label: "<TranslatedText text="Unread" /> notifications", value: unreadCount, href: "/notifications", icon: "bell" as const, tint: "bg-blue-50 text-blue-700", detail: "Updates waiting for you" },
     { label: "Active blood requests", value: activeRequests, href: "/my-blood-requests", icon: "droplet" as const, tint: "bg-rose-50 text-rose-700", detail: "Requests needing attention" },
   ];
   const quickLinks = [
@@ -58,7 +59,7 @@ export default async function DashboardPage() {
         <div className="relative grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(220px,280px)] lg:items-end">
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> Your personal space
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> <TranslatedText text="Your personal space" />
             </div>
             <div className="mt-5 flex items-center gap-4">
               <ProfileAvatar name={user.fullName || user.username} src={user.avatar} storageKey={user.avatarKey} className="h-14 w-14 border-2 border-white/30 text-lg shadow-lg sm:h-16 sm:w-16" textClassName="text-lg" />
@@ -100,8 +101,8 @@ export default async function DashboardPage() {
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-slate-50 text-slate-400 transition group-hover:bg-emerald-50 group-hover:text-emerald-700"><Icon name="arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></span>
               </div>
               <p className="mt-5 text-3xl font-bold tracking-tight text-slate-950">{stat.value.toLocaleString()}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">{stat.label}</p>
-              <p className="mt-1 text-xs text-slate-500">{stat.detail}</p>
+              <p className="mt-1 text-sm font-semibold text-slate-800"><TranslatedText text={stat.label} /></p>
+              <p className="mt-1 text-xs text-slate-500"><TranslatedText text={stat.detail} /></p>
             </Link>
           ))}
         </div>
@@ -120,7 +121,7 @@ export default async function DashboardPage() {
       <Card className="dc-dashboard-quick mb-8 rounded-2xl border border-slate-200/80 p-5 shadow-sm sm:p-6">
         <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Shortcuts</p><h2 className="mt-1 font-bold text-slate-950">Quick access</h2><p className="mt-1 text-sm text-slate-500">Jump straight into the things you care about.</p></div><span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-50 text-emerald-700"><Icon name="arrow-right" className="h-4 w-4" /></span></div>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {quickLinks.map((link) => <Link key={link.href} href={link.href} className={`flex items-center gap-3 rounded-xl border p-3.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${link.tone}`}><Icon name={link.icon} className="h-5 w-5" />{link.label}<span className="ml-auto"><Icon name="arrow-right" className="h-4 w-4 opacity-60" /></span></Link>)}
+          {quickLinks.map((link) => <Link key={link.href} href={link.href} className={`flex items-center gap-3 rounded-xl border p-3.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${link.tone}`}><Icon name={link.icon} className="h-5 w-5" /><TranslatedText text={link.label} /><span className="ml-auto"><Icon name="arrow-right" className="h-4 w-4 opacity-60" /></span></Link>)}
         </div>
       </Card>
 
@@ -131,7 +132,7 @@ export default async function DashboardPage() {
         </div>
         <ul className="mt-5 grid gap-3 md:grid-cols-2">
           {notifications.slice(0, 6).map((notification) => {
-            const content = <><span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${notification.read ? "bg-slate-100 text-slate-500" : "bg-emerald-100 text-emerald-800"}`}><Icon name="bell" className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="flex items-start justify-between gap-2"><span className="text-sm font-semibold text-slate-900">{notification.title}</span>{!notification.read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-600" aria-label="Unread" />}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{notification.body}</span><span className="mt-2 block text-xs font-medium text-slate-400">{formatNotificationDate(notification.createdAt)}</span></span></>;
+            const content = <><span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${notification.read ? "bg-slate-100 text-slate-500" : "bg-emerald-100 text-emerald-800"}`}><Icon name="bell" className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="flex items-start justify-between gap-2"><span className="text-sm font-semibold text-slate-900">{notification.title}</span>{!notification.read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-600" aria-label="<TranslatedText text="Unread" />" />}</span><span className="mt-1 block text-sm leading-5 text-slate-600">{notification.body}</span><span className="mt-2 block text-xs font-medium text-slate-400">{formatNotificationDate(notification.createdAt)}</span></span></>;
             return <li key={notification.id}>{notification.href ? <Link href={notification.href} className="flex h-full items-start gap-3 rounded-xl border border-slate-200/80 bg-white p-3.5 transition hover:border-emerald-200 hover:bg-emerald-50/40">{content}</Link> : <div className="flex h-full items-start gap-3 rounded-xl border border-slate-200/80 bg-white p-3.5">{content}</div>}</li>;
           })}
           {notifications.length === 0 && <li className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center md:col-span-2"><span className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-500"><Icon name="bell" className="h-5 w-5" /></span><p className="mt-3 text-sm font-semibold text-slate-800">You’re all caught up</p><p className="mt-1 text-sm text-slate-500">New notifications will appear here.</p></li>}
