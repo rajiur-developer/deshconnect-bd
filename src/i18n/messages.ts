@@ -836,6 +836,28 @@ export const bnMessages: Record<string, string> = {
   "Upazilas": "উপজেলাসমূহ",
   "news": "সংবাদ",
 
+  "Go to community": "কমিউনিটিতে যান",
+  "View": "দেখুন",
+  "Member profile": "সদস্য প্রোফাইল",
+  "Email verified": "ইমেইল যাচাইকৃত",
+  "Add a short introduction": "সংক্ষিপ্ত পরিচিতি যোগ করুন",
+  "Tell the community a little about yourself.": "কমিউনিটির সঙ্গে নিজের সম্পর্কে কিছু বলুন।",
+  "Complete profile": "প্রোফাইল সম্পূর্ণ করুন",
+  "Personal information": "ব্যক্তিগত তথ্য",
+  "Profile details": "প্রোফাইলের বিবরণ",
+  "The information visible on your member profile.": "আপনার সদস্য প্রোফাইলে প্রদর্শিত তথ্য।",
+  "Member since": "সদস্য হয়েছেন",
+  "Account role": "অ্যাকাউন্টের ভূমিকা",
+  "Email status": "ইমেইলের অবস্থা",
+  "Manage your space": "আপনার অ্যাকাউন্ট পরিচালনা করুন",
+  "Keep your details current and stay connected with the community.": "আপনার তথ্য হালনাগাদ রাখুন এবং কমিউনিটির সঙ্গে যুক্ত থাকুন।",
+  "Edit profile": "প্রোফাইল সম্পাদনা",
+  "Update your personal information": "আপনার ব্যক্তিগত তথ্য হালনাগাদ করুন",
+  "Manage account preferences": "অ্যাকাউন্টের পছন্দসমূহ পরিচালনা করুন",
+  "View your community network": "আপনার কমিউনিটি নেটওয়ার্ক দেখুন",
+  "Public posts": "পাবলিক পোস্ট",
+  "No public posts yet.": "এখনো কোনো পাবলিক পোস্ট নেই।",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
