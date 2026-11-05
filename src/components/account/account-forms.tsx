@@ -4,6 +4,7 @@ import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { uploadPublicImage } from "@/lib/storage/upload-public-image";
 import { optimizeImageForUpload } from "@/lib/images/optimize-upload";
 import { sendMessageAction, updateProfileAction, type AccountFormState } from "@/features/account/actions"; import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 import { Spinner } from "@/components/ui/spinner";
 type LocationProps = {
 divisions: LocationOption[];
@@ -21,6 +22,7 @@ districtId?: string;
 upazilaId?: string;
 }; };
 export function ProfileEditForm({ userId, divisions, districts, upazilas, initial }: ProfileProps) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<AccountFormState, FormData>(updateProfileAction, {});
 const [uploading, setUploading] = useState(false);
 const [uploadError, setUploadError] = useState("");
@@ -43,8 +45,8 @@ if (!file) return;
 event.preventDefault();
 if (uploadInProgress.current) return;
 setUploadError("");
-if (!PROFILE_IMAGE_TYPES.includes(file.type as (typeof PROFILE_IMAGE_TYPES)[number])) { setUploadError("Choose a JPG, JPEG, or PNG image."); return; }
-if (file.size < 1 || file.size > PROFILE_IMAGE_MAX_BYTES) { setUploadError("The image must be 5 MB or smaller."); return; }
+if (!PROFILE_IMAGE_TYPES.includes(file.type as (typeof PROFILE_IMAGE_TYPES)[number])) { setUploadError(t("Choose a JPG, JPEG, or PNG image.")); return; }
+if (file.size < 1 || file.size > PROFILE_IMAGE_MAX_BYTES) { setUploadError(t("The image must be 5 MB or smaller.")); return; }
 uploadInProgress.current = true;
 setUploading(true);
 try {
@@ -55,7 +57,7 @@ if (process.env.NEXT_PUBLIC_R2_PUBLIC_URL) {
   uploaded = await uploadPublicImage(optimizedFile, "profile");
 } else {
   const { data, error } = await getInsForgeBrowserClient().storage.from(PROFILE_IMAGE_BUCKET).upload(`${userId}/${crypto.randomUUID()}-${safeFilename(optimizedFile.name)}`, optimizedFile);
-  if (error || !data?.url || !data?.key) { setUploadError("Image upload failed. Please try again."); return; }
+  if (error || !data?.url || !data?.key) { setUploadError(t("Image upload failed. Please try again.")); return; }
   uploaded = { url: data.url, key: data.key };
 }
 if (avatarUrlRef.current) avatarUrlRef.current.value = uploaded.url;
@@ -83,12 +85,12 @@ return (
 <Textarea id="bio" name="bio" defaultValue={initial.bio ?? ""} />
 </Field>
 <div>
-<p className="mb-1.5 text-sm font-medium text-slate-700">Profile picture</p>
+<p className="mb-1.5 text-sm font-medium text-slate-700">{t("Profile picture")}</p>
 <div className="flex items-center gap-4">
-{preview && <img src={preview} alt="Profile picture preview" className="h-14 w-14 rounded-full border border-slate-200 object-cover" />}
+{preview && <img src={preview} alt={t("Profile picture preview")} className="h-14 w-14 rounded-full border border-slate-200 object-cover" />}
 <input ref={fileRef} id="profile-picture" name="profile-picture" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:font-medium file:text-brand-700 hover:file:bg-brand-100" />
 </div>
-<p className="mt-1 text-xs text-slate-500">JPG, JPEG, or PNG · max 5 MB.</p>
+<p className="mt-1 text-xs text-slate-500">{t("JPG, JPEG, or PNG · max 5 MB.")}</p>
 </div>
 <input ref={avatarUrlRef} type="hidden" name="avatar" />
 <input ref={avatarKeyRef} type="hidden" name="avatar_key" />
@@ -104,9 +106,9 @@ districtId: initial.districtId,
 upazilaId: initial.upazilaId,
 }}
 />
-{(state.error || uploadError) && <p role="alert" className="text-sm text-accent-600">{uploadError || state.error}</p>}
-{state.success && <p role="status" className="text-sm text-emerald-600">{state.success}</p>}
-<Button type="submit" disabled={pending || uploading}>{uploading ? "Uploading…" : pending ? "Saving…" : "Save changes"}</Button>
+{(state.error || uploadError) && <p role="alert" className="text-sm text-accent-600">{t(uploadError || state.error)}</p>}
+{state.success && <p role="status" className="text-sm text-emerald-600">{t(state.success)}</p>}
+<Button type="submit" disabled={pending || uploading}>{uploading ? t("Uploading…") : pending ? t("Saving…") : t("Save changes")}</Button>
 </form>
 ); }
 function createVoiceWav(chunks: Float32Array[], sourceRate: number): Blob {
@@ -158,6 +160,7 @@ return new Blob([buffer], { type: "audio/wav" });
 }
 
 export function MessageForm({ conversationId, viewerId, onMessageSent }: { conversationId: string; viewerId: string; onMessageSent?: (message: { id: string; conversationId: string; senderId: string; body: string; attachmentKey: string | null; attachmentUrl: string | null; attachmentMimeType: string | null; attachmentType: "image" | "audio" | null; createdAt: string; readBy: string[] }) => void }) {
+const { t } = useLanguage();
 const [body, setBody] = useState("");
 const [file, setFile] = useState<File | null>(null);
 const [pending, setPending] = useState(false);
@@ -412,43 +415,43 @@ setError(message);
 }
 return (
 <form onSubmit={submitMessage} className={`space-y-2 rounded-lg ${error ? "motion-error" : ""}`}>
-{replyingTo && <div className="flex items-start justify-between gap-3 rounded-lg border-l-2 border-brand-500 bg-brand-50 px-3 py-2 text-xs text-slate-600"><p className="min-w-0"><span className="font-semibold text-slate-800">Replying to {replyingTo.senderName}</span><br /><span className="block truncate">{replyingTo.body}</span></p><button type="button" onClick={() => setReplyingTo(null)} className="shrink-0 text-slate-500 underline">Cancel</button></div>}
+{replyingTo && <div className="flex items-start justify-between gap-3 rounded-lg border-l-2 border-brand-500 bg-brand-50 px-3 py-2 text-xs text-slate-600"><p className="min-w-0"><span className="font-semibold text-slate-800">{t("Replying to")} {replyingTo.senderName}</span><br /><span className="block truncate">{replyingTo.body}</span></p><button type="button" onClick={() => setReplyingTo(null)} className="shrink-0 text-slate-500 underline">{t("Cancel")}</button></div>}
 {recording && <div role="status" aria-live="polite" className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
 <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-red-600" aria-hidden="true" />
-<span className="font-medium">Recording {String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:{String(recordingSeconds % 60).padStart(2, "0")}</span>
+<span className="font-medium">{t("Recording")} {String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:{String(recordingSeconds % 60).padStart(2, "0")}</span>
 <span className="flex h-6 flex-1 items-center justify-center gap-1" aria-hidden="true">{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((bar) => <span key={bar} ref={(element) => { waveformBarsRef.current[bar] = element; }} className="chat-recording-bar" />)}</span>
-<button type="button" onClick={() => stopVoiceRecording()} className="rounded-md px-2 py-1 text-xs font-semibold hover:bg-red-100" aria-label="Stop recording">Stop</button>
-<button type="button" onClick={cancelAttachment} className="grid h-8 w-8 shrink-0 place-items-center rounded-full hover:bg-red-100" aria-label="Cancel voice recording" title="Cancel recording"><Icon name="close" className="h-4 w-4" /></button>
+<button type="button" onClick={() => stopVoiceRecording()} className="rounded-md px-2 py-1 text-xs font-semibold hover:bg-red-100" aria-label={t("Stop recording")}>{t("Stop")}</button>
+<button type="button" onClick={cancelAttachment} className="grid h-8 w-8 shrink-0 place-items-center rounded-full hover:bg-red-100" aria-label={t("Cancel voice recording")} title={t("Cancel recording")}><Icon name="close" className="h-4 w-4" /></button>
 </div>}
 {file && <div className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-2">
 {file.type.startsWith("image/") && filePreviewUrl
-? <img src={filePreviewUrl} alt="Selected image preview" className="h-16 w-16 shrink-0 rounded-lg object-cover" />
+? <img src={filePreviewUrl} alt={t("Selected image preview")} className="h-16 w-16 shrink-0 rounded-lg object-cover" />
 : <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700"><Icon name="audio" className="h-5 w-5" /></span>}
 <div className="min-w-0 flex-1">
-<p className="text-xs font-semibold text-slate-800">{file.type.startsWith("image/") ? "Image preview" : "Voice message preview"} <span className="font-normal text-slate-500">· max 5 MB</span></p>
+<p className="text-xs font-semibold text-slate-800">{file.type.startsWith("image/") ? t("Image preview") : t("Voice message preview")} <span className="font-normal text-slate-500">· {t("max 5 MB")}</span></p>
 {file.type.startsWith("audio/") && filePreviewUrl
-? <audio controls preload="metadata" src={filePreviewUrl} className="mt-1 h-9 w-full max-w-xs" aria-label="Preview voice message" />
+? <audio controls preload="metadata" src={filePreviewUrl} className="mt-1 h-9 w-full max-w-xs" aria-label={t("Preview voice message")} />
 : file.type.startsWith("image/") ? null : <p className="mt-1 truncate text-xs text-slate-500" title={file.name}>{file.name}</p>}
 </div>
-<button type="button" onClick={cancelAttachment} disabled={pending} className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-red-100 hover:text-red-700 disabled:opacity-50" aria-label="Remove attachment" title="Remove attachment"><Icon name="close" className="h-4 w-4" /></button>
+<button type="button" onClick={cancelAttachment} disabled={pending} className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-red-100 hover:text-red-700 disabled:opacity-50" aria-label={t("Remove attachment")} title={t("Remove attachment")}><Icon name="close" className="h-4 w-4" /></button>
 </div>}
 <div className="flex items-center gap-2">
 {!messageFocused && !recording && <div className="flex shrink-0 items-center gap-1">
-<button type="button" onClick={() => imageRef.current?.click()} disabled={pending} aria-label="Choose image" title="Choose image (max 5 MB)" className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-60">
+<button type="button" onClick={() => imageRef.current?.click()} disabled={pending} aria-label={t("Choose image")} title={t("Choose image (max 5 MB)")} className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-60">
 <Icon name="image" className="h-5 w-5" />
 </button>
 <input ref={imageRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" disabled={pending} onChange={(event) => { const selected = event.target.files?.[0] ?? null; setFile(selected); setError(""); if (selected && audioRef.current) audioRef.current.value = ""; }} />
-<button type="button" onClick={() => audioRef.current?.click()} disabled={pending} aria-label="Choose voice recording" title="Choose voice recording (max 5 MB)" className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-60">
+<button type="button" onClick={() => audioRef.current?.click()} disabled={pending} aria-label={t("Choose voice recording")} title={t("Choose voice recording (max 5 MB)")} className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-60">
 <Icon name="audio" className="h-5 w-5" />
 </button>
 <input ref={audioRef} type="file" accept="audio/*" className="sr-only" disabled={pending} onChange={(event) => { const selected = event.target.files?.[0] ?? null; setFile(selected); setError(""); if (selected && imageRef.current) imageRef.current.value = ""; }} />
-<button type="button" onClick={toggleVoiceRecording} disabled={pending} aria-label={recording ? "Stop voice recording" : "Record voice"} title={recording ? "Stop recording" : "Record voice (max 5 MB)"} className={`grid h-9 w-9 place-items-center rounded-lg disabled:opacity-60 ${recording ? "bg-red-50 text-red-700" : "text-slate-600 hover:bg-brand-50 hover:text-brand-700"}`}>
+<button type="button" onClick={toggleVoiceRecording} disabled={pending} aria-label={recording ? t("Stop voice recording") : t("Record voice")} title={recording ? t("Stop recording") : t("Record voice (max 5 MB)")} className={`grid h-9 w-9 place-items-center rounded-lg disabled:opacity-60 ${recording ? "bg-red-50 text-red-700" : "text-slate-600 hover:bg-brand-50 hover:text-brand-700"}`}>
 <Icon name={recording ? "stop" : "mic"} className="h-5 w-5" />
 </button>
 </div>}
-<Input value={body} onChange={(event) => setBody(event.target.value)} onFocus={() => setMessageFocused(true)} onBlur={() => setMessageFocused(false)} placeholder="Write a message…" aria-label="Message" className="min-w-0 flex-1" maxLength={2000} disabled={pending} />
-<Button type="submit" disabled={pending || recording || (!body.trim() && !file)} aria-busy={pending}>{pending && <Spinner />}{pending ? "Sending…" : "Send"}</Button>
+<Input value={body} onChange={(event) => setBody(event.target.value)} onFocus={() => setMessageFocused(true)} onBlur={() => setMessageFocused(false)} placeholder={t("Write a message…")} aria-label={t("Message")} className="min-w-0 flex-1" maxLength={2000} disabled={pending} />
+<Button type="submit" disabled={pending || recording || (!body.trim() && !file)} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Sending…") : t("Send")}</Button>
 </div>
-{error && <p role="alert" className="text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="text-xs text-accent-600">{t(error)}</p>}
 </form>
 ); }
