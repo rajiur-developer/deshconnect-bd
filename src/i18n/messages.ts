@@ -832,6 +832,10 @@ export const bnMessages: Record<string, string> = {
   "services found": "টি সেবা পাওয়া গেছে",
   "records found": "টি রেকর্ড পাওয়া গেছে",
 
+  "Division's districts": "বিভাগের জেলাসমূহ",
+  "Upazilas": "উপজেলাসমূহ",
+  "news": "সংবাদ",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
