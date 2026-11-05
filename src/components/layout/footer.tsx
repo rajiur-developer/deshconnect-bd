@@ -14,7 +14,7 @@ return (
 <img src={MainLogo.src} alt="" className="h-9 w-9 object-contain" />
 {SITE.name}
 </Link>
-<p className="mt-3 text-sm text-slate-600">{SITE.description}</p>
+<p className="mt-3 text-sm text-slate-600">{t(SITE.description)}</p>
 <p className="mt-4 text-xs text-slate-400">{t("Built for the people of Bangladesh.")}</p>
 </div>
 {FOOTER_LINKS.map((group) => (
