@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { IconName } from "@/components/ui/icons"; import { Icon } from "@/components/ui/icons";
 import { SearchAutocomplete } from "@/components/search/search-autocomplete";
+import { useLanguage } from "@/components/i18n/language-provider";
 export type LocationOption = { id: string; name: string }; export type DistrictOption = LocationOption & { divisionId: string }; export type UpazilaOption = LocationOption & { districtId: string };
 const MANAGED_KEYS = new Set(["q", "divisionId", "districtId", "upazilaId", "category", "sort", "page"]);
 type Props = {
@@ -43,6 +44,7 @@ icon = "filter",
 title = "Filter",
 overlapBanner = false,
 }: Props) {
+const { t } = useLanguage();
 const formRef = useRef<HTMLFormElement>(null);
 const router = useRouter();
 const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
@@ -94,52 +96,52 @@ return (
   <div className="mb-2 flex items-center justify-between gap-2 sm:mb-4 sm:gap-3">
     <div className="flex items-center gap-2.5">
       <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand-50 text-brand-700"><Icon name={icon} className="h-4 w-4" /></span>
-      <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+      <h2 className="text-sm font-semibold text-slate-900">{t(title)}</h2>
     </div>
-    <Link href={action} scroll={false} className="rounded-lg px-2 py-1 text-[10px] font-semibold text-brand-700 transition hover:bg-brand-50 focus-ring sm:px-3 sm:py-2 sm:text-xs">Reset all</Link>
+    <Link href={action} scroll={false} className="rounded-lg px-2 py-1 text-[10px] font-semibold text-brand-700 transition hover:bg-brand-50 focus-ring sm:px-3 sm:py-2 sm:text-xs">{t("Reset all")}</Link>
   </div>
 
   <SearchAutocomplete
     value={searchValue}
     onValueChange={setSearchValue}
-    placeholder="Search by name or keyword"
-    ariaLabel="Search by name or keyword"
+    placeholder={t("Search by name or keyword")}
+    ariaLabel={t("Search by name or keyword")}
     className="min-h-8 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-1.5 pl-8 pr-2 text-[11px] text-slate-800 sm:min-h-10 sm:rounded-xl sm:py-2 sm:pl-9 sm:pr-3 sm:text-xs outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
     wrapperClassName="relative mb-2 sm:mb-3"
   />
 
   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
     <label className="block min-w-0">
-      <span className="mb-0.5 block text-[10px] font-semibold text-slate-600 sm:mb-1 sm:text-[11px]">{labels?.division ?? "Division"}</span>
-      <select name="divisionId" aria-label="Division" value={divisionId} onChange={(event) => { setDivisionId(event.target.value); setDistrictId(""); setUpazilaId(""); submit({ divisionId: event.target.value, districtId: "", upazilaId: "" }); }} className="min-h-8 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-10 sm:rounded-xl sm:px-2.5 sm:text-xs outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{labels?.division ?? "All divisions"}</option>
+      <span className="mb-0.5 block text-[10px] font-semibold text-slate-600 sm:mb-1 sm:text-[11px]">{t(labels?.division ?? "Division")}</span>
+      <select name="divisionId" aria-label={t("Division")} value={divisionId} onChange={(event) => { setDivisionId(event.target.value); setDistrictId(""); setUpazilaId(""); submit({ divisionId: event.target.value, districtId: "", upazilaId: "" }); }} className="min-h-8 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 sm:min-h-10 sm:rounded-xl sm:px-2.5 sm:text-xs outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{t(labels?.division ? `All ${labels.division.toLowerCase()}` : "All divisions")}</option>
         {divisions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
     <label className="block min-w-0">
-      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{labels?.district ?? "District"}</span>
-      <select name="districtId" aria-label="District" value={districtId} onChange={(event) => { setDistrictId(event.target.value); setUpazilaId(""); submit({ districtId: event.target.value, upazilaId: "" }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{labels?.district ?? "All districts"}</option>
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(labels?.district ?? "District")}</span>
+      <select name="districtId" aria-label={t("District")} value={districtId} onChange={(event) => { setDistrictId(event.target.value); setUpazilaId(""); submit({ districtId: event.target.value, upazilaId: "" }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{t(labels?.district ? `All ${labels.district.toLowerCase()}` : "All districts")}</option>
         {districtChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
     <label className="block min-w-0">
-      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{labels?.upazila ?? "Upazila"}</span>
-      <select name="upazilaId" aria-label="Upazila" value={upazilaId} onChange={(event) => { setUpazilaId(event.target.value); submit({ upazilaId: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">{labels?.upazila ?? "All upazilas"}</option>
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(labels?.upazila ?? "Upazila")}</span>
+      <select name="upazilaId" aria-label={t("Upazila")} value={upazilaId} onChange={(event) => { setUpazilaId(event.target.value); submit({ upazilaId: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{t(labels?.upazila ? `All ${labels.upazila.toLowerCase()}` : "All upazilas")}</option>
         {upazilaChoices.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
     </label>
     {showCategory && categories && <label className="block min-w-0">
-      <span className="mb-1 block text-[11px] font-semibold text-slate-600">Category</span>
-      <select name="category" aria-label="Category" value={categoryValue} onChange={(event) => { setCategoryValue(event.target.value); submit({ category: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
-        <option value="">All categories</option>
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t("Category")}</span>
+      <select name="category" aria-label={t("Category")} value={categoryValue} onChange={(event) => { setCategoryValue(event.target.value); submit({ category: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+        <option value="">{t("All categories")}</option>
         {categories.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
       </select>
     </label>}
     {extraSelects?.map((extra) => <label key={extra.name} className="block min-w-0">
-      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{extra.label}</span>
-      <select name={extra.name} aria-label={extra.label} value={extraValues[extra.name] ?? ""} onChange={(event) => { setExtraValues((currentValues) => ({ ...currentValues, [extra.name]: event.target.value })); submit({ [extra.name]: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-600">{t(extra.label)}</span>
+      <select name={extra.name} aria-label={t(extra.label)} value={extraValues[extra.name] ?? ""} onChange={(event) => { setExtraValues((currentValues) => ({ ...currentValues, [extra.name]: event.target.value })); submit({ [extra.name]: event.target.value }); }} className="min-h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-2.5 text-xs text-slate-700 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10">
         <option value="">All {extra.label.toLowerCase()}</option>
         {extra.options.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
       </select>
@@ -148,7 +150,7 @@ return (
   {hidden.map(([key, value]) => <input key={key} type="hidden" name={key} value={value} />)}
   <div className="mt-4">
   <button type="submit" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25">
-    <Icon name="filter" className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Apply Filters
+    <Icon name="filter" className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> {t("Apply Filters")}
   </button>
   </div>
 </form>
