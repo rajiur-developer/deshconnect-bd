@@ -26,11 +26,11 @@ className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
 </div>
 <div className="mt-4">
 <label htmlFor="title" className="mb-1.5 block text-sm font-medium text-slate-700">Title</label>
-<Input id="title" name="title" placeholder=t("Summarize your visit") />
+<Input id="title" name="title" placeholder={t("Summarize your visit")} />
 </div>
 <div className="mt-4">
 <label htmlFor="body" className="mb-1.5 block text-sm font-medium text-slate-700">Review</label>
-<Textarea id="body" name="body" placeholder=t("What did you like? What should others know?") />
+<Textarea id="body" name="body" placeholder={t("What did you like? What should others know?")} />
 </div>
 {state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{t(state.error)}</p>}
 {state.success && <p role="status" className="mt-3 text-sm text-emerald-600">{t(state.success)}</p>}
