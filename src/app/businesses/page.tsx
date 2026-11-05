@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { buildHref, firstParam, parseSort } from "@/lib/query"; import { parsePage } from "@/lib/utils"; import { getDirectoryLocationOptions } from "@/services/locations"; import { listBusinesses } from "@/services/businesses"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { BusinessCard } from "@/components/cards/business-card"; import { EmptyState } from "@/components/ui/empty-state"; import { Pagination } from "@/components/ui/pagination"; import { PageBanner } from "@/components/layout/page-banner"; import { ListGrid } from "@/components/layout/list-grid"; import { Icon } from "@/components/ui/icons";
 const CATEGORIES = [
 { value: "hotel", label: "Hotel" },
@@ -44,7 +45,7 @@ categories={CATEGORIES}
 showCategory
 current={{ divisionId, districtId, upazilaId }}
 />
-<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} businesses found</p>
+<p id="directory-results" className="scroll-mt-24 mt-6 text-sm text-slate-500">{meta.total} <TranslatedText text="businesses found" /></p>
 {items.length ? (
 <ListGrid className="mt-4">
 {items.map((business) => (
