@@ -1,7 +1,9 @@
 "use client";
 import { useState, useTransition } from "react"; import { useRouter } from "next/navigation";
 import { deleteOwnPostAction, moderatePostAction, reactToPostAction } from "@/features/community/actions"; import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 export function ReactionButton({ postId, initialCount }: { postId: string; initialCount: number }) {
+const { t } = useLanguage();
 const [count, setCount] = useState(initialCount);
 const [reacted, setReacted] = useState(false);
 const [pending, startTransition] = useTransition();
@@ -24,11 +26,12 @@ className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-
 </button>
 ); }
 export function DeletePostButton({ postId }: { postId: string }) {
+const { t } = useLanguage();
 const [deleted, setDeleted] = useState(false);
 const [error, setError] = useState("");
 const [pending, startTransition] = useTransition();
 const router = useRouter();
-if (deleted) return <span className="text-sm text-slate-500">Post deleted.</span>;
+if (deleted) return <span className="text-sm text-slate-500">{t("Post deleted.")}</span>;
 return (
 <>
 <button
@@ -51,12 +54,13 @@ setError("Could not delete this post. Please try again.");
 className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
 >
 <Icon name="trash" className="h-4 w-4" />
-{pending ? "Deleting…" : "Delete"}
+{pending ? t("Deleting…") : t("Delete")}
 </button>
-{error && <p role="alert" className="basis-full text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="basis-full text-xs text-accent-600">{t(error)}</p>}
 </>
 ); }
 export function ModeratePostButtons({ postId, status }: { postId: string; status: string }) {
+const { t } = useLanguage();
 const [current, setCurrent] = useState(status);
 const [error, setError] = useState("");
 const [pending, startTransition] = useTransition();
@@ -89,7 +93,7 @@ disabled={pending || current === "visible"}
 onClick={() => apply("visible")}
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
 >
-{current === "hidden" ? "Show" : "Approve"}
+{current === "hidden" ? t("Show") : t("Approve")}
 </button>
 <button
 type="button"
@@ -97,7 +101,7 @@ disabled={pending || current === "hidden"}
 onClick={() => apply("hidden")}
 className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
 >
-Hide
+{t("Hide")}
 </button>
 <button
 type="button"
@@ -105,7 +109,7 @@ disabled={pending || current === "deleted"}
 onClick={remove}
 className="rounded-lg border border-accent-500/40 px-3 py-1.5 text-xs font-medium text-accent-600 hover:bg-accent-500/10 disabled:opacity-50"
 >
-Delete
+{t("Delete")}
 </button>
 {error && <p role="alert" className="basis-full text-xs text-accent-600">{error}</p>}
 </div>
