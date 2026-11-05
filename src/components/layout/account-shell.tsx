@@ -1,7 +1,9 @@
+"use client";
 import Link from "next/link";
 import type { PublicUser } from "@/types/auth";
 import { PageHeader } from "@/components/layout/page-header";
 import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 const NAV_GROUPS = [
   {
@@ -67,11 +69,11 @@ export function AccountShell({
         <div className="container-x py-5 sm:py-7">
           <div className="mb-7 flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white/85 p-4 shadow-sm shadow-slate-900/[0.03] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-4">
             <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Your account</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">{t("Your account")}</p>
               <p className="mt-1 truncate text-sm font-semibold text-slate-900">{user.fullName || user.username}</p>
               <p className="truncate text-xs text-slate-500">@{user.username}</p>
             </div>
-            <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:justify-end sm:pb-0" aria-label="Account shortcuts">
+            <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:justify-end sm:pb-0" aria-label={t("Account shortcuts")}>
               {[
                 { href: "/profile", label: "Profile" },
                 { href: "/messages", label: "Messages" },
@@ -101,7 +103,7 @@ export function AccountShell({
             <nav className="rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 shadow-sm backdrop-blur-xl" aria-label="Account navigation">
               {navGroups.map((group) => (
                 <div key={group.title} className="py-2 first:pt-1">
-                  <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{group.title}</p>
+                  <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t(group.title)}</p>
                   <div className="space-y-1">
                     {group.links.map((item) => {
                       const active = item.href === "/profile" && title.toLowerCase() === "my profile";
@@ -116,7 +118,7 @@ export function AccountShell({
                         >
                           {active && <span className="absolute bottom-2 left-0 top-2 w-0.5 rounded-full bg-emerald-600" />}
                           <Icon name={item.icon} className={active ? "h-4 w-4 text-emerald-700" : "h-4 w-4 text-slate-400 transition-colors group-hover:text-emerald-700"} />
-                          <span>{item.label}</span>
+                          <span>{t(item.label)}</span>
                           {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-600" />}
                         </Link>
                       );
