@@ -1,7 +1,9 @@
 "use client";
 import { useActionState } from "react";
+import { useLanguage } from "@/components/i18n/language-provider";
 import { createReviewAction, type ReviewFormState } from "@/features/places/actions"; import { Button } from "@/components/ui/button"; import { Input, Textarea } from "@/components/ui/input"; import { useFormStateToast } from "@/components/ui/toast";
 export function ReviewForm({ placeId, slug }: { placeId: string; slug: string }) {
+const { t } = useLanguage();
 const [state, formAction, pending] = useActionState<ReviewFormState, FormData>(createReviewAction, {});
 useFormStateToast(state);
 return (
@@ -18,22 +20,22 @@ defaultValue="5"
 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
 >
 {[5, 4, 3, 2, 1].map((value) => (
-<option key={value} value={value}>{value} stars</option>
+<option key={value} value={value}>{value} {t("stars")}</option>
 ))}
 </select>
 </div>
 <div className="mt-4">
 <label htmlFor="title" className="mb-1.5 block text-sm font-medium text-slate-700">Title</label>
-<Input id="title" name="title" placeholder="Summarize your visit" />
+<Input id="title" name="title" placeholder=t("Summarize your visit") />
 </div>
 <div className="mt-4">
 <label htmlFor="body" className="mb-1.5 block text-sm font-medium text-slate-700">Review</label>
-<Textarea id="body" name="body" placeholder="What did you like? What should others know?" />
+<Textarea id="body" name="body" placeholder=t("What did you like? What should others know?") />
 </div>
-{state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="mt-3 text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="mt-3 text-sm text-emerald-600">{t(state.success)}</p>}
 <div className="mt-4">
-<Button type="submit" disabled={pending}>{pending ? "Publishing…" : "Submit review"}</Button>
+<Button type="submit" disabled={pending}>{pending ? t("Publishing…") : t("Submit review")}</Button>
 </div>
 </form>
 ); }
