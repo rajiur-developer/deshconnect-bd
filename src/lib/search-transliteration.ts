@@ -1,9 +1,6 @@
 /**
  * Lightweight Bengali/English/Banglish query expansion.
- *
- * This is intentionally query-time only: it does not alter stored content or
- * database schemas. It supports common informal Banglish spellings and keeps
- * the original query as a fallback for exact English/Bengali matches.
+ * Query-time only: stored content and database schemas remain unchanged.
  */
 const BENGALI_TO_LATIN: Record<string, string> = {
   অ: "o", আ: "a", ই: "i", ঈ: "i", উ: "u", ঊ: "u", ঋ: "ri",
@@ -19,7 +16,15 @@ const BENGALI_TO_LATIN: Record<string, string> = {
   ো: "o", ৌ: "ou", ৃ: "ri", ্: "",
 };
 
-const COMMON_BANGLISH_ALIASES: Record<string, string> = {\n  oprajeyo: "অপরাজেয়",\n  oparajeyo: "অপরাজেয়",\n  oporajeyo: "অপরাজেয়",\n  aparajeyo: "অপরাজেয়",\n};\nconst APARAJEYO_VARIANTS = ["অপরাজেয়", "oprajeyo", "oparajeyo", "oporajeyo", "aparajeyo", "oprajey"];\n\nconst ROMAN_TO_BENGALI: Array<[string, string]> = [
+const COMMON_BANGLISH_ALIASES: Record<string, string> = {
+  oprajeyo: "অপরাজেয়",
+  oparajeyo: "অপরাজেয়",
+  oporajeyo: "অপরাজেয়",
+  aparajeyo: "অপরাজেয়",
+};
+const APARAJEYO_VARIANTS = ["অপরাজেয়", "oprajeyo", "oparajeyo", "oporajeyo", "aparajeyo", "oprajey"];
+
+const ROMAN_TO_BENGALI: Array<[string, string]> = [
   ["op", "অপ"], ["eyo", "েয়"], ["yoo", "্যু"], ["chh", "ছ"], ["kh", "খ"],
   ["gh", "ঘ"], ["ch", "চ"], ["jh", "ঝ"], ["th", "থ"], ["dh", "ধ"],
   ["ph", "ফ"], ["bh", "ভ"], ["sh", "শ"], ["ng", "ং"], ["ny", "ঞ"],
@@ -40,6 +45,8 @@ export function bengaliToLatin(value: string): string {
 export function banglishToBengali(value: string): string {
   const input = value.toLocaleLowerCase().replace(/[^a-z\s-]/g, " ").replace(/\s+/g, " ").trim();
   if (!input) return "";
+  if (COMMON_BANGLISH_ALIASES[input]) return COMMON_BANGLISH_ALIASES[input];
+
   return input.split(/([\s-]+)/).map((part) => {
     if (!part || /^[\s-]+$/.test(part)) return part;
     let output = "";
@@ -57,17 +64,23 @@ export function banglishToBengali(value: string): string {
   }).join("");
 }
 
-/** Return the original query plus useful cross-script alternatives. */
+/** Return the original query plus cross-script and common spelling alternatives. */
 export function expandSearchTerms(query: string): string[] {
   const original = query.normalize("NFC").trim().replace(/\s+/g, " ");
   if (!original) return [];
   const terms = new Set([original]);
+
   if (/[\u0980-\u09FF]/.test(original)) {
     const latin = bengaliToLatin(original).trim();
     if (latin && latin.toLowerCase() !== original.toLowerCase()) terms.add(latin);
+    if (original.includes("অপরাজেয়")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
   } else if (/[a-z]/i.test(original)) {
     const bengali = banglishToBengali(original);
     if (bengali && bengali !== original) terms.add(bengali);
+    if (COMMON_BANGLISH_ALIASES[original.toLowerCase()]) {
+      APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
+    }
   }
-  return Array.from(terms).slice(0, 3);
+
+  return Array.from(terms).slice(0, 8);
 }
