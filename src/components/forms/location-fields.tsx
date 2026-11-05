@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useLanguage } from "@/components/i18n/language-provider";
 import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters";
 type Props = {
 idPrefix?: string;
@@ -9,6 +10,7 @@ upazilas: UpazilaOption[];
 current: { divisionId?: string; districtId?: string; upazilaId?: string };
 required?: boolean; };
 /** Dependent Division → District → Upazila selects for forms. */ export function LocationFields({ idPrefix = "", divisions, districts, upazilas, current, required }: Props) {
+const { t } = useLanguage();
 const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
 const [districtId, setDistrictId] = useState(current.districtId ?? "");
 const [upazilaId, setUpazilaId] = useState(current.upazilaId ?? "");
@@ -32,14 +34,14 @@ setUpazilaId("");
 }}
 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
 >
-<option value="">Select division</option>
+<option value="">{t("Select division")}</option>
 {divisions.map((division) => (
 <option key={division.id} value={division.id}>{division.name}</option>
 ))}
 </select>
 </div>
 <div>
-<label htmlFor={`${idPrefix}districtId`} className="mb-1.5 block text-sm font-medium text-slate-700">District{required ? " *" : ""}</label>
+<label htmlFor={`${idPrefix}districtId`} className="mb-1.5 block text-sm font-medium text-slate-700">{t("District")}{required ? " *" : ""}</label>
 <select
 id={`${idPrefix}districtId`}
 name="districtId"
@@ -51,14 +53,14 @@ setUpazilaId("");
 }}
 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
 >
-<option value="">Select district</option>
+<option value="">{t("Select district")}</option>
 {districtChoices.map((district) => (
 <option key={district.id} value={district.id}>{district.name}</option>
 ))}
 </select>
 </div>
 <div>
-<label htmlFor={`${idPrefix}upazilaId`} className="mb-1.5 block text-sm font-medium text-slate-700">Upazila{required ? " *" : ""}</label>
+<label htmlFor={`${idPrefix}upazilaId`} className="mb-1.5 block text-sm font-medium text-slate-700">{t("Upazila")}{required ? " *" : ""}</label>
 <select
 id={`${idPrefix}upazilaId`}
 name="upazilaId"
@@ -67,7 +69,7 @@ required={required}
 onChange={(event) => setUpazilaId(event.target.value)}
 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring"
 >
-<option value="">Select upazila</option>
+<option value="">{t("Select upazila")}</option>
 {upazilaChoices.map((upazila) => (
 <option key={upazila.id} value={upazila.id}>{upazila.name}</option>
 ))}
