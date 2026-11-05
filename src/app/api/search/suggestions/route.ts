@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   if (query.length < 2) return NextResponse.json({ suggestions: [] });
 
   try {
-    const suggestions = scope === "none" ? [] : await searchSuggestions(query, 5, scope);
+    const suggestions = scope === "none" ? [] : await searchSuggestions(query, 8, scope);
     return NextResponse.json(
       { suggestions },
       { headers: { "Cache-Control": "private, max-age=10, stale-while-revalidate=30" } },
