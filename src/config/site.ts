@@ -26,7 +26,7 @@ export const PRIMARY_NAV: NavEntry[] = [
 { label: "Home", href: "/", description: "DeshConnect home page" },
 { label: "Tourism", href: "/places", description: "Places to visit in Bangladesh" },
 {
-label: "Services",
+label: "Service",
 items: [
 { label: "Education", href: "/institutions?category=school", description: "Schools, colleges and madrasahs" },
 { label: "Hospitals", href: "/hospitals", description: "Hospitals and health centres" },
