@@ -70,7 +70,7 @@ return (
 </Field>
 <Field label={t("Category")} htmlFor="news-category" required>
 <select id="news-category" name="category" required className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring">
-<option value="">Select category</option>
+<option value="">{t("Select category")}</option>
 {categories.map((category) => (
 <option key={category.value} value={category.value}>{category.name}</option>
 ))}
