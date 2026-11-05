@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+ import { useLanguage } from "@/components/i18n/language-provider";
  import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
  import { getInsForgeBrowserClient } from "@/lib/insforge-browser";
 import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/upload-public-image";
@@ -23,6 +24,7 @@ import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/uplo
  onValueChange?: (value: string) => void;
  onUploadingChange?: (uploading: boolean) => void;
  }) {
+ const { t } = useLanguage();
  const uploadToStorage = Boolean(userId && storageFolder);
  const inputRef = useRef<HTMLInputElement>(null);
  const [value, setValue] = useState(uploadToStorage ? "" : current ?? "");
@@ -31,11 +33,11 @@ import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/uplo
  const [error, setError] = useState("");
  async function handleFile(file: File) {
  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
- setError("Choose a JPG, PNG, or WebP image.");
+ setError(t("Choose a JPG, PNG, or WebP image."));
  return;
  }
  if (file.size < 1 || file.size > 5 * 1024 * 1024) {
- setError("Image must be 5 MB or smaller.");
+ setError(t("Image must be 5 MB or smaller."));
  return;
  }
  setError("");
@@ -53,7 +55,7 @@ import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/uplo
    const { data, error: uploadError } = await getInsForgeBrowserClient()
      .storage.from(COMMUNITY_POST_IMAGE_BUCKET).upload(key, image);
    if (uploadError) throw new Error(uploadError.message);
-   if (!data?.url || !data.key) throw new Error("Image upload did not return a URL and storage key.");
+   if (!data?.url || !data.key) throw new Error(t("Image upload did not return a URL and storage key."));
    uploaded = { url: data.url, key: data.key };
  }
  setValue(uploaded.url);
@@ -61,13 +63,13 @@ import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/uplo
  setPreview(URL.createObjectURL(image));
  } else {
  const dataUrl = await resizeToDataUrl(file);
- if (!dataUrl) throw new Error("This image could not be read. Please choose another image.");
+ if (!dataUrl) throw new Error(t("This image could not be read. Please choose another image."));
  setValue(dataUrl);
  onValueChange?.(dataUrl);
  setPreview(dataUrl);
  }
  } catch (cause) {
- setError(cause instanceof Error ? cause.message : "Image upload failed. Please try again.");
+ setError(cause instanceof Error ? cause.message : t("Image upload failed. Please try again."));
  } finally {
  setBusy(false);
  onUploadingChange?.(false);
@@ -75,7 +77,7 @@ import { uploadPublicImage, type DirectoryImageFolder } from "@/lib/storage/uplo
  }
  return (
  <div>
- <p className="mb-1.5 text-sm font-medium text-slate-700">{label}</p>
+ <p className="mb-1.5 text-sm font-medium text-slate-700">{t(label)}</p>
 <input type="hidden" name={name} value={value} />
 <div className="flex items-center gap-3">
 <button
@@ -85,7 +87,7 @@ onClick={() => inputRef.current?.click()}
 className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-ring disabled:cursor-wait disabled:opacity-60"
 >
 <Icon name="edit" className="h-4 w-4" />
-{busy ? "Uploading…" : preview ? "Change image" : "Select image"}
+{busy ? t("Uploading…") : preview ? t("Change image") : t("Select image")}
 </button>
 <input
 ref={inputRef}
@@ -99,7 +101,7 @@ event.target.value = "";
 }}
 />
 {preview ? (
-<img src={preview} alt={label} className="h-16 w-16 rounded-lg border border-slate-200 object-cover" />
+<img src={preview} alt={t(label)} className="h-16 w-16 rounded-lg border border-slate-200 object-cover" />
 ) : (
 <span className="text-sm text-slate-400">No image selected</span>
 )}
@@ -120,7 +122,7 @@ Remove
 )}
 </div>
 {error && <p role="alert" className="mt-1 text-xs text-accent-600">{error}</p>}
-{hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+{hint && <p className="mt-1 text-xs text-slate-500">{t(hint)}</p>}
 </div>
 ); }
 function resizeToBlob(file: File): Promise<Blob> {
@@ -136,15 +138,15 @@ canvas.height = Math.max(1, Math.round(img.height * scale));
 const ctx = canvas.getContext("2d");
 URL.revokeObjectURL(url);
 if (!ctx) {
-reject(new Error("This image could not be resized."));
+reject(new Error(t("This image could not be resized.")));
 return;
 }
 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("This image could not be encoded.")), "image/jpeg", 0.8);
+canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error(t("This image could not be encoded."))), "image/jpeg", 0.8);
 };
 img.onerror = () => {
 URL.revokeObjectURL(url);
-reject(new Error("This image could not be read. Please choose another image."));
+reject(new Error(t("This image could not be read. Please choose another image.")));
 };
 img.src = url;
 });
