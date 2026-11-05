@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 type Suggestion = { label: string; category: string };
 
@@ -25,6 +26,7 @@ export function SearchAutocomplete({
   className = "",
   wrapperClassName = "relative min-w-0",
 }: SearchAutocompleteProps) {
+  const { t } = useLanguage();
   const pathname = usePathname();
   const scope = pathname === "/" ? "all" :
     pathname.startsWith("/places") || pathname.startsWith("/tourism") ? "places" :
@@ -126,8 +128,8 @@ export function SearchAutocomplete({
         onFocus={() => { if (suggestions.length) setOpen(true); }}
         onBlur={() => window.setTimeout(() => setOpen(false), 140)}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
+        placeholder={t(placeholder)}
+        aria-label={t(ariaLabel)}
         aria-autocomplete="list"
         aria-expanded={open}
         aria-controls="deshconnect-search-suggestions"
@@ -142,7 +144,7 @@ export function SearchAutocomplete({
           className="absolute left-0 right-0 top-full z-[10000] mt-2 max-h-80 overflow-y-auto rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-2xl shadow-slate-950/20"
         >
           {loading && suggestions.length === 0 ? (
-            <p className="px-3 py-2.5 text-xs text-slate-500">Searching suggestions…</p>
+            <p className="px-3 py-2.5 text-xs text-slate-500">{t("Searching suggestions…")}</p>
           ) : suggestions.map((suggestion, index) => (
             <button
               id={`search-suggestion-${index}`}
