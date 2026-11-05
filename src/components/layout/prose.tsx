@@ -4,7 +4,7 @@ import { useLanguage } from "@/components/i18n/language-provider";
 function translateChildren(children: ReactNode, t: (value: string) => string): ReactNode {
   return Children.map(children, (child) => {
     if (typeof child === "string") {
-      const normalized = child.replace(/\\s+/g, " ").trim();
+      const normalized = child.replace(/\s+/g, " ").trim();
       if (!normalized) return child;
       return t(normalized);
     }
