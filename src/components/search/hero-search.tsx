@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { PublicUser } from "@/types/auth";
 import { Icon } from "@/components/ui/icons";
 import { SearchAutocomplete } from "@/components/search/search-autocomplete";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 type Division = { id: string; slug: string; name: string; bnName?: string };
 
@@ -51,6 +52,7 @@ function distanceKm(a: { lat: number; lon: number }, b: { lat: number; lon: numb
 }
 
 export function HeroSearch({ divisions, user }: { divisions: Division[]; user: PublicUser | null }) {
+  const { t } = useLanguage();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [q, setQ] = useState("");
@@ -157,7 +159,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
         <SearchAutocomplete
           value={q}
           onValueChange={setQ}
-          placeholder={placeholder || "Search places, hospitals, businesses and services…"}
+          placeholder={t(placeholder || "Search places, hospitals, businesses and services…")}
           className="h-9 w-full rounded-lg border border-white/40 bg-white/90 py-1.5 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-500 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 sm:h-11 sm:rounded-xl sm:py-2 sm:pl-11 sm:text-sm"
           wrapperClassName="relative min-w-0 flex-1"
         />
@@ -217,10 +219,10 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
         </button>
       </div>
 
-      {locationStatus && <p role="status" className="mt-2 text-left text-[11px] text-white/90 sm:text-xs">{locationStatus}</p>}
+      {locationStatus && <p role="status" className="mt-2 text-left text-[11px] text-white/90 sm:text-xs">{t(locationStatus)}</p>}
 
       <div className="mt-2.5 flex flex-wrap items-center gap-1.5 px-0.5 text-[11px] sm:mt-3 sm:gap-2 sm:text-xs">
-        <span className="font-semibold text-white/90">Popular:</span>
+        <span className="font-semibold text-white/90">{t("Popular:")}</span>
         {[
           { label: "Sajek Valley", query: "Sajek Valley" },
           { label: "Cox's Bazar", query: "Cox's Bazar" },
