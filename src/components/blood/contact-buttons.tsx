@@ -22,6 +22,7 @@ function ContactActions({
   viewerId?: string;
   chat: { targetType: "donor" | "request"; targetId: string; recipientName: string };
 }) {
+  const { t } = useLanguage();
   const callNumber = internationalNumber(phone);
   const whatsappNumber = internationalNumber(whatsapp || phone);
   if (chat.targetType === "donor" && !viewerId) {
