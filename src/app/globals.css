@@ -57,18 +57,16 @@ html[lang="en"] {
 
 html[lang="bn"] body {
   font-family: "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
-  font-size: 1rem;
-  line-height: 1.55;
+  /* Match Bengali glyph scale to Inter's x-height without scaling UI containers. */
+  font-size-adjust: 0.54;
   letter-spacing: 0;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Keep the same nominal size and line rhythm in both interface languages. */
+/* English remains the visual reference; keep the same layout rhythm. */
 html[lang="en"] body {
   font-family: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
-  font-size: 1rem;
-  line-height: 1.55;
   letter-spacing: 0;
 }
 
