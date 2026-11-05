@@ -15,14 +15,14 @@ return (
 type="button"
 disabled={pending}
 onClick={() => {
-if (!window.confirm("Remove your donor profile from public listings? Your record will remain available to admins.")) return;
+if (!window.confirm(t("Remove your donor profile from public listings? Your record will remain available to admins."))) return;
 startTransition(async () => {
 const result = await archiveOwnDonorProfileAction();
 if (!result.ok) {
-error(result.error ?? "Your donor profile could not be removed.");
+error(t(result.error ?? "Your donor profile could not be removed."));
 return;
 }
-success("Your donor profile was removed from public listings.");
+success(t("Your donor profile was removed from public listings."));
 router.refresh();
 });
 }}
@@ -52,6 +52,6 @@ if (result.cancelled) setCancelled(true);
 }
 className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
 >
-Cancel request
+{t("Cancel request")}
 </button>
 ); }
