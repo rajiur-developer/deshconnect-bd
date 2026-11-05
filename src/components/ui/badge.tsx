@@ -26,7 +26,7 @@ TONES[tone],
 className
 )}
 >
-{children}
+{typeof children === "string" ? t(children) : children}
 </span>
 ); }
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
