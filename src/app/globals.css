@@ -8,8 +8,11 @@
 
 
 
-/* ── Typography · Bengali: Tiro Bangla ─────────────────────── */
-@import "@fontsource/tiro-bangla/400.css";
+/* ── Typography · Bengali: Noto Sans Bengali ────────────────── */
+@import "@fontsource/noto-sans-bengali/400.css";
+@import "@fontsource/noto-sans-bengali/500.css";
+@import "@fontsource/noto-sans-bengali/600.css";
+@import "@fontsource/noto-sans-bengali/700.css";
 
 @theme {
   /* Brand greens — Deep Green #0B3D2E · Emerald #138A58 · Soft Mint #35C982 */
@@ -45,18 +48,28 @@
   --color-slate-900: #202923; /* Body text */
   --color-slate-950: #141a16;
 
-  --font-sans: "Inter", "Tiro Bangla", "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
+  --font-sans: "Inter", "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
 }
 
 html[lang="en"] {
-  --font-sans: "Inter", "Tiro Bangla", "Noto Sans Bengali", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 html[lang="bn"] body {
-  font-family: "Tiro Bangla", "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
+  font-family: "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  letter-spacing: 0;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  line-height: 1.7;
+}
+
+/* Keep the same nominal size and line rhythm in both interface languages. */
+html[lang="en"] body {
+  font-family: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  letter-spacing: 0;
 }
 
 @layer base {
@@ -137,17 +150,17 @@ html[lang="bn"] body {
 
 @layer utilities {
   .font-bengali {
-    font-family: "Tiro Bangla", "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
-    line-height: 1.7;
+    font-family: "Noto Sans Bengali", "Nirmala UI", "Segoe UI", sans-serif;
+    line-height: 1.55;
   }
 
   .font-tiro-bangla {
-    font-family: "Tiro Bangla", "Noto Sans Bengali", "Nirmala UI", sans-serif;
-    line-height: 1.7;
+    font-family: "Noto Sans Bengali", "Nirmala UI", sans-serif;
+    line-height: 1.55;
   }
 
   .font-bengali-display {
-    font-family: "Galada", "Noto Sans Bengali", "Nirmala UI", sans-serif;
+    font-family: "Noto Sans Bengali", "Nirmala UI", sans-serif;
   }
 }
 
