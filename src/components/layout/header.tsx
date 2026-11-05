@@ -10,7 +10,7 @@ import {
   MessageRealtimeNotifications,
   type UnreadConversation,
 } from "@/components/messaging/message-realtime-notifications";
-import { Icon } from "@/components/ui/icons";
+import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
 import { MobileNav } from "./mobile-nav";
 import { DesktopNav } from "./desktop-nav";
 import { UserMenu } from "./user-menu";
@@ -125,11 +125,10 @@ export async function Header({
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
               />
 
-              <input
-                name="q"
+              <SearchAutocomplete
                 placeholder="Search places and services…"
-                aria-label="Search DeshConnect"
                 className="dc-header-search w-52 rounded-full border border-slate-300 bg-slate-50 py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus-ring lg:w-64"
+                wrapperClassName="relative"
               />
             </div>
           </form>
