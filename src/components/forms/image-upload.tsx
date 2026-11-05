@@ -138,15 +138,15 @@ canvas.height = Math.max(1, Math.round(img.height * scale));
 const ctx = canvas.getContext("2d");
 URL.revokeObjectURL(url);
 if (!ctx) {
-reject(new Error(t("This image could not be resized.")));
+reject(new Error("This image could not be resized."));
 return;
 }
 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error(t("This image could not be encoded."))), "image/jpeg", 0.8);
+canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("This image could not be encoded.")), "image/jpeg", 0.8);
 };
 img.onerror = () => {
 URL.revokeObjectURL(url);
-reject(new Error(t("This image could not be read. Please choose another image.")));
+reject(new Error("This image could not be read. Please choose another image."));
 };
 img.src = url;
 });
