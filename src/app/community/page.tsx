@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import type { Metadata } from "next";
 import { CommunityPostImage } from "@/components/community/community-post-image";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
@@ -28,7 +29,7 @@ title="Community"
 description="The community achieves more together. Share, ask questions, and help people nearby."
 />
 <div className="page-theme" data-page-theme="community"><div className="bg-gradient-to-b from-brand-50/80 via-slate-50 to-white"><div className="container-x grid gap-6 py-8 sm:py-10 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.8fr)] lg:gap-8">
-<div className="dc-community-heading flex items-center justify-between gap-3 lg:col-span-2"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700">DeshConnect community</p><p className="mt-1 text-sm text-slate-600">Share local updates, ask questions, and connect with people.</p></div><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" />Chat now</Link></div>
+<div className="dc-community-heading flex items-center justify-between gap-3 lg:col-span-2"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700"><TranslatedText text="DeshConnect community" /></p><p className="mt-1 text-sm text-slate-600"><TranslatedText text="Share local updates, ask questions, and connect with people." /></p></div><Link href={user ? "/messages" : "/login?next=%2Fmessages"} className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><Icon name="message" className="h-4 w-4" /><TranslatedText text="Chat now" /></Link></div>
 <div id="directory-results" className="dc-community-feed scroll-mt-24 order-2 min-w-0 space-y-5 lg:order-1 lg:col-start-1">
 {result.items.length === 0 && (
 <EmptyState title="No posts yet" description="Start a discussion and be our first person." icon={<Icon name="message" className="h-10 w-10" />} />
@@ -44,7 +45,7 @@ return (
 <p className="text-xs text-slate-500">{relativeTime(post.createdAt)}</p>
 </div>
 {user && author && author.id !== user.id && <div className="ml-auto flex flex-wrap gap-2">{friendIds.has(author.id) ? <StartConversationButton username={author.username} /> : incomingByUser.has(author.id) ? <RespondButtons connectionId={incomingByUser.get(author.id)!.id} /> : <ConnectButton username={author.username} pendingConnectionId={outgoingByUser.get(author.id)?.id} />}</div>}
-{post.status === "pending" && <Badge tone="amber">Pending review</Badge>}
+{post.status === "pending" && <Badge tone="amber"><TranslatedText text="Pending review" /></Badge>}
 </div>
 <p className="mt-3 whitespace-pre-line text-slate-800">{post.body}</p>
 {post.image && (
@@ -72,7 +73,7 @@ View discussion
 ) : (
 <div className="rounded-3xl border border-brand-100 bg-white p-6 text-sm text-slate-600 shadow-sm"><div className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-700"><Icon name="message" className="h-6 w-6" /></div><h2 className="text-lg font-bold text-slate-900">Join the conversation</h2>
 <p>Log in to join the discussion.</p>
-<Link href="/login" className="mt-2 inline-block font-medium text-brand-700">Login →</Link>
+<Link href="/login" className="mt-2 inline-block font-medium text-brand-700"><TranslatedText text="Login →" /></Link>
 </div>
 )}
 </aside>
