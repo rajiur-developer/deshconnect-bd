@@ -19,7 +19,7 @@ const BENGALI_TO_LATIN: Record<string, string> = {
   ো: "o", ৌ: "ou", ৃ: "ri", ্: "",
 };
 
-const ROMAN_TO_BENGALI: Array<[string, string]> = [
+const COMMON_BANGLISH_ALIASES: Record<string, string> = {\n  oprajeyo: "অপরাজেয়",\n  oparajeyo: "অপরাজেয়",\n  oporajeyo: "অপরাজেয়",\n  aparajeyo: "অপরাজেয়",\n};\n\nconst ROMAN_TO_BENGALI: Array<[string, string]> = [
   ["op", "অপ"], ["eyo", "েয়"], ["yoo", "্যু"], ["chh", "ছ"], ["kh", "খ"],
   ["gh", "ঘ"], ["ch", "চ"], ["jh", "ঝ"], ["th", "থ"], ["dh", "ধ"],
   ["ph", "ফ"], ["bh", "ভ"], ["sh", "শ"], ["ng", "ং"], ["ny", "ঞ"],
