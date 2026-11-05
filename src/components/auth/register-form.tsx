@@ -49,18 +49,14 @@ function StepHeading({ step }: { step: number }) {
 export function RegisterForm({ divisions, districts, upazilas }: Props) {
   const { t } = useLanguage();
   const [state, formAction, pending] = useActionState<FormState, FormData>(registerAction, {});
-  const [verifyState, verifyAction, verifyPending] = useActionState<FormState, FormData>(verifyRegistrationAction, {});
   const [resendState, resendAction, resendPending] = useActionState<FormState, FormData>(resendRegistrationCodeAction, {});
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [details, setDetails] = useState({ fullName: "", username: "", email: "", phone: "" });
-  const otpRefs = useRef([]);
   useFormStateToast(state);
-  useFormStateToast(verifyState);
   useFormStateToast(resendState);
 
   const passwordStrength = password.length < 8 ? 0 : password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password) ? 3 : /[A-Za-z]/.test(password) && /[0-9]/.test(password) ? 2 : 1;
