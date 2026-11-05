@@ -121,7 +121,7 @@ Remove
 </button>
 )}
 </div>
-{error && <p role="alert" className="mt-1 text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="mt-1 text-xs text-accent-600">{t(error)}</p>}
 {hint && <p className="mt-1 text-xs text-slate-500">{t(hint)}</p>}
 </div>
 ); }
