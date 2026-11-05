@@ -1,5 +1,7 @@
+"use client";
 import type { InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/i18n/language-provider";
 const baseField =
 "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-ring disabled:cursor-not-allowed disabled:bg-slate-100";
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
@@ -13,15 +15,17 @@ return (
 </select>
 ); }
 export function Label({ htmlFor, children, required }: { htmlFor?: string; children: ReactNode; required?: boolean }) {
+const { t } = useLanguage();
 return (
 <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-slate-700">
-{children}
+{typeof children === "string" ? t(children) : children}
 {required && <span className="ml-0.5 text-accent-600">*</span>}
 </label>
 ); }
 export function FieldError({ children }: { children?: ReactNode }) {
+const { t } = useLanguage();
 if (!children) return null;
-return <p className="mt-1 text-sm text-accent-600">{children}</p>; }
+return <p className="mt-1 text-sm text-accent-600">{typeof children === "string" ? t(children) : children}</p>; }
 export function Field({
 label,
 htmlFor,
@@ -41,7 +45,7 @@ return (
 {label}
 </Label>
 {children}
-{hint && !error ? <p className="mt-1 text-xs text-slate-500">{hint}</p> : null}
+{hint && !error ? <p className="mt-1 text-xs text-slate-500">{t(hint)}</p> : null}
 <FieldError>{error}</FieldError>
 </div>
 ); }
