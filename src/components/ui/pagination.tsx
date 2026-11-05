@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PageMeta } from "@/lib/utils"; import { cn } from "@/lib/utils"; import { buttonClasses } from "./button";
+import type { PageMeta } from "@/lib/utils"; import { cn } from "@/lib/utils"; import { buttonClasses } from "./button-styles";
 function pageList(current: number, total: number): (number | "…")[] {
 const pages = new Set<number>([1, total, current, current - 1, current + 1]);
 const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
