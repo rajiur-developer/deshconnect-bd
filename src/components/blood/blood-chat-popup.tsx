@@ -107,7 +107,7 @@ void refresh();
 return () => {
 active = false;
 };
-}, [refreshMessages]);
+}, [refreshMessages, t]);
 useEffect(() => {
 endOfMessages.current?.scrollIntoView({ behavior: "smooth" });
 }, [messages]);
