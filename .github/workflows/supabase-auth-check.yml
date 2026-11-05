@@ -1,0 +1,35 @@
+name: Supabase auth migration checks
+
+on:
+  push:
+    branches:
+      - fix/supabase-auth-registration
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SITE_URL: https://deshconnect-bd.vercel.app
+      NEXT_PUBLIC_APP_URL: https://deshconnect-bd.vercel.app
+      AUTH_SECRET: test-only-auth-secret-for-ci-checks-1234567890
+      NEXT_PUBLIC_INSFORGE_URL: https://qk8ksk3i.us-east.insforge.app
+      NEXT_PUBLIC_INSFORGE_ANON_KEY: anon_4a348f47f687395a65d7e8f8c394727e6696ef89d615c39a99357e8c21e6eced
+      NEXT_PUBLIC_SUPABASE_URL: https://eqxqlblyanfgghygofsj.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_O8ol8h4w9ncBdAk6Ezd8RQ_eFr_7gRd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Type check
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Production build
+        run: npm run build
