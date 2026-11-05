@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/components/i18n/language-provider";
 import { useRealtimeConversation } from "@/components/messaging/use-realtime-conversation";
 import { Icon } from "@/components/ui/icons"; import {
 getBloodChatMessagesAction,
@@ -14,6 +15,7 @@ targetType: "donor" | "request";
 targetId: string;
 viewerId: string;
 recipientName: string; }) {
+const { t } = useLanguage();
 const [conversationId, setConversationId] = useState<string | null>(null);
 const [error, setError] = useState<string | null>(null);
 const [pending, setPending] = useState(false);
@@ -23,12 +25,12 @@ setError(null);
 try {
 const result = await startBloodChatAction(targetType, targetId);
 if (!result.conversationId) {
-setError(result.error ?? "Could not open this chat.");
+setError(result.error ?? t("Could not open this chat."));
 return;
 }
 setConversationId(result.conversationId);
 } catch (cause) {
-setError(cause instanceof Error ? cause.message : "Could not open this chat.");
+setError(cause instanceof Error ? cause.message : t("Could not open this chat."));
 } finally {
 setPending(false);
 }
@@ -42,9 +44,9 @@ disabled={pending}
 className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-medium text-brand-800 hover:bg-brand-50 disabled:opacity-60"
 >
 <Icon name="message" className="h-3.5 w-3.5" />
-{pending ? "Opening…" : "Chat"}
+{pending ? t("Opening…") : t("Chat")}
 </button>
-{error && <p role="alert" className="mt-2 text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="mt-2 text-xs text-accent-600">{t(error)}</p>}
 {conversationId && (
 <BloodChatPopup
 conversationId={conversationId}
@@ -64,6 +66,7 @@ conversationId: string;
 viewerId: string;
 recipientName: string;
 onClose: () => void; }) {
+const { t } = useLanguage();
 const [messages, setMessages] = useState<Message[]>([]);
 const [body, setBody] = useState("");
 const [error, setError] = useState<string | null>(null);
@@ -95,7 +98,7 @@ if (!active) return;
 await refreshMessages();
 } catch (cause) {
 if (active) {
-setError(cause instanceof Error ? cause.message : "Could not load messages.");
+setError(cause instanceof Error ? cause.message : t("Could not load messages."));
 setLoading(false);
 }
 }
@@ -117,7 +120,7 @@ setError(null);
 try {
 const result = await sendBloodChatMessageAction(conversationId, text);
 if (!result.message) {
-setError(result.error ?? "Could not send your message.");
+setError(result.error ?? t("Could not send your message."));
 return;
 }
 setMessages((current) =>
@@ -127,14 +130,14 @@ current.some((message) => message.id === result.message?.id)
 );
 setBody("");
 } catch (cause) {
-setError(cause instanceof Error ? cause.message : "Could not send your message.");
+setError(cause instanceof Error ? cause.message : t("Could not send your message."));
 } finally {
 setSending(false);
 }
 };
 return (
 <section
-aria-label={`Chat with ${recipientName}`}
+aria-label={t("Chat with")} + ` ${recipientName}`
 className="fixed bottom-4 right-4 z-50 flex h-[min(32rem,calc(100dvh-2rem))] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
 >
 <header className="flex items-center justify-between bg-brand-800 px-4 py-3 text-white">
@@ -145,7 +148,7 @@ className="fixed bottom-4 right-4 z-50 flex h-[min(32rem,calc(100dvh-2rem))] w-[
 <button
 type="button"
 onClick={onClose}
-aria-label="Close chat"
+aria-label=t("Close chat")
 className="rounded-lg p-2 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
 >
 <Icon name="close" className="h-4 w-4" />
@@ -177,8 +180,8 @@ className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 te
 value={body}
 onChange={(event) => setBody(event.target.value)}
 maxLength={2000}
-aria-label="Message"
-placeholder="Write a message…"
+aria-label={t("Message")}
+placeholder=t("Write a message…")
 className="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
 />
 <button
@@ -186,7 +189,7 @@ type="submit"
 disabled={sending || !body.trim()}
 className="rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
 >
-{sending ? "…" : "Send"}
+{sending ? "…" : t("Send")}
 </button>
 </form>
 </section>
