@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { RecordImage } from "@/components/ui/record-image";
 import type { Place } from "@/types/content";
 import { PLACE_CATEGORIES } from "@/lib/constants";
@@ -40,7 +41,7 @@ export function PlaceCard({ place, locationLabel }: { place: Place; locationLabe
           </div>
           {place.verification === "verified" && (
             <div className="pointer-events-none absolute right-3 top-3">
-              <Badge tone="success">Verified</Badge>
+              <Badge tone="success"><TranslatedText text="Verified" /></Badge>
             </div>
           )}
         </div>
