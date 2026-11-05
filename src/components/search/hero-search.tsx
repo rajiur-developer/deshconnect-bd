@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicUser } from "@/types/auth";
-import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
+import { Icon } from "@/components/ui/icons";
+import { SearchAutocomplete } from "@/components/search/search-autocomplete";
 
 type Division = { id: string; slug: string; name: string; bnName?: string };
 
