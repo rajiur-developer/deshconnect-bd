@@ -1,4 +1,5 @@
 import type { Metadata } from "next"; import Image from "next/image"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { getBusinessBySlug } from "@/services/businesses"; import { formatLocation } from "@/services/locations"; import { formatDate } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { MapPreview } from "@/components/maps/map-preview";
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,7 +32,7 @@ return (
 </div>
 <div className="mt-4 flex flex-wrap items-center gap-2">
 <Badge tone="neutral">{business.category}</Badge>
-{business.verification === "verified" && <Badge tone="success">Verified listing</Badge>}
+{business.verification === "verified" && <Badge tone="success"><TranslatedText text="Verified listing" /></Badge>}
 </div>
 <h1 className="mt-3 text-3xl font-bold text-slate-900">{business.name}</h1>
 {locationLabel && (
@@ -47,16 +48,16 @@ return (
 </div>
 <dl className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
 <div>
-<dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Address</dt>
+<dt className="text-xs font-medium uppercase tracking-wide text-slate-500"><TranslatedText text="Address" /></dt>
 <dd className="mt-1 text-sm text-slate-900">{business.address}</dd>
 </div>
 <div>
-<dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Last updated</dt>
+<dt className="text-xs font-medium uppercase tracking-wide text-slate-500"><TranslatedText text="Last updated" /></dt>
 <dd className="mt-1 text-sm text-slate-900">{formatDate(business.updatedAt)}</dd>
 </div>
 </dl>
 <div className="mt-8">
-<h2 className="text-xl font-semibold text-slate-900">Location</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Location" /></h2>
 <div className="mt-4">
 <MapPreview latitude={null} longitude={null} name={business.name} address={business.address} />
 </div>
@@ -64,7 +65,7 @@ return (
 </div>
 <aside>
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Contact</h2>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Contact" /></h2>
 <ul className="mt-4 space-y-3 text-sm">
 {business.phone && (
 <li className="flex items-center gap-3">
@@ -81,7 +82,7 @@ return (
 </li>
 )}
 {!business.phone && !business.website && (
-<li className="text-slate-600">No contact details verified yet.</li>
+<li className="text-slate-600"><TranslatedText text="No contact details verified yet." /></li>
 )}
 </ul>
 </div>
