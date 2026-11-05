@@ -1,4 +1,5 @@
 import Image from "next/image"; import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import type { Institution } from "@/types/content"; import { formatLocation } from "@/services/locations"; import { formatDate } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { MapPreview } from "@/components/maps/map-preview"; import { institutionCategoryLabel } from "@/components/cards/institution-card";
 export async function InstitutionDetail({ institution }: { institution: Institution }) {
 const locationLabel = await formatLocation(institution);
@@ -15,8 +16,8 @@ return (
 </div>
 <div className="mt-4 flex flex-wrap items-center gap-2">
 <Badge tone="info">{institutionCategoryLabel(institution.category, institution.categoryName)}</Badge>
-{institution.verification === "verified" && <Badge tone="success">Verified listing</Badge>}
-{institution.verification !== "verified" && <Badge tone="neutral">Unverified listing</Badge>}
+{institution.verification === "verified" && <Badge tone="success"><TranslatedText text="Verified listing" /></Badge>}
+{institution.verification !== "verified" && <Badge tone="neutral"><TranslatedText text="Unverified listing" /></Badge>}
 {institution.source?.startsWith("Mahadi Hassan (CC BY 2.0)") ? (
 <a
 href="https://huggingface.co/datasets/Mahadih534/all-bangladeshi-hospitals"
@@ -51,18 +52,18 @@ Source: OpenStreetMap contributors · ODbL
 </div>
 <dl className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
 <div>
-<dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Address</dt>
+<dt className="text-xs font-medium uppercase tracking-wide text-slate-500"><TranslatedText text="Address" /></dt>
 <dd className="mt-1 text-sm text-slate-900">{institution.address}</dd>
 </div>
 {institution.lastCheckedAt && (
 <div>
-<dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Last verified</dt>
+<dt className="text-xs font-medium uppercase tracking-wide text-slate-500"><TranslatedText text="Last verified" /></dt>
 <dd className="mt-1 text-sm text-slate-900">{formatDate(institution.lastCheckedAt)}</dd>
 </div>
 )}
 </dl>
 <div className="mt-8">
-<h2 className="text-xl font-semibold text-slate-900">Location</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Location" /></h2>
 <p className="mt-1 text-sm text-slate-600">{institution.address}</p>
 <div className="mt-4">
 <MapPreview latitude={institution.latitude} longitude={institution.longitude} name={institution.name} address={institution.address} />
@@ -71,9 +72,9 @@ Source: OpenStreetMap contributors · ODbL
 </div>
 <aside className="space-y-6">
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Contact & info</h2>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Contact & info" /></h2>
 <ul className="mt-4 space-y-3">
-{contacts.length === 0 && <li className="text-sm text-slate-600">No contact details verified yet.</li>}
+{contacts.length === 0 && <li className="text-sm text-slate-600"><TranslatedText text="No contact details verified yet." /></li>}
 {contacts.map((contact, index) => (
 <li key={`${contact.label}-${index}`} className="flex items-start gap-3">
 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700">
@@ -94,8 +95,8 @@ Source: OpenStreetMap contributors · ODbL
 </ul>
 </div>
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Found an error?</h2>
-<p className="mt-1 text-sm text-slate-600">Submit a correction, our team will review it.</p>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Found an error?" /></h2>
+<p className="mt-1 text-sm text-slate-600"><TranslatedText text="Submit a correction, our team will review it." /></p>
 <Link href={`/contact?target=${encodeURIComponent(institution.name)}`} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-700">
 Submit correction
 <Icon name="arrow-right" className="h-4 w-4" />
