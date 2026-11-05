@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useActionState } from "react";
 import {
   googleOAuthAction,
@@ -67,8 +67,6 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
   const strengthLabel = t(["Enter a password", "Weak", "Good", "Strong"][passwordStrength]);
 
   if (state.verificationRequired) {
-    const fields = ["fullName", "username", "phone", "divisionId", "districtId", "upazilaId", "bloodGroup", "gender", "dateOfBirth", "termsAccepted"] as const;
-    const digitValues = otp.split("");
     return (
       <div className="mx-auto w-full max-w-xl">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
@@ -76,49 +74,15 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t("Verify your email")}</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">{t("Enter the 6-digit verification code sent to")} <strong className="break-all text-slate-800">{state.email}</strong>.</p>
-          <form action={verifyAction} className="mt-6">
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            {t("We sent a verification link to")} <strong className="break-all text-slate-800">{state.email}</strong>.
+            {" "}{t("Open that email and click the link to activate your account. Check your spam folder if it is not in your inbox.")}
+          </p>
+          <form action={resendAction} className="mt-6 text-center">
             <input type="hidden" name="email" value={state.email ?? ""} />
-            {fields.map((key) => <input key={key} type="hidden" name={key} value={state[key] ?? ""} />)}
-            <input type="hidden" name="otp" value={otp} />
-            <div className="grid grid-cols-6 gap-2 sm:gap-3" aria-label={t("Six digit verification code")}>
-              {Array.from({ length: 6 }, (_, index) => (
-                <input
-                  key={index}
-                  ref={(node) => { otpRefs.current[index] = node; }}
-                  aria-label={`${t("Verification digit")} ${index + 1}`}
-                  inputMode="numeric"
-                  autoComplete={index === 0 ? "one-time-code" : "off"}
-                  pattern="[0-9]*"
-                  maxLength={1}
-                  value={digitValues[index] ?? ""}
-                  onChange={(event) => {
-                    const digit = event.target.value.replace(/\D/g, "").slice(-1);
-                    const next = digitValues.slice();
-                    next[index] = digit;
-                    setOtp(next.join("").slice(0, 6));
-                    if (digit && index < 5) otpRefs.current[index + 1]?.focus();
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === "Backspace" && !digitValues[index] && index > 0) otpRefs.current[index - 1]?.focus();
-                    if (event.key === "ArrowLeft" && index > 0) otpRefs.current[index - 1]?.focus();
-                    if (event.key === "ArrowRight" && index < 5) otpRefs.current[index + 1]?.focus();
-                  }}
-                  onPaste={(event) => {
-                    const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                    if (pasted) { event.preventDefault(); setOtp(pasted); otpRefs.current[Math.min(pasted.length, 5)]?.focus(); }
-                  }}
-                  className="h-12 min-w-0 rounded-xl border border-slate-300 bg-white text-center text-xl font-semibold text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 sm:h-14"
-                  required={index === 0}
-                />
-              ))}
-            </div>
-            {verifyState.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{t(verifyState.error)}</p>}
-            <div className="mt-6"><Button type="submit" className="w-full rounded-xl py-3" disabled={verifyPending || otp.length !== 6} aria-busy={verifyPending}>{verifyPending && <Spinner />}{verifyPending ? t("Verifying…") : t("Verify email")}</Button></div>
-          </form>
-          <form action={resendAction} className="mt-4 text-center">
-            <input type="hidden" name="email" value={state.email ?? ""} />
-            <button type="submit" disabled={resendPending} className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline disabled:opacity-60">{resendPending ? t("Sending new code…") : t("Resend verification code")}</button>
+            <button type="submit" disabled={resendPending} className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline disabled:opacity-60">
+              {resendPending ? t("Sending verification email…") : t("Resend verification email")}
+            </button>
             {resendState.error && <p role="alert" className="mt-2 text-sm text-red-700">{t(resendState.error)}</p>}
             {resendState.success && <p role="status" className="mt-2 text-sm text-emerald-700">{t(resendState.success)}</p>}
           </form>

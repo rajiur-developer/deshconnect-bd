@@ -131,7 +131,9 @@ async function insforgeRequest(table: string, method: string, params: Record<str
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      apikey: publishableKey,\n      Prefer: [((method === "POST" || method === "PATCH") ? "return=representation" : ""), (includeCount ? "count=exact" : "")].filter(Boolean).join(","),\n      Authorization: `Bearer ${accessToken ?? publishableKey}`,
+      apikey: publishableKey,
+      Prefer: [((method === "POST" || method === "PATCH") ? "return=representation" : ""), (includeCount ? "count=exact" : "")].filter(Boolean).join(","),
+      Authorization: `Bearer ${accessToken ?? publishableKey}`,
     },
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
