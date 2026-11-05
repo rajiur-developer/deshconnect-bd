@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@insforge/sdk";
+import { createClient as createInsForgeClient } from "@insforge/sdk";\nimport { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { getDatabase, saveDatabase } from "@/lib/db/store";\nimport { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -18,21 +18,38 @@ if (!INSFORGE_URL || !ANON_KEY) {
 }
 
 async function currentAccessToken(): Promise<string | null> {
-  const store = await cookies();
-  return store.get("insforge_access_token")?.value ?? null;
+  const client = createSupabaseServerClient(await cookies());
+  const { data } = await client.auth.getSession();
+  return data.session?.access_token ?? null;
 }
 
-export const insforge = createClient({
+const legacyMediaClient = createInsForgeClient({
   baseUrl: INSFORGE_URL,
   anonKey: ANON_KEY,
-  fetch: async (input, init) => {
-    const headers = new Headers(input instanceof Request ? input.headers : undefined);
-    new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
-    const accessToken = await currentAccessToken();
-    headers.set("apikey", ANON_KEY);
-    headers.set("Authorization", `Bearer ${accessToken ?? ANON_KEY}`);
-    return fetch(input, { ...init, headers });
+});
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\\/+$/, "");
+const SUPABASE_KEY = (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)?.trim();
+if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Supabase URL and publishable key are required.");
+
+const supabaseDataClient = createSupabaseClient(SUPABASE_URL, SUPABASE_KEY, {
+  global: {
+    fetch: async (input, init) => {
+      const headers = new Headers(input instanceof Request ? input.headers : undefined);
+      new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
+      const accessToken = await currentAccessToken();
+      headers.set("apikey", SUPABASE_KEY);
+      headers.set("Authorization", `Bearer ${accessToken ?? SUPABASE_KEY}`);
+      return fetch(input, { ...init, headers });
+    },
   },
+});
+
+export const insforge = Object.assign(supabaseDataClient as any, {
+  database: {
+    from: supabaseDataClient.from.bind(supabaseDataClient),
+    rpc: supabaseDataClient.rpc.bind(supabaseDataClient),
+  },
+  storage: legacyMediaClient.storage,
 });
 
 const LOCAL_TABLES: Record<string, string> = {
@@ -103,19 +120,16 @@ async function localRows(table: string, params: Record<string, string>): Promise
 
 async function insforgeRequest(table: string, method: string, params: Record<string, string> = {}, body?: unknown, includeCount = false): Promise<any> {
   const query = new URLSearchParams(params).toString();
-  // InsForge exposes its PostgREST-compatible database API under this path.
-  // `/rest/v1` is a Supabase URL and returns `Cannot POST /rest/v1/...` here.
-  const url = `${INSFORGE_URL}/api/database/records/${table}${query ? `?${query}` : ""}`;
+  // Supabase exposes the PostgREST-compatible database API under /rest/v1.
+  const publishableKey = SUPABASE_KEY!;
+  const url = `${SUPABASE_URL}/rest/v1/${table}${query ? `?${query}` : ""}`;
   const accessToken = await currentAccessToken();
   const res = await fetch(url, {
     method,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      apikey: ANON_KEY,
-      ...((method === "POST" || method === "PATCH") ? { Prefer: "return=representation" } : {}),
-      ...(includeCount ? { Prefer: "count=exact" } : {}),
-      Authorization: `Bearer ${accessToken ?? ANON_KEY}`,
+      apikey: publishableKey,\n      Prefer: [((method === "POST" || method === "PATCH") ? "return=representation" : ""), (includeCount ? "count=exact" : "")].filter(Boolean).join(","),\n      Authorization: `Bearer ${accessToken ?? publishableKey}`,
     },
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
@@ -124,7 +138,7 @@ async function insforgeRequest(table: string, method: string, params: Record<str
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`InsForge ${method} ${table} failed: ${res.status} ${text}`);
+    throw new Error(`Supabase ${method} ${table} failed: ${res.status} ${text}`);
   }
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
