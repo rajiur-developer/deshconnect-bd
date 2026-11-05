@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { HeroSearch } from "@/components/search/hero-search";
 import { VideoBackground } from "@/components/layout/video-background";
 import { HomeDataSections, HomeSectionsFallback } from "@/components/home/home-data-sections";
+import { TranslatedText } from "@/components/i18n/translated-text";
 
 export const metadata = { title: SITE.name, description: SITE.description };
 
@@ -71,15 +72,15 @@ export default function HomePage() {
           <div className="dc-home-hero-content enter-fade mx-auto w-full max-w-4xl">
             <div className="flex justify-center">
               <Badge tone="accent" className="bg-white/10 text-white ring-white/20">
-                Bangladesh's information & community platform
+                <TranslatedText text="Bangladesh's information & community platform" />
               </Badge>
             </div>
             <h1 className="mt-4 text-[1.35rem] font-extrabold tracking-tight leading-snug text-white sm:mt-5 sm:text-5xl sm:leading-tight lg:text-6xl">
-              Discover your Bangladesh.
-              <span className="block text-emerald-300">Connect with your community.</span>
+              <TranslatedText text="Discover your Bangladesh." />
+              <span className="block text-emerald-300"><TranslatedText text="Connect with your community." /></span>
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-xs leading-5 text-slate-100 sm:mt-5 sm:text-lg sm:leading-7">
-              Find local places, institutions, public services, news and community support — all in one place.
+              <TranslatedText text="Find local places, institutions, public services, news and community support — all in one place." />
             </p>
             <Suspense fallback={<HomeHeroSearchFallback />}>
               <div className="mx-auto mt-5 w-full max-w-2xl text-left sm:mt-6">
@@ -88,7 +89,7 @@ export default function HomePage() {
             </Suspense>
             <div className="mt-3 flex flex-wrap justify-center gap-2 sm:mt-5 sm:gap-3">
               <Link href="/places" className="rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:bg-emerald-700 sm:px-4 sm:py-2 sm:text-sm">
-                Explore places <span aria-hidden="true">→</span>
+                <TranslatedText text="Explore places" /> <span aria-hidden="true">→</span>
               </Link>
               <Suspense fallback={null}>
                 <HomeHeroActions />
