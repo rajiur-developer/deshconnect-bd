@@ -58,7 +58,7 @@ className="flex cursor-pointer list-none items-center gap-2 rounded-full border 
 <form action={signOutAction} className="mt-1 border-t border-slate-100 p-1.5 pt-2">
 <FormPendingButton variant="outline" pendingLabel={t("Logging out…")} className="flex w-full items-center gap-2 border-rose-100 bg-rose-50 px-3 py-2.5 text-left text-sm font-semibold text-rose-700 hover:border-rose-200 hover:bg-rose-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600">
 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-Logout
+{t("Logout")}
 </FormPendingButton>
 </form>
 </div>
