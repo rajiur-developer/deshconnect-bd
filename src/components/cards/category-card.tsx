@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/components/i18n/language-provider";
 import type { NavItem } from "@/config/site"; import { Icon, type IconName } from "@/components/ui/icons";
 export function CategoryCard({ item }: { item: NavItem & { icon: string; blurb: string } }) {
+const { t } = useLanguage();
 const isBloodDonation = item.href === "/blood-donation";
 return (
 <Link
@@ -9,7 +12,7 @@ className={`dc-category-card group relative flex flex-col rounded-2xl border bg-
 >
 {isBloodDonation && (
 <span className="absolute right-3 top-3 rounded-full bg-rose-600 px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-sm">
-Highlight
+{t("Highlight")}
 </span>
 )}
 <span
@@ -20,8 +23,8 @@ className={`grid h-12 w-12 place-items-center rounded-xl transition-all duration
 <h3
 className={`mt-4 font-semibold transition-colors duration-200 ${           isBloodDonation ? "text-rose-700" : "text-slate-900 group-hover:text-emerald-700"         }`}
 >
-{item.label}
+{t(item.label)}
 </h3>
-<p className="mt-1 text-sm text-slate-600">{item.blurb}</p>
+<p className="mt-1 text-sm text-slate-600">{t(item.blurb)}</p>
 </Link>
 ); }
