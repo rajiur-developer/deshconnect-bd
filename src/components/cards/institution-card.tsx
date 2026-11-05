@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { RecordImage } from "@/components/ui/record-image";
 import type { Institution } from "@/types/content"; import { INSTITUTION_CATEGORIES } from "@/lib/constants"; import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 export function institutionCategoryLabel(category: string, categoryName?: string): string {
