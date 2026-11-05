@@ -784,6 +784,10 @@ export const bnMessages: Record<string, string> = {
   "DeshConnect helps donors and requesters connect voluntarily. We do not guarantee donor eligibility, blood availability, or medical suitability; we are not a medical service provider.": "DeshConnect রক্তদাতা ও অনুরোধকারীদের স্বেচ্ছায় যোগাযোগ করতে সহায়তা করে। আমরা রক্তদাতার যোগ্যতা, রক্তের প্রাপ্যতা বা চিকিৎসাগত উপযুক্ততার নিশ্চয়তা দিই না; আমরা চিকিৎসাসেবা প্রদানকারী প্রতিষ্ঠান নই।",
   "Directory details are provided as general guidance. Where possible, verification status and the date of the last verification are shown; for important information, confirm directly with the relevant institution.": "ডিরেক্টরির তথ্য সাধারণ নির্দেশনা হিসেবে দেওয়া হয়। সম্ভব হলে যাচাইয়ের অবস্থা ও সর্বশেষ যাচাইয়ের তারিখ দেখানো হয়; গুরুত্বপূর্ণ তথ্য সংশ্লিষ্ট প্রতিষ্ঠানের সঙ্গে সরাসরি নিশ্চিত করুন।",
 
+  "Unverified listing": "যাচাই করা হয়নি এমন তালিকা",
+  "Submit a correction, our team will review it.": "সংশোধনের তথ্য জমা দিন, আমাদের টিম তা পর্যালোচনা করবে।",
+  "Could not open this chat.": "এই চ্যাটটি খোলা যায়নি।",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
