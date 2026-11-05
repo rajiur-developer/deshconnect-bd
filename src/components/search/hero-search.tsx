@@ -132,7 +132,7 @@ export function HeroSearch({ divisions, user }: { divisions: Division[]; user: P
           return;
         }
         setDivisionId(nearest.division.id);
-        setLocationStatus(`Nearest division: ${nearest.division.name}`);
+        setLocationStatus(`${t("Nearest division:")} ${nearest.division.name}`);
         setDropdownOpen(false);
       },
       (error) => {
