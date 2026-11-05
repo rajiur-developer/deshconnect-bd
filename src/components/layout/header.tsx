@@ -15,6 +15,7 @@ import { SearchAutocomplete } from "@/components/search/search-autocomplete";
 import { MobileNav } from "./mobile-nav";
 import { DesktopNav } from "./desktop-nav";
 import { UserMenu } from "./user-menu";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import MainLogo from "../../../public/logo/Main-Logo.webp";
 
 export async function Header({
@@ -133,6 +134,8 @@ export async function Header({
               />
             </div>
           </form>
+
+          <LanguageSwitcher />
 
           <MobileNav
             user={user}
