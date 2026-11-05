@@ -10,9 +10,9 @@ return (
 <form action={formAction} className="rounded-2xl border border-slate-200 bg-white p-5">
 <input type="hidden" name="placeId" value={placeId} />
 <input type="hidden" name="slug" value={slug} />
-<h3 className="font-semibold text-slate-900">Write a review</h3>
+<h3 className="font-semibold text-slate-900">{t("Write a review")}</h3>
 <div className="mt-4">
-<label htmlFor="rating" className="mb-1.5 block text-sm font-medium text-slate-700">Rating</label>
+<label htmlFor="rating" className="mb-1.5 block text-sm font-medium text-slate-700">{t("Rating")}</label>
 <select
 id="rating"
 name="rating"
@@ -25,11 +25,11 @@ className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
 </select>
 </div>
 <div className="mt-4">
-<label htmlFor="title" className="mb-1.5 block text-sm font-medium text-slate-700">Title</label>
+<label htmlFor="title" className="mb-1.5 block text-sm font-medium text-slate-700">{t("Title")}</label>
 <Input id="title" name="title" placeholder={t("Summarize your visit")} />
 </div>
 <div className="mt-4">
-<label htmlFor="body" className="mb-1.5 block text-sm font-medium text-slate-700">Review</label>
+<label htmlFor="body" className="mb-1.5 block text-sm font-medium text-slate-700">{t("Review")}</label>
 <Textarea id="body" name="body" placeholder={t("What did you like? What should others know?")} />
 </div>
 {state.error && <p role="alert" className="mt-3 text-sm text-accent-600">{t(state.error)}</p>}
