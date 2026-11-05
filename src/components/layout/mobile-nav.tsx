@@ -8,6 +8,7 @@ import { isNavGroup, isNavPathActive, PRIMARY_NAV } from "@/config/site";
 import { Icon } from "@/components/ui/icons";
 import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } from "@/components/messaging/message-realtime-notifications";
 import { UserMenu } from "@/components/layout/user-menu";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 const subscribeToHydration = () => () => {};
 const PRIMARY_LINKS = [
@@ -29,6 +30,7 @@ export function MobileNav({
   unreadMessages?: number;
   initialUnreadMessages?: UnreadConversation[];
 }) {
+  const { t } = useLanguage();
   const [moreOpen, setMoreOpen] = useState(false);
   const [optimisticPath, setOptimisticPath] = useState<string | null>(null);
   const routeReady = useSyncExternalStore(subscribeToHydration, () => true, () => false);
@@ -86,7 +88,7 @@ export function MobileNav({
             onClick={() => setMoreOpen((value) => !value)}
             aria-expanded={moreOpen}
             aria-controls="dc-mobile-more-menu"
-            aria-label="More navigation options"
+            aria-label={t("More navigation options")}
             className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-0.5 py-2 transition-all duration-150 ease-out active:scale-[.94] motion-reduce:transition-none ${moreOpen || moreActive ? "text-violet-700" : "text-violet-600 hover:text-violet-800"}`}
           >
             <span className={`grid h-10 w-10 place-items-center rounded-xl transition-transform duration-150 ease-out motion-reduce:transition-none ${moreOpen ? "rotate-90 scale-95" : "rotate-0 group-hover:scale-110"}`}><Icon name={moreOpen ? "close" : "menu"} className="h-[24px] w-[24px] text-violet-600" /></span>
@@ -109,8 +111,8 @@ export function MobileNav({
       >
         <div className="mb-3 flex items-center justify-between px-1">
           <div>
-            <p className="text-sm font-bold text-slate-900">More from DeshConnect</p>
-            <p className="mt-0.5 text-[11px] text-slate-500">Explore all features</p>
+            <p className="text-sm font-bold text-slate-900">{t("More from DeshConnect")}</p>
+            <p className="mt-0.5 text-[11px] text-slate-500">{t("Explore all features")}</p>
           </div>
           {user && <UserMenu user={user} unread={unread} />}
         </div>
@@ -137,7 +139,7 @@ export function MobileNav({
             <input
               id="dc-mobile-search"
               name="q"
-              placeholder="Search DeshConnect"
+              placeholder={t("Search DeshConnect")}
               className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
               tabIndex={moreOpen ? 0 : -1}
             />
