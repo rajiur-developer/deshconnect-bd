@@ -22,7 +22,7 @@ return (
 <Link
 href={entry.href}
 aria-current={isActive ? "page" : undefined}
-className={`relative z-10 flex min-h-10 w-full min-w-0 items-center justify-center whitespace-nowrap rounded-lg px-1.5 py-2 text-xs font-semibold transition-all duration-200 ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
+className={`relative z-10 flex min-h-10 w-full min-w-0 items-center justify-center whitespace-normal text-center leading-tight rounded-lg px-1.5 py-2 text-sm font-semibold transition-all duration-200 ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
 >
 {isBloodDonation && <Icon name="droplet" aria-hidden="true" className="mr-1 inline h-4 w-4" />}
 {t(entry.label)}{entry.href === "/messages" && <UnreadMessageBadge count={unreadTotal} />}
@@ -49,7 +49,7 @@ onClick={() => {
   else { setDismissedByClick(false); setOpen(true); }
 }}
 aria-current={isGroupActive ? "page" : undefined}
-className={`flex min-h-10 w-full min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-2 text-xs font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "text-brand-700" : "text-slate-600"}`}
+className={`flex min-h-10 w-full min-w-0 items-center justify-center gap-1 whitespace-normal text-center leading-tight rounded-lg px-1.5 py-2 text-sm font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-700 ${isGroupActive ? "text-brand-700" : "text-slate-600"}`}
 >
 {t(entry.label)}
 <Icon
