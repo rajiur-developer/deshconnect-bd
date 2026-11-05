@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { requireUser } from "@/lib/auth/current-user"; import { listPosts } from "@/services/community"; import { relativeTime } from "@/lib/utils"; import { AccountShell } from "@/components/layout/account-shell"; import { Badge, Card } from "@/components/ui/badge"; import { EmptyState } from "@/components/ui/empty-state"; import { Icon } from "@/components/ui/icons"; import { DeletePostButton } from "@/components/community/community-actions";
 export const metadata = { title: "My posts", robots: { index: false, follow: false } };
 const STATUS_TONE: Record<string, "success" | "amber" | "neutral" | "accent"> = {
@@ -15,7 +16,7 @@ return (
 <EmptyState
 title="No posts yet"
 description="Share something with the community, it will appear here."
-action={<Link href="/community" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white">Go to community</Link>}
+action={<Link href="/community" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white"><TranslatedText text="Go to community" /></Link>}
 icon={<Icon name="message" className="h-10 w-10" />}
 />
 ) : (
@@ -33,7 +34,7 @@ icon={<Icon name="message" className="h-10 w-10" />}
 <p className="mt-2 text-slate-800 line-clamp-3">{post.body}</p>
 </div>
 <div className="flex shrink-0 flex-col items-end gap-2">
-<Link href={`/community/${post.id}`} className="text-sm font-medium text-brand-700">View</Link>
+<Link href={`/community/${post.id}`} className="text-sm font-medium text-brand-700"><TranslatedText text="View" /></Link>
 {post.status !== "deleted" && <DeletePostButton postId={post.id} />}
 </div>
 </div>
