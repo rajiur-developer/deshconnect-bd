@@ -111,6 +111,6 @@ className="rounded-lg border border-accent-500/40 px-3 py-1.5 text-xs font-mediu
 >
 {t("Delete")}
 </button>
-{error && <p role="alert" className="basis-full text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="basis-full text-xs text-accent-600">{t(error)}</p>}
 </div>
 ); }
