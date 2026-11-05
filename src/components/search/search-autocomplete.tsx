@@ -161,7 +161,7 @@ export function SearchAutocomplete({
                 <Icon name="search" className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                 <span className="truncate text-sm font-medium text-slate-800">{suggestion.label}</span>
               </span>
-              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">{suggestion.category}</span>
+              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">{t(suggestion.category)}</span>
             </button>
           ))}
         </div>
