@@ -1,4 +1,5 @@
 import type { Metadata } from "next"; import Image from "next/image"; import Link from "next/link"; import { notFound } from "next/navigation"; import { EmptyRecordPage } from "@/components/layout/empty-record-page";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { getPlaceBySlug, getReviewsForPlace, isPlaceSaved } from "@/services/places"; import { formatLocation } from "@/services/locations"; import { listUsers } from "@/services/users"; import { getCurrentUser } from "@/lib/auth/current-user"; import { formatDate, relativeTime } from "@/lib/utils"; import { Badge } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { MapPreview } from "@/components/maps/map-preview"; import { SaveButton } from "@/components/places/save-button"; import { ReviewForm } from "@/components/places/review-form";
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -53,7 +54,7 @@ return (
 </div>
 <div className="mt-4 flex flex-wrap items-center gap-2">
 <Badge tone="brand">{place.categoryName ?? place.category}</Badge>
-{place.verification === "verified" && <Badge tone="success">Verified listing</Badge>}
+{place.verification === "verified" && <Badge tone="success"><TranslatedText text="Verified listing" /></Badge>}
 {place.source && <Badge tone="neutral">Source: {place.source}</Badge>}
 </div>
 <h1 className="mt-3 text-3xl font-bold text-slate-900">{place.name}</h1>
@@ -86,7 +87,7 @@ return (
 </dl>
 )}
 <div className="mt-8">
-<h2 className="text-xl font-semibold text-slate-900">Location</h2>
+<h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="Location" /></h2>
 <p className="mt-1 text-sm text-slate-600">{place.address}</p>
 <div className="mt-4">
 <MapPreview latitude={place.latitude} longitude={place.longitude} name={place.name} address={place.address} />
@@ -95,8 +96,8 @@ return (
 </div>
 <aside className="space-y-6">
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Save this place</h2>
-<p className="mt-1 text-sm text-slate-600">Keep it in your list for later.</p>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Save this place" /></h2>
+<p className="mt-1 text-sm text-slate-600"><TranslatedText text="Keep it in your list for later." /></p>
 <div className="mt-4">
 {user ? (
 <SaveButton placeId={place.id} initialSaved={saved} />
@@ -110,7 +111,7 @@ Log in to save
 </div>
 {place.gallery && place.gallery.length > 1 && (
 <div className="rounded-2xl border border-slate-200 bg-white p-5">
-<h2 className="font-semibold text-slate-900">Gallery</h2>
+<h2 className="font-semibold text-slate-900"><TranslatedText text="Gallery" /></h2>
 <div className="mt-3 grid grid-cols-3 gap-2">
 {place.gallery.slice(0, 6).map((src) => (
 <div key={src} className="relative aspect-square overflow-hidden rounded-lg bg-slate-100">
@@ -158,8 +159,8 @@ return (
 </div>
 <div>{user ? <ReviewForm placeId={place.id} slug={place.slug} /> : (
 <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
-<p>Log in to write a review.</p>
-<Link href="/login" className="mt-2 inline-block font-medium text-brand-700">Login →</Link>
+<p><TranslatedText text="Log in to write a review." /></p>
+<Link href="/login" className="mt-2 inline-block font-medium text-brand-700"><TranslatedText text="Login →" /></Link>
 </div>
 )}</div>
 </div>
