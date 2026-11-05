@@ -1,4 +1,5 @@
 import type { PublicDonor } from "@/types/blood";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { Badge, Card } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons"; import { BloodGroupBadge } from "./blood-group-badge";
 const AVAILABILITY_TONE: Record<PublicDonor["availability"], "success" | "amber" | "neutral"> = {
 available: "success",
@@ -29,7 +30,7 @@ return (
 <BloodGroupBadge group={donor.bloodGroup} />
 <div className="min-w-0">
 <p className="text-sm font-semibold text-slate-900">{donor.fullName}</p>
-<p className="text-xs text-slate-500">{donor.donationCount} donations</p>
+<p className="text-xs text-slate-500">{donor.donationCount} <TranslatedText text="donations" /></p>
 </div>
 </div>
 {isOwner && (
