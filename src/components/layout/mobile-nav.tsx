@@ -157,10 +157,10 @@ export function MobileNav({
           ) : (
             <>
               <Link href="/login" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl bg-emerald-700 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 active:scale-[.98]">
-                Login
+                {t("Login")}
               </Link>
               <Link href="/register" tabIndex={moreOpen ? 0 : -1} className="flex-1 rounded-xl border border-emerald-200 px-3 py-2.5 text-center text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50 active:scale-[.98]">
-                Create account
+                {t("Create account")}
               </Link>
             </>
           )}
