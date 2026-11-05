@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TranslatedText } from "@/components/i18n/translated-text";
 import { BLOOD_GROUPS } from "@/lib/constants"; import { firstParam } from "@/lib/query"; import { formatLocation, getDirectoryLocationOptions } from "@/services/locations"; import { getDonorForUser, listBloodRequests, listPublicDonors } from "@/services/blood"; import { getCurrentUser } from "@/lib/auth/current-user"; import { DirectoryFilters } from "@/components/search/directory-filters"; import { DonorCard } from "@/components/blood/donor-card"; import { BloodRequestCard } from "@/components/blood/blood-request-card"; import { BloodRequestForm, DonorForm } from "@/components/blood/blood-forms"; import { CancelRequestButton } from "@/components/blood/donor-actions"; import { DonorContactButtons, RequesterContactButtons } from "@/components/blood/contact-buttons"; import { EmptyState } from "@/components/ui/empty-state"; import { PageBanner } from "@/components/layout/page-banner"; import { Badge, Section } from "@/components/ui/badge"; import { Icon } from "@/components/ui/icons";
 export const metadata: Metadata = {
 title: "Blood donation",
@@ -33,11 +34,11 @@ media="/images/banner/Blood.webp"
 <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg shadow-slate-900/5 sm:grid-cols-3 sm:p-5">
 <div className="rounded-xl bg-accent-50 p-4">
 <p className="text-2xl font-bold text-accent-700">{donors.length}</p>
-<p className="mt-1 text-sm font-medium text-slate-700">Voluntary donors listed</p>
+<p className="mt-1 text-sm font-medium text-slate-700"><TranslatedText text="Voluntary donors listed" /></p>
 </div>
 <div className="rounded-xl bg-brand-50 p-4">
 <p className="text-2xl font-bold text-brand-700">{requests.length}</p>
-<p className="mt-1 text-sm font-medium text-slate-700">Active blood requests</p>
+<p className="mt-1 text-sm font-medium text-slate-700"><TranslatedText text="Active blood requests" /></p>
 </div>
 <div className="flex flex-col justify-center rounded-xl bg-slate-50 p-4">
 <p className="text-sm font-semibold text-slate-900">One donation can save lives.</p>
@@ -49,11 +50,11 @@ media="/images/banner/Blood.webp"
 <div className="mb-6 flex flex-col justify-between gap-4 rounded-2xl bg-gradient-to-r from-accent-700 to-accent-500 p-5 text-white sm:flex-row sm:items-center sm:p-6">
 <div>
 <h2 className="text-xl font-bold">How can we help today?</h2>
-<p className="mt-1 text-sm text-white/85">Browse matching donors and urgent requests, or add your own information.</p>
+<p className="mt-1 text-sm text-white/85"><TranslatedText text="Browse matching donors and urgent requests, or add your own information." /></p>
 </div>
 <div className="flex flex-wrap gap-2">
-<a href="#donors" className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-accent-700 hover:bg-accent-50">Find donors</a>
-<a href="#request-form" className="rounded-lg border border-white/70 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">Post a request</a>
+<a href="#donors" className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-accent-700 hover:bg-accent-50"><TranslatedText text="Find donors" /></a>
+<a href="#request-form" className="rounded-lg border border-white/70 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"><TranslatedText text="Post a request" /></a>
 </div>
 </div>
 <DirectoryFilters
@@ -78,7 +79,7 @@ current={{ divisionId, districtId, upazilaId }}
 <section id="donors" className="scroll-mt-24">
 <div className="mb-4 flex items-center justify-between">
 <div><h2 className="text-xl font-semibold text-slate-900">Find a donor</h2><p className="mt-1 text-sm text-slate-500">People who chose to make their donor profile visible.</p></div>
-<Badge tone="brand">{donors.length} donors</Badge>
+<Badge tone="brand">{donors.length} <TranslatedText text="donors" /></Badge>
 </div>
 {donors.length === 0 ? (
 <EmptyState
@@ -102,8 +103,8 @@ action={<DonorContactButtons donorId={donor.id} phone={donor.phone} whatsapp={do
 </section>
 <section id="requests" className="scroll-mt-24">
 <div className="mb-4 flex items-center justify-between">
-<div><h2 className="text-xl font-semibold text-slate-900">People who need blood</h2><p className="mt-1 text-sm text-slate-500">Contact requesters directly using their shared contact details.</p></div>
-<Badge tone="accent">{requests.length} requests</Badge>
+<div><h2 className="text-xl font-semibold text-slate-900"><TranslatedText text="People who need blood" /></h2><p className="mt-1 text-sm text-slate-500"><TranslatedText text="Contact requesters directly using their shared contact details." /></p></div>
+<Badge tone="accent">{requests.length} <TranslatedText text="requests" /></Badge>
 </div>
 {requests.length === 0 ? (
 <EmptyState
