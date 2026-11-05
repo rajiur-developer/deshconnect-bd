@@ -1,5 +1,7 @@
+"use client";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/i18n/language-provider";
 type Tone = "neutral" | "brand" | "accent" | "amber" | "success" | "info";
 const TONES: Record<Tone, string> = {
 neutral: "bg-slate-100 text-slate-700 ring-slate-200",
@@ -15,6 +17,7 @@ children, }: {
 tone?: Tone;
 className?: string;
 children: ReactNode; }) {
+const { t } = useLanguage();
 return (
 <span
 className={cn(
@@ -51,14 +54,15 @@ children: ReactNode;
 className?: string;
 /** Set false when the caller already wraps the section in a container. */
 contained?: boolean; }) {
+const { t } = useLanguage();
 return (
 <section className={cn("py-10 sm:py-14", className)}>
 <div className={contained ? "container-x" : undefined}>
 {(title || description || action) && (
 <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
 <div>
-{title && <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">{title}</h2>}
-{description && <p className="mt-2 max-w-2xl text-slate-600">{description}</p>}
+{title && <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">{t(title)}</h2>}
+{description && <p className="mt-2 max-w-2xl text-slate-600">{t(description)}</p>}
 </div>
 {action}
 </div>
