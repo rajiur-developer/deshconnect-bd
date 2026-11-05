@@ -807,6 +807,31 @@ export const bnMessages: Record<string, string> = {
   "Need a donor? Visit the blood donation directory to search or request blood.": "রক্তদাতা প্রয়োজন? রক্তদান ডিরেক্টরিতে গিয়ে রক্তদাতা খুঁজুন অথবা রক্তের অনুরোধ জানান।",
   "Find blood donors →": "রক্তদাতা খুঁজুন →",
 
+  "Voluntary donors listed": "তালিকাভুক্ত স্বেচ্ছাসেবী রক্তদাতা",
+  "Browse matching donors and urgent requests, or add your own information.": "মিলে যাওয়া রক্তদাতা ও জরুরি অনুরোধ দেখুন অথবা নিজের তথ্য যোগ করুন।",
+  "Find donors": "রক্তদাতা খুঁজুন",
+  "Post a request": "অনুরোধ জানান",
+  "donors": "জন রক্তদাতা",
+  "requests": "টি অনুরোধ",
+  "People who need blood": "যাদের রক্ত প্রয়োজন",
+  "Contact requesters directly using their shared contact details.": "তাদের শেয়ার করা যোগাযোগের তথ্য ব্যবহার করে সরাসরি অনুরোধকারীদের সঙ্গে যোগাযোগ করুন।",
+  "DeshConnect community": "DeshConnect কমিউনিটি",
+  "Share local updates, ask questions, and connect with people.": "স্থানীয় আপডেট শেয়ার করুন, প্রশ্ন করুন এবং মানুষের সঙ্গে যুক্ত হোন।",
+  "Chat now": "এখনই চ্যাট করুন",
+  "Login →": "লগইন →",
+  "Healthcare directory": "স্বাস্থ্যসেবা ডিরেক্টরি",
+  "Hospitals & diagnostic centres near your community": "আপনার এলাকার হাসপাতাল ও ডায়াগনস্টিক সেন্টার",
+  "Browse hospitals, clinics and diagnostic facilities by division, district and upazila.": "বিভাগ, জেলা ও উপজেলা অনুযায়ী হাসপাতাল, ক্লিনিক ও ডায়াগনস্টিক সেন্টার খুঁজুন।",
+  "listed facilities": "টি তালিকাভুক্ত প্রতিষ্ঠান",
+  "Directory results": "ডিরেক্টরির ফলাফল",
+  "Available healthcare facilities": "উপলভ্য স্বাস্থ্যসেবা প্রতিষ্ঠান",
+  "Looking for a blood donor?": "রক্তদাতা খুঁজছেন?",
+  "Open the DeshConnect blood donation directory to find donors or submit a request.": "রক্তদাতা খুঁজতে বা অনুরোধ জানাতে DeshConnect-এর রক্তদান ডিরেক্টরিতে যান।",
+  "Blood donation support →": "রক্তদান সহায়তা →",
+  "businesses found": "টি ব্যবসা পাওয়া গেছে",
+  "services found": "টি সেবা পাওয়া গেছে",
+  "records found": "টি রেকর্ড পাওয়া গেছে",
+
 };
 
 export const enMessages: Record<string, string> = Object.fromEntries(
