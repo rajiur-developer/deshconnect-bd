@@ -167,6 +167,7 @@ export function PlacesDirectoryFilters({
   categories,
   current,
 }: Pick<Props, "action" | "params" | "divisions" | "districts" | "upazilas" | "categories" | "current">) {
+  const { t } = useLanguage();
   const [divisionId, setDivisionId] = useState(current.divisionId ?? "");
   const [districtId, setDistrictId] = useState(current.districtId ?? "");
   const [upazilaId, setUpazilaId] = useState(current.upazilaId ?? "");
