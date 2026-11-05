@@ -10,12 +10,12 @@ import {
   MessageRealtimeNotifications,
   type UnreadConversation,
 } from "@/components/messaging/message-realtime-notifications";
-import { Icon } from "@/components/ui/icons";
-import { SearchAutocomplete } from "@/components/search/search-autocomplete";
 import { MobileNav } from "./mobile-nav";
 import { DesktopNav } from "./desktop-nav";
 import { UserMenu } from "./user-menu";
 import { TranslatedText } from "@/components/i18n/translated-text";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { SearchTrigger } from "@/components/search/search-trigger";
 import MainLogo from "../../../public/logo/Main-Logo.webp";
 
 export async function Header({
@@ -120,20 +120,8 @@ export async function Header({
         />
 
         <div className="ml-auto flex items-center gap-2">
-          <form action="/search" className="hidden md:block">
-            <div className="relative">
-              <Icon
-                name="search"
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-              />
-
-              <SearchAutocomplete
-                placeholder="Search places and services…"
-                className="dc-header-search w-52 rounded-full border border-slate-300 bg-slate-50 py-2 pl-9 pr-3 text-sm placeholder:text-slate-400 focus-ring lg:w-64"
-                wrapperClassName="relative"
-              />
-            </div>
-          </form>
+          <SearchTrigger />
+          <LanguageSwitcher />
 
           <MobileNav
             user={user}
