@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link"; import { useSyncExternalStore, useState } from "react"; import { usePathname } from "next/navigation";
-import { Icon } from "@/components/ui/icons"; import { isNavGroup, isNavPathActive, type NavEntry } from "@/config/site";
+import { Icon } from "@/components/ui/icons";
+import { useLanguage } from "@/components/i18n/language-provider"; import { isNavGroup, isNavPathActive, type NavEntry } from "@/config/site";
 import { UnreadMessageBadge, useUnreadMessageTotal, type UnreadConversation } from "@/components/messaging/message-realtime-notifications";
 const linkClass =
 "block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-700";
@@ -12,6 +13,7 @@ const [open, setOpen] = useState(false);
 const [dismissedByClick, setDismissedByClick] = useState(false);
 const routeReady = useHydratedPathname();
 const pathname = usePathname();
+const { t } = useLanguage();
 const unreadTotal = useUnreadMessageTotal(!isNavGroup(entry) && entry.href === "/messages" ? initialUnreadMessages : []);
 if (!isNavGroup(entry)) {
 const isBloodDonation = entry.href === "/blood-donation";
@@ -23,7 +25,7 @@ aria-current={isActive ? "page" : undefined}
 className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 hover:scale-[1.04] ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
 >
 {isBloodDonation && <Icon name="droplet" aria-hidden="true" className="mr-1 inline h-4 w-4" />}
-{entry.label}{entry.href === "/messages" && <UnreadMessageBadge count={unreadTotal} />}
+{t(entry.label)}{entry.href === "/messages" && <UnreadMessageBadge count={unreadTotal} />}
 </Link>
 );
 }
@@ -62,9 +64,9 @@ className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""
 const isActive = routeReady && isNavPathActive(pathname, item.href);
 return (
 <Link key={item.href} href={item.href} onClick={dismissMenu} aria-current={isActive ? "page" : undefined} className={`${linkClass}${isActive ? " bg-brand-50 text-brand-700" : ""}`}>
-{item.label}
+{t(item.label)}
 {item.description ? (
-<span className="block text-xs font-normal text-slate-500">{item.description}</span>
+<span className="block text-xs font-normal text-slate-500">{t(item.description)}</span>
 ) : null}
 </Link>
 );})}
