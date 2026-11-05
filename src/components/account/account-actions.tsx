@@ -7,7 +7,9 @@ markNotificationReadAction,
 requestConnectionAction,
 respondConnectionAction,
 } from "@/features/account/actions";
+import { useLanguage } from "@/components/i18n/language-provider";
 export function ConnectButton({ username, pendingConnectionId }: { username: string; pendingConnectionId?: string }) {
+const { t } = useLanguage();
 const [state, setState] = useState<"idle" | "sent">("idle");
 const [error, setError] = useState("");
 const [pending, startTransition] = useTransition();
@@ -42,12 +44,13 @@ setError("Could not send the request. Please try again.");
 }
 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
 >
-{state === "sent" ? "Request sent" : pending ? "Sending…" : "Connect"}
+{state === "sent" ? t("Request sent") : pending ? t("Sending…") : t("Connect")}
 </button>
-{error && <p role="alert" className="basis-full text-xs text-accent-600">{error}</p>}
+{error && <p role="alert" className="basis-full text-xs text-accent-600">{t(error)}</p>}
 </>
 ); }
 export function RespondButtons({ connectionId }: { connectionId: string }) {
+const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const router = useRouter();
 const respond = (action: "accepted" | "rejected") =>
@@ -76,6 +79,7 @@ Decline
 </div>
 ); }
 export function CancelRequestButton({ connectionId }: { connectionId: string }) {
+const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const router = useRouter();
 return (
@@ -94,6 +98,7 @@ Cancel request
 </button>
 ); }
 export function StartConversationButton({ username }: { username: string }) {
+const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const [error, setError] = useState("");
 const router = useRouter();
@@ -116,6 +121,7 @@ Message
 </>
 ); }
 export function MarkAllReadButton() {
+const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const router = useRouter();
 return (
@@ -134,6 +140,7 @@ Mark all as read
 </button>
 ); }
 export function MarkReadButton({ id }: { id: string }) {
+const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const router = useRouter();
 return (
