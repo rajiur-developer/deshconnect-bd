@@ -70,7 +70,7 @@ return (
 <input ref={imageKeyRef} type="hidden" name="imageKey" />
 <input ref={imageMimeRef} type="hidden" name="imageMimeType" />
 <input ref={imageSizeRef} type="hidden" name="imageSize" />
-<h2 className="font-semibold text-slate-900">Share with the community</h2>
+<h2 className="font-semibold text-slate-900">{t("Share with the community")}</h2>
 <div className="mt-3">
 <Textarea name="body" placeholder={t("Ask a question, give advice or start a discussion…")} aria-label={t("Post content")} />
 </div>
@@ -78,7 +78,7 @@ return (
 <LocationFields divisions={divisions} districts={districts} upazilas={upazilas} current={{}} />
 </div>
 <div className="mt-3">
-<label htmlFor="community-post-image" className="mb-1 block text-sm font-medium text-slate-700">Add an image (optional, up to 3 MB)</label>
+<label htmlFor="community-post-image" className="mb-1 block text-sm font-medium text-slate-700">{t("Add an image (optional, up to 3 MB)")}</label>
 <input ref={fileRef} id="community-post-image" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const file = event.currentTarget.files?.[0]; setUploadError(""); setPreview(file ? URL.createObjectURL(file) : ""); if (!file) { if (imageUrlRef.current) imageUrlRef.current.value = ""; if (imageKeyRef.current) imageKeyRef.current.value = ""; if (imageMimeRef.current) imageMimeRef.current.value = ""; if (imageSizeRef.current) imageSizeRef.current.value = ""; } }} className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700" />
 {preview && <img src={preview} alt={t("Post image preview")} className="mt-3 max-h-48 rounded-xl object-contain" />}
 {uploadError && <p role="alert" className="mt-2 text-sm text-accent-600">{t(uploadError)}</p>}
@@ -97,10 +97,10 @@ useFormStateToast(state);
 return (
 <form action={formAction} className="rounded-2xl border border-slate-200 bg-white p-4">
 <input type="hidden" name="postId" value={postId} />
-<label htmlFor="comment-body" className="sr-only">Write a comment</label>
+<label htmlFor="comment-body" className="sr-only">{t("Write a comment")}</label>
 <Textarea id="comment-body" name="body" placeholder={t("Write a comment…")} className="min-h-[80px]" />
-{state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{t(state.success)}</p>}
 <div className="mt-3 flex justify-end">
 <Button type="submit" size="sm" disabled={pending}>{pending ? t("Publishing…") : t("Comment")}</Button>
 </div>
@@ -131,10 +131,10 @@ className="rounded-2xl border border-slate-200 bg-white p-4"
 >
 <input type="hidden" name="targetType" value={targetType} />
 <input type="hidden" name="targetId" value={targetId} />
-<h3 className="font-semibold text-slate-900">Report about content</h3>
-<p className="mt-1 text-sm text-slate-600">Tell us why this needs review.</p>
+<h3 className="font-semibold text-slate-900">{t("Report about content")}</h3>
+<p className="mt-1 text-sm text-slate-600">{t("Tell us why this needs review.")}</p>
 <div className="mt-3">
-<label htmlFor="report-reason" className="mb-1 block text-sm font-medium text-slate-700">Reason</label>
+<label htmlFor="report-reason" className="mb-1 block text-sm font-medium text-slate-700">{t("Reason")}</label>
 <input
 id="report-reason"
 name="reason"
@@ -144,11 +144,11 @@ className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-rin
 />
 </div>
 <div className="mt-3">
-<label htmlFor="report-details" className="mb-1 block text-sm font-medium text-slate-700">Details (optional)</label>
+<label htmlFor="report-details" className="mb-1 block text-sm font-medium text-slate-700">{t("Details (optional)")}</label>
 <Textarea id="report-details" name="details" className="min-h-[70px]" />
 </div>
-{state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{state.error}</p>}
-{state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{state.success}</p>}
+{state.error && <p role="alert" className="mt-2 text-sm text-accent-600">{t(state.error)}</p>}
+{state.success && <p role="status" className="mt-2 text-sm text-emerald-600">{t(state.success)}</p>}
 <div className="mt-3 flex justify-end">
 <Button type="submit" size="sm" variant="danger" disabled={pending}>{pending ? t("Sending…") : t("Submit report")}</Button>
 </div>
