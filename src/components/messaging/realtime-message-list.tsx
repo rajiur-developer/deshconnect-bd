@@ -6,12 +6,14 @@ import type { Message } from "@/types/community";
 import { deleteMessageForMeAction, deleteOwnMessageAction, editOwnMessageAction, toggleMessageReactionAction } from "@/features/account/actions";
 import type { PublicUser } from "@/types/auth";
 import { Spinner } from "@/components/ui/spinner";
+import { useLanguage } from "@/components/i18n/language-provider";
 
 type ForwardTarget = Pick<PublicUser, "id" | "username" | "fullName">;
 type RenderMessage = Message & { deliveryState?: "sending"; optimisticAttachmentType?: "image" | "audio" | null };
 const REACTION_CHOICES = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 
 export function RealtimeMessageList({ conversationId, viewerId, participantId, initialMessages, forwardTargets = [], onForward }: { conversationId: string; viewerId: string; participantId: string; initialMessages: Message[]; forwardTargets?: ForwardTarget[]; onForward?: (message: Message, target: ForwardTarget) => Promise<void> }) {
+  const { t, language } = useLanguage();
   const [messages, setMessages] = useState<RenderMessage[]>(initialMessages);
   const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({});
   const [mediaErrors, setMediaErrors] = useState<Record<string, boolean>>({});
