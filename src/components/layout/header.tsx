@@ -10,7 +10,8 @@ import {
   MessageRealtimeNotifications,
   type UnreadConversation,
 } from "@/components/messaging/message-realtime-notifications";
-import { Icon } from "@/components/ui/icons";\nimport { SearchAutocomplete } from "@/components/search/search-autocomplete";
+import { Icon } from "@/components/ui/icons";
+import { SearchAutocomplete } from "@/components/search/search-autocomplete";
 import { MobileNav } from "./mobile-nav";
 import { DesktopNav } from "./desktop-nav";
 import { UserMenu } from "./user-menu";
