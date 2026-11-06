@@ -1,22 +1,22 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import { formatZodError, reviewSchema } from "@/lib/validation/schemas"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants";
+import { requireUser } from "@/lib/auth/current-user"; import { createServerClient } from "@/lib/supabase/server"; import { mapDbRow } from "@/lib/db/insforge"; import { formatZodError, reviewSchema } from "@/lib/validation/schemas"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants";
 export async function toggleSaveAction(placeId: string): Promise<{ saved: boolean }> {
 const user = await requireUser();
-const existing = await insforge.database
+const existing = await (await createServerClient()).database
 .from("saved_places")
 .select("id")
 .eq("user_id", user.id)
 .eq("place_id", placeId)
 .maybeSingle();
 if (existing?.data) {
-const { error } = await insforge.database.from("saved_places").delete().eq("user_id", user.id).eq("place_id", placeId);
+const { error } = await (await createServerClient()).database.from("saved_places").delete().eq("user_id", user.id).eq("place_id", placeId);
 if (error) throw error;
 revalidatePath("/saved");
 revalidatePath(`/places/${placeId}`);
 return { saved: false };
 } else {
-const { error } = await insforge.database.from("saved_places").insert([{ user_id: user.id, place_id: placeId }]);
+const { error } = await (await createServerClient()).database.from("saved_places").insert([{ user_id: user.id, place_id: placeId }]);
 if (error) throw error;
 revalidatePath("/saved");
 revalidatePath(`/places/${placeId}`);
@@ -44,7 +44,7 @@ if (!limit.ok) {
 return { error: `Too many reviews. Try again in ${limit.retryAfterSeconds}s.` };
 }
 try {
-const { error } = await insforge.database
+const { error } = await (await createServerClient()).database
 .from("reviews")
 .insert([{
 place_id: placeId,
@@ -64,7 +64,7 @@ return { error: dbError.message || "Your review could not be published. Please t
 
 // Keep the place's aggregate rating in sync with its own visible reviews.
 // Every listing/card reads these two fields from the places record.
-const { data: visibleReviews, error: aggregateError } = await insforge.database
+const { data: visibleReviews, error: aggregateError } = await (await createServerClient()).database
 .from("reviews")
 .select("rating")
 .eq("place_id", placeId)
@@ -79,7 +79,7 @@ const averageRating = reviewCount
 ? Number((ratings.reduce((sum: number, rating: number) => sum + rating, 0) / reviewCount).toFixed(2))
 : 0;
 
-const { error: placeUpdateError } = await insforge.database
+const { error: placeUpdateError } = await (await createServerClient()).database
 .from("places")
 .update({ rating: averageRating, review_count: reviewCount })
 .eq("id", placeId);
