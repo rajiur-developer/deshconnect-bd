@@ -9,7 +9,7 @@ import { messageSchema } from "@/lib/validation/schemas";
 import { sanitizeMultiline } from "@/lib/security/sanitize";
 import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
-import { requireUser } from "@/lib/auth/current-user"; import { createServerClient } from "@/lib/supabase/server"; import { mapDbRow } from "@/lib/db/insforge"; import {
+import { requireUser } from "@/lib/auth/current-user"; import { mapDbRow } from "@/lib/db/insforge"; import {
 cancelConnection,
 getOrCreateConversation,
 requestConnection,
