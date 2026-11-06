@@ -2,6 +2,7 @@ import { createServerClient as createSupabaseSsrClient } from "@supabase/ssr";
 import { createServerClient as createInsForgeSsrClient } from "@insforge/sdk/ssr";
 
 type CookieStore = {
+  get: (name: string) => { name: string; value: string } | undefined;
   getAll: () => Array<{ name: string; value: string }>;
   set: (name: string, value: string, options?: any) => void;
 };
