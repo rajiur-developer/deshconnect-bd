@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import type { PublicUser } from "@/types/auth";
 import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants";
