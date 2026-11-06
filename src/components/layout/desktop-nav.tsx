@@ -69,7 +69,7 @@ export function DesktopNav({
   return (
     <nav
       ref={navRef}
-      className="dc-desktop-nav relative ml-2 hidden items-center gap-1 lg:flex"
+      className="dc-desktop-nav relative ml-2 hidden min-w-0 flex-1 items-center justify-between gap-1 lg:flex"
       aria-label={t("Primary")}
     >
       <span
