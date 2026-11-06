@@ -34,7 +34,7 @@ return { error: `Too many submissions. Try again in ${limit.retryAfterSeconds}s.
 }
 let error: any = null;
 try {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { error: insertError } = await client.database
 .from("news")
 .insert([{
