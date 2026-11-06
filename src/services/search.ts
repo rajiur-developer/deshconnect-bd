@@ -33,15 +33,33 @@ export async function globalSearch(query: string, limit = 4): Promise<GlobalSear
   };
   addTextSearch(postParams, query, ["body"]);
 
-  const [places, institutions, hospitals, businesses, governmentServices, news, postRows] = await Promise.all([
-    listPlaces({ q: query, page: 1, pageSize: limit }),
-    listInstitutions({ q: query, page: 1, pageSize: limit }),
-    listHospitals({ q: query, page: 1, pageSize: limit }),
-    listBusinesses({ q: query, page: 1, pageSize: limit }),
-    listGovernmentServices({ q: query, page: 1, pageSize: limit }),
-    listNews({ q: query, page: 1, pageSize: limit }),
-    insforgeSelectMany("posts", postParams),
-  ]);
+  const sources = [
+    ["places", () => listPlaces({ q: query, page: 1, pageSize: limit })],
+    ["institutions", () => listInstitutions({ q: query, page: 1, pageSize: limit })],
+    ["hospitals", () => listHospitals({ q: query, page: 1, pageSize: limit })],
+    ["businesses", () => listBusinesses({ q: query, page: 1, pageSize: limit })],
+    ["government services", () => listGovernmentServices({ q: query, page: 1, pageSize: limit })],
+    ["news", () => listNews({ q: query, page: 1, pageSize: limit })],
+    ["community posts", () => insforgeSelectMany("posts", postParams)],
+  ] as const;
+
+  // A failure in one directory must not hide valid matches from every other
+  // directory. Keep each source independent and report failures server-side.
+  const settled = await Promise.allSettled(sources.map(([, load]) => load()));
+  const value = <T,>(index: number, fallback: T): T => {
+    const result = settled[index];
+    if (result.status === "fulfilled") return result.value as T;
+    console.error(`Global search source failed (${sources[index][0]}):`, result.reason);
+    return fallback;
+  };
+
+  const places = value(0, { items: [] as Place[] });
+  const institutions = value(1, { items: [] as Institution[] });
+  const hospitals = value(2, { items: [] as Institution[] });
+  const businesses = value(3, { items: [] as Business[] });
+  const governmentServices = value(4, { items: [] as GovernmentService[] });
+  const news = value(5, { items: [] as News[] });
+  const postRows = value(6, { data: [] as any[] });
 
   return {
     places: places.items,
