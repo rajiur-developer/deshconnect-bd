@@ -3437,7 +3437,7 @@ html[lang="en"] .dc-desktop-nav {
 
 html[lang="en"] .dc-desktop-nav > a,
 html[lang="en"] .dc-desktop-nav > div > button {
-  font: size 16px !important;
+  font-size: 16px !important;
   line-height: 20px;
 }
 
