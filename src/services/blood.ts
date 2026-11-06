@@ -1,6 +1,6 @@
 import "server-only";
 
-import { insforge } from "@/lib/insforge";
+import { createServerClient } from "@/lib/supabase/server";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 
 export async function insforgeListPublicDonors(query: {
@@ -12,7 +12,7 @@ export async function insforgeListPublicDonors(query: {
   sort?: "relevance" | "name" | "newest" | "rating";
 }) {
   const pageSize = 500;
-  let donorQuery = insforge.database
+  let donorQuery = (await createServerClient()).database
     .from("public_blood_donors")
     .select("id,user_id,blood_group,availability,preferred_contact,donation_count,consent_listed,division_id,district_id,upazila_id,created_at,updated_at,phone,whatsapp")
     .eq("consent_listed", true)
@@ -32,7 +32,7 @@ export async function insforgeListPublicDonors(query: {
   const userIds = [...new Set(rows.map((row: any) => row.user_id).filter(Boolean))];
   const profileResults = await Promise.all(
     Array.from({ length: Math.ceil(userIds.length / 100) }, (_, index) =>
-      insforge.database.from("public_profiles").select("id,full_name").in("id", userIds.slice(index * 100, (index + 1) * 100)).limit(100),
+      (await createServerClient()).database.from("public_profiles").select("id,full_name").in("id", userIds.slice(index * 100, (index + 1) * 100)).limit(100),
     ),
   );
   for (const result of profileResults) {
@@ -162,7 +162,7 @@ export async function insforgeUpsertDonor(input: {
   consentListed: boolean;
   consentContact: boolean;
 }) {
-  const { data: existing, error: lookupError } = await insforge.database
+  const { data: existing, error: lookupError } = await (await createServerClient()).database
     .from("blood_donors")
     .select("*")
     .eq("user_id", input.userId)
@@ -186,7 +186,7 @@ export async function insforgeUpsertDonor(input: {
     consent_expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
   };
   if (existing) {
-    const { data, error } = await insforge.database
+    const { data, error } = await (await createServerClient()).database
       .from("blood_donors")
       .update(record)
       .eq("id", existing.id)
@@ -195,7 +195,7 @@ export async function insforgeUpsertDonor(input: {
     if (error) throw error;
     return data;
   }
-  const { data, error } = await insforge.database
+  const { data, error } = await (await createServerClient()).database
     .from("blood_donors")
     .insert([record])
     .select("*")
