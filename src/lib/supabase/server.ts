@@ -53,7 +53,60 @@ export async function createServerClient(options: { cookies?: CookieStore } = {}
         : null;
       return { data: { user }, error: result.error };
     },
+    async resendVerificationEmail(input: { email: string }) {
+      return client.auth.resend({ type: "signup", email: input.email });
+    },
+    async sendResetPasswordEmail(input: { email: string }) {
+      return client.auth.resetPasswordForEmail(input.email);
+    },
+    async exchangeResetPasswordToken(input: { email: string; code: string }) {
+      const result = await client.auth.verifyOtp({ email: input.email, token: input.code, type: "recovery" });
+      return { data: result.error ? null : { token: result.data.session?.access_token ?? "verified" }, error: result.error };
+    },
+    async resetPassword(input: { newPassword: string }) {
+      return client.auth.updateUser({ password: input.newPassword });
+    },
   });
 
   return Object.assign(client, { database: client, auth });
+}
+
+
+/** Compatibility adapter for the former InsForge auth-action interface. */
+export function createAuthActions(options: { cookies: CookieStore }) {
+  const clientPromise = createServerClient({ cookies: options.cookies });
+  return {
+    async signInWithPassword(input: { email: string; password: string }) {
+      const client = await clientPromise;
+      return client.auth.signInWithPassword(input);
+    },
+    async signUp(input: { email: string; password: string; name: string }) {
+      const client = await clientPromise;
+      const result = await client.auth.signUp({
+        email: input.email,
+        password: input.password,
+        options: { data: { name: input.name, fullName: input.name } },
+      });
+      return {
+        data: { user: result.data.user, requireEmailVerification: !result.data.session },
+        error: result.error,
+      };
+    },
+    async verifyEmail(input: { email: string; otp: string }) {
+      const client = await clientPromise;
+      return client.auth.verifyOtp({ email: input.email, token: input.otp, type: "signup" });
+    },
+    async signInWithOAuth(provider: "google", options: { redirectTo: string; skipBrowserRedirect?: boolean }) {
+      const client = await clientPromise;
+      const result = await client.auth.signInWithOAuth({ provider, options: { redirectTo: options.redirectTo } });
+      return {
+        data: result.data.url ? { url: result.data.url, codeVerifier: "supabase-pkce-cookie-managed" } : null,
+        error: result.error,
+      };
+    },
+    async signOut() {
+      const client = await clientPromise;
+      return client.auth.signOut();
+    },
+  };
 }
