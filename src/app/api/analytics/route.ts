@@ -105,6 +105,8 @@ export async function POST(request: NextRequest) {
     if (error && error.code !== "23505") {
       throw new Error(`Supabase visitor event insert failed: ${error.message}`);
     }
+  } catch (error) {
+    console.error("Could not record analytics event.", error instanceof Error ? error.message : "Unknown error");
   }
 
   return response;
