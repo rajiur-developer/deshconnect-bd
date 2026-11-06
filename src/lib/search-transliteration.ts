@@ -57,7 +57,8 @@ const ROMAN_TO_BENGALI: Array<[string, string]> = [
 ];
 
 export function bengaliToLatin(value: string): string {
-  return Array.from(value.normalize("NFC")).map((char) => BENGALI_TO_LATIN[char] ?? char).join("");
+  const normalized = value.normalize("NFC").replace(/য়/g, "য়");
+  return Array.from(normalized).map((char) => BENGALI_TO_LATIN[char] ?? char).join("");
 }
 
 /** Convert common phonetic Banglish input into a Bengali search variant. */
@@ -92,7 +93,7 @@ export function expandSearchTerms(query: string): string[] {
   if (/[\u0980-\u09FF]/.test(original)) {
     const latin = (BENGALI_PLACE_ALIASES[original] ?? bengaliToLatin(original)).trim();
     if (latin && latin.toLowerCase() !== original.toLowerCase()) terms.add(latin);
-    if (original.includes("অপরাজেয়")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
+    if (original.replace(/য়/g, "য়").includes("অপরাজেয়")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
   } else if (/[a-z]/i.test(original)) {
     const bengali = banglishToBengali(original);
     if (bengali && bengali !== original) terms.add(bengali);
