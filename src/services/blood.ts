@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createServerClient } from "@/lib/supabase/server";
+import { createPublicClient, createServerClient } from "@/lib/supabase/server";
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 
 export async function insforgeListPublicDonors(query: {
@@ -12,7 +12,7 @@ export async function insforgeListPublicDonors(query: {
   sort?: "relevance" | "name" | "newest" | "rating";
 }) {
   const pageSize = 500;
-  let donorQuery = (await createServerClient()).database
+  let donorQuery = createPublicClient()
     .from("public_blood_donors")
     .select("id,user_id,blood_group,availability,preferred_contact,donation_count,consent_listed,division_id,district_id,upazila_id,created_at,updated_at,phone,whatsapp")
     .eq("consent_listed", true)
@@ -30,9 +30,10 @@ export async function insforgeListPublicDonors(query: {
     if ((data ?? []).length < pageSize) break;
   }
   const userIds = [...new Set(rows.map((row: any) => row.user_id).filter(Boolean))];
+  const publicClient = createPublicClient();
   const profileResults = await Promise.all(
     Array.from({ length: Math.ceil(userIds.length / 100) }, (_, index) =>
-      (await createServerClient()).database.from("public_profiles").select("id,full_name").in("id", userIds.slice(index * 100, (index + 1) * 100)).limit(100),
+      publicClient.from("public_profiles").select("id,full_name").in("id", userIds.slice(index * 100, (index + 1) * 100)).limit(100),
     ),
   );
   for (const result of profileResults) {
