@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createServerClient as createSupabaseServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
@@ -109,4 +110,13 @@ export function createAuthActions(options: { cookies: CookieStore }) {
       return client.auth.signOut();
     },
   };
+}
+
+
+/** Anonymous client for explicitly public, column-limited database views. */
+export function createPublicClient() {
+  const { url, key } = supabaseCredentials();
+  return createSupabaseClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
 }
