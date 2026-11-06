@@ -45,7 +45,7 @@ export async function createRecordAction(_previous: RecordFormState, formData: F
     }
   }
 
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { error } = await client.database.from("sample_records").insert([{
     title,
     category,
