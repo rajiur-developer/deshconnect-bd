@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createPublicClient, createServerClient } from "@/lib/supabase/server";
 import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants";
-import { isR2PublicMediaUrl, isTrustedPublicImageUrl } from "@/lib/storage/media-url";
+import { isR2PublicMediaUrl, isTrustedPublicImageUrl, isTrustedSupabaseStorageUrl } from "@/lib/storage/media-url";
 import { deleteR2Object } from "@/lib/storage/r2";
 import { messageSchema } from "@/lib/validation/schemas";
 import { sanitizeMultiline } from "@/lib/security/sanitize";
@@ -176,7 +176,8 @@ const keyParts = attachment.key.split("/");
 let validUrl = false;
 try {
 const url = new URL(attachment.url);
-validUrl = url.origin === new URL(process.env.NEXT_PUBLIC_INSFORGE_URL!).origin && decodeURIComponent(url.pathname).includes("record-attachments") && decodeURIComponent(url.pathname).includes(attachment.key);
+validUrl = url.origin === new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).origin
+  && isTrustedSupabaseStorageUrl(attachment.url, attachment.key, ["record-attachments"], "private");
 } catch { validUrl = false; }
 if (keyParts.length !== 3 || keyParts[0] !== user.id || keyParts[1] !== conversationId || !/^[a-zA-Z0-9-]{12,80}\.[a-z0-9]{2,6}$/i.test(keyParts[2]) || !validUrl || !attachmentTypes.has(attachment.mimeType) || !["image", "audio"].includes(attachment.type) || (attachment.type === "image") !== attachment.mimeType.startsWith("image/")) {
 return { ok: false, error: "The selected image or voice message is invalid. Please select it again." };
