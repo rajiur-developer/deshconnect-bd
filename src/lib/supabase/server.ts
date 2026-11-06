@@ -86,10 +86,14 @@ export function createAuthActions(options: { cookies: CookieStore }) {
     },
     async signUp(input: { email: string; password: string; name: string; metadata?: Record<string, unknown> }) {
       const client = await clientPromise;
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://deshconnect-bd.vercel.app";
       const result = await client.auth.signUp({
         email: input.email,
         password: input.password,
-        options: { data: { name: input.name, fullName: input.name, ...(input.metadata ?? {}) } },
+        options: {
+          data: { name: input.name, fullName: input.name, ...(input.metadata ?? {}) },
+          emailRedirectTo: new URL("/api/auth/callback", baseUrl).toString(),
+        },
       });
       return {
         data: { user: result.data.user, requireEmailVerification: !result.data.session },
