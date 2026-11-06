@@ -239,7 +239,7 @@ export async function resetPasswordAction(_prev: FormState, formData: FormData):
   const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.auth.exchangeResetPasswordToken({ email, code });
   if (error || !data?.token) return { error: error?.message ?? "The code is invalid or expired." };
-  const { error: resetError } = await client.auth.resetPassword({ newPassword: password, otp: data.token });
+  const { error: resetError } = await client.auth.resetPassword({ newPassword: password });
   if (resetError) return { error: resetError.message };
   return { success: "Your password has been updated. You can now sign in." };
 }
