@@ -27,7 +27,7 @@ upazilaId: formData.get("upazilaId") || undefined,
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const limit = await rateLimitAsync(`post:${user.id}`, RATES.postPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many posts. Try again in ${limit.retryAfterSeconds}s.` };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database
 .from("posts")
 .insert([{
@@ -73,7 +73,7 @@ const user = await requireUser();
 const postId = String(formData.get("postId") ?? "");
 const parsed = commentSchema.safeParse({ body: formData.get("body") });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database
 .from("comments")
 .insert([{
@@ -89,7 +89,7 @@ revalidatePath(`/community/${postId}`);
 return { success: "Comment added." }; }
 export async function reactToPostAction(postId: string): Promise<{ count: number }> {
 await requireUser();
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: post } = await client.database.from("posts").select("reactions").eq("id", postId).single();
 if (!post) throw new Error("Post not found");
 const newCount = (post.reactions ?? 0) + 1;
@@ -109,7 +109,7 @@ if (!parsed.success) return { error: formatZodError(parsed.error) };
 if (!targetId) return { error: "Missing target." };
 const limit = await rateLimitAsync(`report:${user.id}`, RATES.reportPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many reports. Try again in ${limit.retryAfterSeconds}s.` };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { error } = await client.database.from("reports").insert([{
 target_type: targetType as Report["targetType"],
 target_id: targetId,
@@ -151,7 +151,7 @@ return { deleted: false, error: "You do not have permission to delete this post.
 }
 const storageKey = post.image_key || getPostStorageKey(post.image);
 const storageBucket = getPostStorageBucket(post.image) || PROFILE_IMAGE_BUCKET;
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 if (storageKey) {
   if (isR2PublicMediaUrl(post.image ?? "", storageKey)) {
     try { await deleteR2Object(storageKey); }
