@@ -236,7 +236,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             {state.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{t(state.error)}</p>}
             <div className="mt-6 grid grid-cols-2 gap-3">
               <Button type="button" variant="outline" className="rounded-xl py-3" onClick={() => setStep(1)}>{t("← Back")}</Button>
-              <Button type="submit" className="account-create-btn rounded-xl py-3 text-center" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Creating account…") : t("Create account")}</Button>
+              <Button type="submit" className="rounded-xl py-3 text-center" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Creating account…") : t("Create account")}</Button>
             </div>
             <p className="mt-4 text-center text-xs leading-5 text-slate-500">{t("You can leave optional profile details blank and add them later.")}</p>
           </>
