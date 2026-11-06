@@ -13,7 +13,8 @@ results.places.length +
 results.institutions.length +
 results.businesses.length +
 results.governmentServices.length +
-results.news.length;
+results.news.length +
+results.posts.length;
 return (
 <>
 <PageHeader
@@ -79,6 +80,19 @@ action={<Link href="/places" className="rounded-lg bg-brand-600 px-4 py-2 text-s
 <NewsCard key={item.id} news={item} />
 ))}
 </ListGrid>
+</section>
+)}
+{results.posts.length > 0 && (
+<section className="mb-10">
+<h2 className="text-xl font-semibold text-slate-900">Community posts</h2>
+<div className="mt-4 grid gap-3">
+{results.posts.map((post) => (
+<article key={post.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+<p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">{post.body}</p>
+<p className="mt-3 text-xs text-slate-400">{new Date(post.createdAt).toLocaleDateString()}</p>
+</article>
+))}
+</div>
 </section>
 )}
 </>
