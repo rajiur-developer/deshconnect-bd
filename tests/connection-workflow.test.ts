@@ -2,13 +2,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const requireUser = vi.fn();
 const createServerClient = vi.fn();
+const createPublicClient = vi.fn();
 const revalidatePath = vi.fn();
 const queryState = vi.hoisted(() => ({ target: null as any, existing: [] as any[], inserted: null as any, updated: null as any, updateError: null as any, insertedError: null as any, insertedPayload: null as any }));
 
 vi.mock("@/lib/auth/current-user", () => ({ requireUser }));
 vi.mock("next/cache", () => ({ revalidatePath }));
 vi.mock("next/headers", () => ({ cookies: async () => ({}) }));
-vi.mock("@/lib/supabase/server", () => ({ createServerClient }));
+vi.mock("@/lib/supabase/server", () => ({ createServerClient, createPublicClient }));
 vi.mock("@/lib/insforge", () => ({ insforge: {} }));
 vi.mock("@/services/messaging", () => ({ cancelConnection: vi.fn(), getOrCreateConversation: vi.fn(), requestConnection: vi.fn(), respondToConnection: vi.fn(), sendMessage: vi.fn() }));
 vi.mock("@/services/notifications", () => ({ markAllNotificationsRead: vi.fn(), markNotificationRead: vi.fn() }));
@@ -35,6 +36,7 @@ function makeClient() {
   });
   const client = { database: { from } };
   createServerClient.mockReturnValue(client);
+  createPublicClient.mockReturnValue({ from });
   return { client, from };
 }
 
