@@ -59,7 +59,7 @@ const { error } = await client.database.from("profiles").update(update).eq("id",
 if (error) {
 if (hasNewAvatar) {
   if (isR2PublicMediaUrl(avatarUrl, avatarKey)) await deleteR2Object(avatarKey).catch(() => undefined);
-  else await client.storage.from(PROFILE_IMAGE_BUCKET).remove(avatarKey);
+  else await client.storage.from(PROFILE_IMAGE_BUCKET).remove([avatarKey]);
 }
 return { error: "Could not save profile changes. Please try again." };
 }
@@ -67,7 +67,7 @@ if (hasNewAvatar && previousProfile?.avatar_key && previousProfile.avatar_key !=
   if (isR2PublicMediaUrl(previousProfile.avatar ?? "", previousProfile.avatar_key)) {
     await deleteR2Object(previousProfile.avatar_key).catch((cleanupError) => console.error("Could not clean up the previous R2 profile image.", cleanupError));
   } else {
-    await client.storage.from(PROFILE_IMAGE_BUCKET).remove(previousProfile.avatar_key);
+    await client.storage.from(PROFILE_IMAGE_BUCKET).remove([previousProfile.avatar_key]);
   }
 }
 revalidatePath("/profile");
@@ -363,7 +363,7 @@ export async function deleteOwnMessageAction(messageId: string): Promise<{ ok: b
   const { error } = await (await createServerClient()).database.from("messages").delete().eq("id", messageId).eq("sender_id", user.id);
   if (error) return { ok: false, error: "Could not delete this message. Please try again." };
   if (owned.attachment_key) {
-    const { error: storageError } = await (await createServerClient()).storage.from("record-attachments").remove(owned.attachment_key);
+    const { error: storageError } = await (await createServerClient()).storage.from("record-attachments").remove([owned.attachment_key]);
     if (storageError) console.warn("Could not remove deleted chat attachment:", storageError.message);
   }
   revalidatePath(`/messages/${owned.conversationId}`);
