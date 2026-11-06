@@ -99,7 +99,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   if (!result.user) return { error: "Account could not be created. Please try again." };
   if (!result.session) return {
     ...profileFields(formData), email: data.email, verificationRequired: true,
-    success: "A 6-digit verification code has been sent to your email.",
+    success: "A secure verification link has been sent to your email.",
   };
 
   const profileData = new FormData();
@@ -135,7 +135,7 @@ export async function resendRegistrationCodeAction(_prev: FormState, formData: F
   if (!email) return { error: "Enter your email address." };
   const { error } = await (await supabase()).auth.resend({ type: "signup", email });
   if (error) return { error: "Could not resend the verification code. Please try again." };
-  return { success: "A new verification code has been sent." };
+  return { success: "A new verification link has been sent." };
 }
 
 export async function googleOAuthAction(): Promise<void> {
