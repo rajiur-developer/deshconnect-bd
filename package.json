@@ -24,6 +24,11 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.0"
   },
+  "overrides": {
+    "@insforge/shared-schemas": {
+      "zod": "^4.6.6"
+    }
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.5",
     "@types/node": "^22.15.3",
