@@ -53,7 +53,7 @@ export function isTrustedSupabaseStorageUrl(
   visibility: "public" | "private" = "public",
 ): boolean {
   if (!urlValue || !key) return false;
-  const configured = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\\/+$/, "");
+  const configured = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, "");
   if (!configured) return false;
   try {
     const base = new URL(configured);
