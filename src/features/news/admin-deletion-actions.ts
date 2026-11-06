@@ -18,7 +18,7 @@ export async function decideNewsDeletionAction(
     return { ok: false, error: "Only admins and moderators can review deletion requests." };
   }
 
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database.rpc("decide_news_deletion_request", {
     p_request_id: requestId,
     p_decision: decision,
