@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 import { getDatabase } from "@/lib/db/store";
