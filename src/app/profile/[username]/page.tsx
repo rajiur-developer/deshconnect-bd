@@ -17,7 +17,7 @@ const profile = await getUserByUsername(username);
 if (!profile) return <EmptyRecordPage title="Community profile" description="Connect with people and discover community activity." media="/images/banner/Collage.webp" backHref="/community" backLabel="Browse community" />;
 let profileAvatar = profile.avatar;
 if (profile.avatarKey && !isR2PublicMediaUrl(profile.avatar ?? "", profile.avatarKey)) {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data } = await client.storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(profile.avatarKey, 3600);
 profileAvatar = data?.signedUrl ?? profileAvatar;
 }
