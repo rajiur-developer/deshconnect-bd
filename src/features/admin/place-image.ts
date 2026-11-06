@@ -15,6 +15,17 @@ export function isValidAdminDirectoryImageUrl(imageUrl: string, userId: string, 
     }
 
     if (!key) {
+      const supabaseValue = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+      if (supabaseValue) {
+        const base = new URL(supabaseValue);
+        const prefix = `/storage/v1/object/public/${COMMUNITY_POST_IMAGE_BUCKET}/`;
+        if (url.origin === base.origin && url.pathname.startsWith(prefix)) {
+          key = decodeURIComponent(url.pathname.slice(prefix.length));
+        }
+      }
+    }
+
+    if (!key) {
       const baseValue = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim();
       if (!baseValue) return false;
       const base = new URL(baseValue);
