@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { createServerClient } from "@/lib/supabase/server";
+import { createPublicClient, createServerClient } from "@/lib/supabase/server";
 import { PROFILE_IMAGE_BUCKET, PROFILE_IMAGE_MAX_BYTES, PROFILE_IMAGE_TYPES } from "@/features/account/constants";
 import { isR2PublicMediaUrl, isTrustedPublicImageUrl } from "@/lib/storage/media-url";
 import { deleteR2Object } from "@/lib/storage/r2";
@@ -91,7 +91,7 @@ return { success: "Profile updated." }; }
 export async function requestConnectionAction(username: string): Promise<{ ok: boolean; error?: string }> {
 const user = await requireUser();
 const client = createServerClient({ cookies: await cookies() });
-const { data: target, error: targetError } = await client.database.from("public_profiles")
+const { data: target, error: targetError } = await createPublicClient().from("public_profiles")
 .select("id").eq("username", username).maybeSingle();
 if (targetError) throw targetError;
 if (!target) return { ok: false, error: "User not found." };
@@ -203,7 +203,7 @@ revalidatePath(`/messages/${conversationId}`);
   return { ok: true, message: { id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, attachmentKey: message.attachment_key ?? null, attachmentUrl: message.attachment_url ?? null, attachmentMimeType: message.attachment_mime_type ?? null, attachmentType: message.attachment_type ?? null, replyToMessageId: message.reply_to_message_id ?? null, createdAt: message.created_at, readBy: message.read_by ?? [], deliveredTo: message.delivered_to ?? [], editedAt: message.edited_at ?? null, reactions: message.reactions ?? [] } }; }
 export async function startConversationAction(username: string): Promise<{ ok: boolean; conversationId?: string; error?: string }> {
 const user = await requireUser();
-const { data: target } = await (await createServerClient()).database.from("public_profiles").select("id").eq("username", username).single();
+const { data: target } = await createPublicClient().from("public_profiles").select("id").eq("username", username).single();
 if (!target) return { ok: false, error: "User not found." };
 const { data: connection } = await (await createServerClient()).database.from("connections").select("id").eq("status", "accepted").or(`and(requester_id.eq.${user.id},addressee_id.eq.${target.id}),and(requester_id.eq.${target.id},addressee_id.eq.${user.id})`).maybeSingle();
 if (!connection) return { ok: false, error: "You can message this member after they accept your connection request." };
@@ -226,7 +226,7 @@ if (!retryError && existing?.id) return { ok: true, conversationId: existing.id 
 return { ok: false, error: "Could not open this conversation. Please try again." }; }
 export async function openConversationAction(username: string) {
 const user = await requireUser();
-const { data: target, error: targetError } = await (await createServerClient()).database.from("public_profiles").select("id").eq("username", username).maybeSingle();
+const { data: target, error: targetError } = await createPublicClient().from("public_profiles").select("id").eq("username", username).maybeSingle();
 if (targetError || !target) return { ok: false as const, error: "This member could not be found." };
 if (target.id === user.id) return { ok: false as const, error: "You cannot message yourself." };
 const { data: connection, error: connectionError } = await (await createServerClient()).database.from("connections").select("id").eq("status", "accepted").or(`and(requester_id.eq.${user.id},addressee_id.eq.${target.id}),and(requester_id.eq.${target.id},addressee_id.eq.${user.id})`).maybeSingle();
