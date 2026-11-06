@@ -14,7 +14,7 @@ export function LanguageSwitcher() {
       title={language === "bn" ? "Switch to English" : "বাংলায় পরিবর্তন করুন"}
       className="inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-white px-3 text-xs font-bold text-emerald-800 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
     >
-      {language === "bn" ? "English" : "বাংলা"}
+      {language === "bn" ? "EN" : "BN"}
     </button>
   );
 }
