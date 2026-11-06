@@ -23,7 +23,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
     role: "user",
     createdAt: user.createdAt,
   };
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data: profile, error } = await client.database.from("profiles")
     .select("id,username,full_name,avatar,avatar_key,bio,division_id,district_id,upazila_id,role,status,created_at")
     .eq("id", user.id).maybeSingle();
@@ -53,7 +53,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
 }
 
 export const getCurrentUser = cache(async (): Promise<PublicUser | null> => {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.auth.getCurrentUser();
   if (error || !data?.user) return null;
   return resolveProfile(data.user);
