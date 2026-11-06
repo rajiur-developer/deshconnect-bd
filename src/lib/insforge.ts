@@ -110,7 +110,10 @@ async function insforgeRequest(table: string, method: string, params: Record<str
     query = client.from(table).select(params.select ?? "*", includeCount ? { count: "exact" } : undefined);
     query = applySupabaseParams(query, params);
   } else if (method === "POST") {
-    query = client.from(table).insert(body).select("*");
+    // audit_logs intentionally has no user-facing SELECT policy. Do not request
+    // RETURNING rows for audit inserts; the authenticated actor policy is enough.
+    query = client.from(table).insert(body);
+    if (table !== "audit_logs") query = query.select("*");
   } else if (method === "PATCH") {
     query = client.from(table).update(body);
     query = applySupabaseParams(query, params).select("*");
