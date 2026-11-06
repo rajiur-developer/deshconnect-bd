@@ -3421,18 +3421,18 @@ html[lang="bn"] .dc-home-hero-title-primary {
 
 /* Bangla Navbar Font Size */
 html[lang="bn"] .dc-desktop-nav {
-  font-size: 21px !important;
+  font-size: 20px !important;
 }
 
 html[lang="bn"] .dc-desktop-nav > a,
 html[lang="bn"] .dc-desktop-nav > div > button {
-  font-size: 21px !important;
+  font-size: 20px !important;
   line-height: 20px;
 }
 
 /* English Navbar Font Size */
 html[lang="en"] .dc-desktop-nav {
-  font-size: 16px !important;
+  font-size: 15px !important;
 }
 
 html[lang="en"] .dc-desktop-nav > a,
@@ -3443,6 +3443,6 @@ html[lang="en"] .dc-desktop-nav > div > button {
 
 
 .account-create-btn {
-  height: 48px;
-  width: 100%;
+  height: 25px  !important;
+  width: 70px !important;
 }
