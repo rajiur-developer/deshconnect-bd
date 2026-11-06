@@ -58,7 +58,10 @@ export async function createServerClient(options: { cookies?: CookieStore } = {}
       return client.auth.resend({ type: "signup", email: input.email });
     },
     async sendResetPasswordEmail(input: { email: string }) {
-      return client.auth.resetPasswordForEmail(input.email);
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://deshconnect-bd.vercel.app";
+      const next = `/reset-password?email=${encodeURIComponent(input.email)}`;
+      const redirectTo = new URL(`/api/auth/callback?next=${encodeURIComponent(next)}`, baseUrl).toString();
+      return client.auth.resetPasswordForEmail(input.email, { redirectTo });
     },
     async exchangeResetPasswordToken(input: { email: string; code: string }) {
       const result = await client.auth.verifyOtp({ email: input.email, token: input.code, type: "recovery" });
