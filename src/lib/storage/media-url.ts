@@ -42,5 +42,31 @@ export function isTrustedPublicImageUrl(
   key: string,
   buckets: readonly string[] = ["profile-images", "community-post-images"],
 ): boolean {
-  return isR2PublicMediaUrl(urlValue, key) || isTrustedInsForgeImageUrl(urlValue, key, buckets);
+  return isR2PublicMediaUrl(urlValue, key) || isTrustedInsForgeImageUrl(urlValue, key, buckets) || isTrustedSupabaseStorageUrl(urlValue, key, buckets, "public");
+}
+
+
+export function isTrustedSupabaseStorageUrl(
+  urlValue: string,
+  key: string,
+  buckets: readonly string[],
+  visibility: "public" | "private" = "public",
+): boolean {
+  if (!urlValue || !key) return false;
+  const configured = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, "");
+  if (!configured) return false;
+  try {
+    const base = new URL(configured);
+    const url = new URL(urlValue);
+    if (url.origin !== base.origin || url.hash) return false;
+    const visibilityPath = visibility === "public" ? "public" : "sign";
+    const match = url.pathname.match(new RegExp("^/storage/v1/object/" + visibilityPath + "/([^/]+)/(.+)$"));
+    if (!match) return false;
+    const bucket = decodeURIComponent(match[1]);
+    const objectKey = decodeURIComponent(match[2]);
+    if (!buckets.includes(bucket) || objectKey !== key) return false;
+    return visibility === "public" ? !url.search : Boolean(url.searchParams.get("token"));
+  } catch {
+    return false;
+  }
 }

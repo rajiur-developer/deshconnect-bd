@@ -1,7 +1,7 @@
 import "server-only";
 
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
-import { insforge } from "@/lib/insforge";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function insforgeListConversations(userId: string) {
   const { data } = await insforgeSelectMany("conversations", { participant_ids: `cs.{${userId}}`, conversation_type: "eq.connection" });
@@ -13,7 +13,7 @@ export async function insforgeListConversations(userId: string) {
 }
 
 export async function listUnreadMessageCounts() {
-  const { data, error } = await insforge.database.rpc("get_unread_message_counts");
+  const { data, error } = await (await createServerClient()).database.rpc("get_unread_message_counts");
   if (error) throw error;
   return (data ?? []).map((row: any) => ({
     conversationId: row.conversation_id,
@@ -34,7 +34,7 @@ export async function listConversationPreviews(conversationIds: string[]): Promi
   const ids = [...new Set(conversationIds.filter((id) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)))];
   if (ids.length === 0) return [];
   const results = await Promise.all(ids.map(async (conversationId) => {
-    const { data, error } = await insforge.database
+    const { data, error } = await (await createServerClient()).database
       .from("messages")
       .select("id,conversation_id,sender_id,body,attachment_type,created_at")
       .eq("conversation_id", conversationId)

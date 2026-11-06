@@ -1,19 +1,22 @@
 import type { Metadata } from "next"; import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
-import { firstParam } from "@/lib/query"; import { ResetPasswordForm } from "@/components/auth/reset-password-form";
+import { firstParam } from "@/lib/query"; import { ResetPasswordForm } from "@/components/auth/reset-password-form"; import { createServerClient } from "@/lib/supabase/server";
 export const metadata: Metadata = { title: "Reset password", robots: { index: false, follow: false } };
 export default async function ResetPasswordPage({
 searchParams, }: {
 searchParams: Promise<Record<string, string | string[] | undefined>>; }) {
 const params = await searchParams;
 const email = firstParam(params.email) ?? "";
+const client = await createServerClient();
+const { data } = await client.auth.getUser();
+const hasSession = Boolean(data.user && data.user.email?.toLowerCase() === email.toLowerCase());
 return (
 <>
 <PageHeader title="Reset password" description="Choose a new password to secure your account." />
 <div className="container-x flex min-h-[70vh] items-center justify-center py-12">
 <div className="w-full max-w-md">
 {email ? (
-<ResetPasswordForm email={email} />
+<ResetPasswordForm email={email} hasSession={hasSession} />
 ) : (
 <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
 <h1 className="text-2xl font-bold text-slate-900">Reset code needed</h1>

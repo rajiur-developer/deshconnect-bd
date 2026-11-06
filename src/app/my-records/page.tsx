@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { TranslatedText } from "@/components/i18n/translated-text";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { AccountShell } from "@/components/layout/account-shell";
 import { RecordForm } from "@/components/records/record-form";
 import { requireUser } from "@/lib/auth/current-user";
@@ -10,7 +10,7 @@ export const metadata = { title: "My records", robots: { index: false, follow: f
 
 export default async function MyRecordsPage() {
   const user = await requireUser("/my-records");
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database.from("sample_records")
     .select("id,title,category,description,created_at,attachment_url,attachment_key,attachment_name,attachment_mime_type,attachment_size")
     .eq("user_id", user.id)

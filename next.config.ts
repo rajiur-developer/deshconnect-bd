@@ -13,6 +13,18 @@ const storageImagePattern = storageBaseUrl
     })()
   : null;
 
+const supabaseStoragePattern = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? (() => {
+      const url = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL);
+      return {
+        protocol: url.protocol.slice(0, -1) as "http" | "https",
+        hostname: url.hostname,
+        ...(url.port ? { port: url.port } : {}),
+        pathname: "/storage/v1/object/**",
+      } satisfies NonNullable<NonNullable<NextConfig["images"]>["remotePatterns"]>[number];
+    })()
+  : null;
+
 const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim().replace(/\/+$/, "");
 const r2ImagePattern = r2PublicUrl
   ? (() => {
@@ -41,6 +53,7 @@ const nextConfig: NextConfig = {
     // Keep existing InsForge images working while new public media uses R2.
     remotePatterns: [
       ...(storageImagePattern ? [storageImagePattern] : []),
+      ...(supabaseStoragePattern ? [supabaseStoragePattern] : []),
       ...(r2ImagePattern ? [r2ImagePattern] : []),
     ],
     dangerouslyAllowSVG: true,

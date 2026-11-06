@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
+import { isTrustedSupabaseStorageUrl } from "@/lib/storage/media-url";
 import { requireUser } from "@/lib/auth/current-user";
 import { RECORD_ATTACHMENT_BUCKET, RECORD_ATTACHMENT_MAX_BYTES, RECORD_ATTACHMENT_TYPES } from "@/features/records/constants";
 
@@ -27,8 +28,9 @@ export async function createRecordAction(_previous: RecordFormState, formData: F
   if (hasAttachment) {
     let urlIsTrusted = false;
     try {
-      const expectedOrigin = new URL(process.env.NEXT_PUBLIC_INSFORGE_URL!).origin;
-      urlIsTrusted = new URL(attachmentUrl).origin === expectedOrigin;
+      const expectedOrigin = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).origin;
+      urlIsTrusted = new URL(attachmentUrl).origin === expectedOrigin
+        && isTrustedSupabaseStorageUrl(attachmentUrl, attachmentKey, [RECORD_ATTACHMENT_BUCKET], "private");
     } catch {
       urlIsTrusted = false;
     }
@@ -43,7 +45,7 @@ export async function createRecordAction(_previous: RecordFormState, formData: F
     }
   }
 
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { error } = await client.database.from("sample_records").insert([{
     title,
     category,
@@ -58,7 +60,7 @@ export async function createRecordAction(_previous: RecordFormState, formData: F
   }]);
   if (error) {
     if (hasAttachment) {
-      await client.storage.from(RECORD_ATTACHMENT_BUCKET).remove(attachmentKey);
+      await client.storage.from(RECORD_ATTACHMENT_BUCKET).remove([attachmentKey]);
     }
     return { error: "Could not save this record. Please try again." };
   }

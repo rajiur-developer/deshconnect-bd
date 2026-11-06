@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { createId } from "@/lib/utils";
 import { COMMUNITY_POST_IMAGE_BUCKET } from "@/features/account/constants";
 import { isTrustedPublicImageUrl } from "@/lib/storage/media-url";
@@ -34,7 +34,7 @@ return { error: `Too many submissions. Try again in ${limit.retryAfterSeconds}s.
 }
 let error: any = null;
 try {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { error: insertError } = await client.database
 .from("news")
 .insert([{

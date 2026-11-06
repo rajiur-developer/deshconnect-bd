@@ -1,4 +1,4 @@
-import { createAdminClient } from "npm:@insforge/sdk";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,8 +34,8 @@ export default async function (request: Request): Promise<Response> {
     });
   }
 
-  const baseUrl = Deno.env.get("INSFORGE_BASE_URL");
-  const apiKey = Deno.env.get("API_KEY");
+  const baseUrl = Deno.env.get("SUPABASE_URL");
+  const apiKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!baseUrl || !apiKey) {
     console.error("Blood request expiry database connection is not configured.");
     return new Response(JSON.stringify({ error: "Job is not configured" }), {
@@ -44,8 +44,8 @@ export default async function (request: Request): Promise<Response> {
     });
   }
 
-  const admin = createAdminClient({ baseUrl, apiKey });
-  const { data: deletedCount, error } = await admin.database.rpc(
+  const admin = createClient(baseUrl, apiKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { data: deletedCount, error } = await admin.rpc(
     "delete_expired_blood_requests",
   );
   if (error) {

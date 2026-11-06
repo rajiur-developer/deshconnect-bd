@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { getDonationEligibility } from "@/lib/blood-donation";
-import { requireUser } from "@/lib/auth/current-user"; import { insforge } from "@/lib/insforge"; import { formatZodError, bloodRequestSchema, donorSchema, messageSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications"; import { createBloodRequest, upsertDonor } from "@/services/blood";
+import { requireUser } from "@/lib/auth/current-user"; import { createServerClient } from "@/lib/supabase/server"; import { formatZodError, bloodRequestSchema, donorSchema, messageSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { notify } from "@/services/notifications"; import { createBloodRequest, upsertDonor } from "@/services/blood";
 export type BloodFormState = { error?: string; success?: string };
 export async function registerDonorAction(_prev: BloodFormState, formData: FormData): Promise<BloodFormState> {
 const user = await requireUser();
@@ -56,7 +56,7 @@ revalidatePath("/settings");
 return { success: "Your donor profile has been saved." }; }
 export async function archiveOwnDonorProfileAction(): Promise<{ ok: boolean; error?: string }> {
 const user = await requireUser();
-const { data, error } = await insforge.database
+const { data, error } = await (await createServerClient()).database
 .from("blood_donors")
 .update({
 availability: "unavailable",
@@ -131,7 +131,7 @@ revalidatePath("/blood-donation");
 return { success: "Your blood request has been submitted for review." }; }
 export async function cancelBloodRequestAction(requestId: string): Promise<{ cancelled: boolean }> {
 const user = await requireUser();
-const { data, error } = await insforge.database
+const { data, error } = await (await createServerClient()).database
 .from("blood_requests")
 .update({ status: "cancelled", updated_at: new Date().toISOString() })
 .eq("id", requestId)
@@ -143,7 +143,7 @@ if (data?.length) revalidatePath("/blood-donation");
 return { cancelled: (data?.length ?? 0) > 0 }; }
 export async function releaseDonorContactAction(donorId: string) {
 const user = await requireUser();
-const { data: donor, error } = await insforge.database
+const { data: donor, error } = await (await createServerClient()).database
 .from("blood_donors")
 .select("id,user_id,phone,whatsapp,blood_group,consent_listed,consent_contact,consent_expiry")
 .eq("id", donorId)
@@ -154,7 +154,7 @@ if (error || !donor) return null;
 const today = new Date().toISOString().slice(0, 10);
 const consentExpiry = new Date(donor.consent_expiry).toISOString().slice(0, 10);
 if (consentExpiry < today) return null;
-const { data: requests } = await insforge.database
+const { data: requests } = await (await createServerClient()).database
 .from("blood_requests")
 .select("id")
 .eq("requester_id", user.id)
@@ -168,7 +168,7 @@ whatsapp: donor.whatsapp ?? donor.phone ?? null,
 }; }
 export async function releaseRequesterContactAction(requestId: string) {
 const user = await requireUser();
-const { data: request, error } = await insforge.database
+const { data: request, error } = await (await createServerClient()).database
 .from("blood_requests")
 .select("*, profiles!inner(*)")
 .eq("id", requestId)
@@ -178,13 +178,13 @@ if (error || !request) return null;
 const requester = request.profiles;
 if (!requester?.phone) return null;
 const today = new Date().toISOString().slice(0, 10);
-const { data: donor } = await insforge.database
+const { data: donor } = await (await createServerClient()).database
 .from("blood_donors")
 .select("id")
 .eq("user_id", user.id)
 .eq("consent_listed", true)
 .maybeSingle();
-const { data: viewerRequest } = await insforge.database
+const { data: viewerRequest } = await (await createServerClient()).database
 .from("blood_requests")
 .select("id")
 .eq("requester_id", user.id)
@@ -206,7 +206,7 @@ return { error: "Invalid blood listing." };
 }
 let targetUserId: string | null = null;
 if (targetType === "donor") {
-const { data: donor, error } = await insforge.database
+const { data: donor, error } = await (await createServerClient()).database
 .from("public_blood_donors")
 .select("user_id")
 .eq("id", targetId)
@@ -217,7 +217,7 @@ return { error: "Could not open this donor chat. Please try again." };
 }
 targetUserId = donor?.user_id ?? null;
 } else {
-const { data: request, error } = await insforge.database
+const { data: request, error } = await (await createServerClient()).database
 .from("blood_requests")
 .select("requester_id")
 .eq("id", targetId)
@@ -233,7 +233,7 @@ if (!targetUserId || targetUserId === user.id) {
 return { error: "This blood listing is no longer available for chat." };
 }
 // Check if conversation already exists
-const { data: existingConv, error: existingError } = await insforge.database
+const { data: existingConv, error: existingError } = await (await createServerClient()).database
 .from("conversations")
 .select("id")
 .eq("conversation_type", "blood")
@@ -249,7 +249,7 @@ return { error: "Could not open this chat. Please try again." };
 if (existingConv) {
 return { conversationId: existingConv.id };
 }
-const { data: conv, error } = await insforge.database
+const { data: conv, error } = await (await createServerClient()).database
 .from("conversations")
 .insert([{ participant_ids: [user.id, targetUserId], conversation_type: "blood", blood_target_type: targetType, blood_target_id: targetId }])
 .select("id")
@@ -261,7 +261,7 @@ return { error: "Could not create this chat. Please try again." };
 return { conversationId: conv.id }; }
 export async function getBloodChatMessagesAction(conversationId: string) {
 const user = await requireUser();
-const { data: conversation, error: conversationError } = await insforge.database
+const { data: conversation, error: conversationError } = await (await createServerClient()).database
 .from("conversations")
 .select("*")
 .eq("id", conversationId)
@@ -273,7 +273,7 @@ console.error("Could not verify blood chat participant:", conversationError);
 return { error: "Could not load this chat. Please try again." };
 }
 if (!conversation) return { error: "You are not a participant in this conversation." };
-const { data: messages, error } = await insforge.database
+const { data: messages, error } = await (await createServerClient()).database
 .from("messages")
 .select("*")
 .eq("conversation_id", conversationId)
@@ -285,7 +285,7 @@ return { error: "Could not load messages. Please try again." };
 return { messages: (messages ?? []).map((message: any) => ({ id: message.id, conversationId: message.conversation_id, senderId: message.sender_id, body: message.body, createdAt: message.created_at, readBy: message.read_by ?? [] })) }; }
 export async function sendBloodChatMessageAction(conversationId: string, body: string) {
 const user = await requireUser();
-const { data: conversation, error: conversationError } = await insforge.database.from("conversations").select("id").eq("id", conversationId).eq("conversation_type", "blood").filter("participant_ids", "cs", `{${user.id}}`).maybeSingle();
+const { data: conversation, error: conversationError } = await (await createServerClient()).database.from("conversations").select("id").eq("id", conversationId).eq("conversation_type", "blood").filter("participant_ids", "cs", `{${user.id}}`).maybeSingle();
 if (conversationError) {
 console.error("Could not verify blood chat participant before sending:", conversationError);
 return { error: "Could not send your message. Please try again." };
@@ -295,7 +295,7 @@ const parsed = messageSchema.safeParse({ body });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const limit = await rateLimitAsync(`bloodchat:${user.id}`, RATES.bloodChatPerMinute, 60_000);
 if (!limit.ok) return { error: `Too many messages. Try again in ${limit.retryAfterSeconds}s.` };
-const { data: message, error } = await insforge.database
+const { data: message, error } = await (await createServerClient()).database
 .from("messages")
 .insert([{
 conversation_id: conversationId,

@@ -1,10 +1,10 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function getRolePermissionOverrides(): Promise<Record<string, string[]>> {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database
     .from("role_permission_overrides")
     .select("role,actions");
@@ -16,7 +16,7 @@ export async function saveRolePermissionOverrides(
   overrides: Record<string, string[]>,
   actorId: string,
 ) {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const rows = ["user", "moderator"].map((role) => ({
     role,
     actions: overrides[role] ?? [],

@@ -29,7 +29,7 @@ export function CommunityPostImage({ src, storageKey, className = "" }: Communit
     }
 
     setSignedAttempted(true);
-    const bucket = src.includes("/buckets/community-post-images/")
+    const bucket = src.includes("community-post-images")
       ? COMMUNITY_POST_IMAGE_BUCKET
       : PROFILE_IMAGE_BUCKET;
     const client = getInsForgeBrowserClient();

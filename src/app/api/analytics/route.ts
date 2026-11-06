@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimitAsync } from "@/lib/security/rate-limit";
+import { createPublicClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -89,38 +90,23 @@ export async function POST(request: NextRequest) {
   response.cookies.set(SESSION_COOKIE, sessionToken, { ...cookieBase, maxAge: COOKIE_SESSION });
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\/+$/, "");
-    const anonKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY?.trim();
-    if (!baseUrl || !anonKey) throw new Error("InsForge public database configuration is missing");
-    const stored = await fetch(`${baseUrl}/api/database/records/visitor_events`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        apikey: anonKey,
-        Authorization: `Bearer ${anonKey}`,
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({
-        visitor_key: visitorKey,
-        session_key: sessionKey,
-        path: payload.path.split("?")[0].split("#")[0],
-        referrer_host: referrerHost,
-        device_type: deviceType(userAgent),
-        country_code: country && /^[A-Z]{2}$/.test(country) ? country : null,
-        region: region ? region.slice(0, 100) : null,
-      }),
-      cache: "no-store",
+    const client = createPublicClient();
+    const { error } = await client.from("visitor_events").insert({
+      visitor_key: visitorKey,
+      session_key: sessionKey,
+      path: payload.path.split("?")[0].split("#")[0],
+      referrer_host: referrerHost,
+      device_type: deviceType(userAgent),
+      country_code: country && /^[A-Z]{2}$/.test(country) ? country : null,
+      region: region ? region.slice(0, 100) : null,
     });
+
     // A repeated visit to the same route within one minute is deduplicated.
-    if (!stored.ok && stored.status !== 409) {
-      const detail = await stored.text();
-      throw new Error(`InsForge visitor event insert failed: ${stored.status} ${detail}`);
+    if (error && error.code !== "23505") {
+      throw new Error(`Supabase visitor event insert failed: ${error.message}`);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error("Anonymous analytics event could not be stored:", message);
-    return NextResponse.json({ ok: false }, { status: 503 });
+    console.error("Could not record analytics event.", error instanceof Error ? error.message : "Unknown error");
   }
 
   return response;

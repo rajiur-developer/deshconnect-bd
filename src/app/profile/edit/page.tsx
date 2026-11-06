@@ -1,11 +1,11 @@
-import { requireUser } from "@/lib/auth/current-user"; import { getUserById } from "@/services/users"; import { getDirectoryLocationOptions } from "@/services/locations"; import { AccountShell } from "@/components/layout/account-shell"; import { ProfileEditForm } from "@/components/account/account-forms"; import { cookies } from "next/headers"; import { createServerClient } from "@insforge/sdk/ssr"; import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants"; import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
+import { requireUser } from "@/lib/auth/current-user"; import { getUserById } from "@/services/users"; import { getDirectoryLocationOptions } from "@/services/locations"; import { AccountShell } from "@/components/layout/account-shell"; import { ProfileEditForm } from "@/components/account/account-forms"; import { cookies } from "next/headers"; import { createServerClient } from "@/lib/supabase/server"; import { PROFILE_IMAGE_BUCKET } from "@/features/account/constants"; import { isR2PublicMediaUrl } from "@/lib/storage/media-url";
 export const metadata = { title: "Edit profile", robots: { index: false, follow: false } };
 export default async function ProfileEditPage() {
 const user = await requireUser("/profile/edit");
 const [full, options] = await Promise.all([getUserById(user.id), getDirectoryLocationOptions()]);
 let avatar = full?.avatar;
 if (full?.avatarKey && !isR2PublicMediaUrl(full.avatar ?? "", full.avatarKey)) {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data } = await client.storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(full.avatarKey, 3600);
 avatar = data?.signedUrl ?? "";
 }

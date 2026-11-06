@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createAuthActions, createServerClient } from "@insforge/sdk/ssr";
+import { createAuthActions, createServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
@@ -69,7 +69,7 @@ async function saveProfile(userId: string, formData: FormData, cookieStore?: Awa
   // Reuse the same writable cookie store that received the freshly verified
   // session. A second cookies() read inside this Server Action can still see
   // only the request's pre-verification cookies.
-  const client = createServerClient({ cookies: cookieStore ?? await cookies() });
+  const client = await createServerClient({ cookies: cookieStore ?? await cookies() });
   const { data: existing, error: lookupError } = await client.database.from("profiles").select("id").eq("id", userId).maybeSingle();
   if (lookupError) throw new Error(lookupError.message);
   const result = existing
@@ -132,7 +132,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   let signUpError: Awaited<ReturnType<typeof actions.signUp>>["error"];
   try {
     ({ actions, cookieStore } = await freshAuth());
-    ({ data: response, error: signUpError } = await actions.signUp({ email: data.email, password: data.password, name: data.fullName }));
+    ({ data: response, error: signUpError } = await actions.signUp({ email: data.email, password: data.password, name: data.fullName, metadata: { username: data.username.toLowerCase(), phone: data.phone ?? null, divisionId: data.divisionId ?? null, districtId: data.districtId ?? null, upazilaId: data.upazilaId ?? null, bloodGroup: data.bloodGroup ?? null, gender: data.gender ?? null, dateOfBirth: data.dateOfBirth ?? null, termsAccepted: String(data.termsAccepted) } }));
   } catch (cause) {
     console.error("Registration request failed before returning an auth result.", cause instanceof Error ? cause.name : "Unknown error");
     return { error: "We could not reach the registration service. Please try again." };
@@ -177,7 +177,7 @@ export async function verifyRegistrationAction(_prev: FormState, formData: FormD
 export async function resendRegistrationCodeAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!email) return { error: "Enter your email address." };
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { error } = await client.auth.resendVerificationEmail({ email });
   if (error) return { error: "Could not resend the verification code. Please try again." };
   return { success: "A new verification code has been sent." };
@@ -222,7 +222,7 @@ export async function requestPasswordResetAction(_prev: FormState, formData: For
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
   const limit = await rateLimitAsync(`reset:${email}`, RATES.resetPerHour, 60 * 60_000);
   if (!limit.ok) return { error: `Too many requests. Try again in ${limit.retryAfterSeconds}s.` };
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { error } = await client.auth.sendResetPasswordEmail({ email });
   if (error) return { error: "We could not send a reset code. Please try again shortly." };
   redirect(`/reset-password?email=${encodeURIComponent(email)}`);
@@ -233,13 +233,21 @@ export async function resetPasswordAction(_prev: FormState, formData: FormData):
   const code = String(formData.get("code") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
-  if (!email || !/^\d{6}$/.test(code)) return { error: "Enter the 6-digit code sent to your email." };
+  if (!email) return { error: "Enter your account email address." };
+  if (code && !/^\d{6}$/.test(code)) return { error: "Enter the 6-digit code sent to your email." };
   if (password.length < 8 || password.length > 128) return { error: "Password must be between 8 and 128 characters." };
   if (password !== confirmPassword) return { error: "Passwords do not match." };
-  const client = createServerClient({ cookies: await cookies() });
-  const { data, error } = await client.auth.exchangeResetPasswordToken({ email, code });
-  if (error || !data?.token) return { error: error?.message ?? "The code is invalid or expired." };
-  const { error: resetError } = await client.auth.resetPassword({ newPassword: password, otp: data.token });
+  const client = await createServerClient({ cookies: await cookies() });
+  if (code) {
+    const { error } = await client.auth.exchangeResetPasswordToken({ email, code });
+    if (error) return { error: error.message };
+  } else {
+    const { data, error } = await client.auth.getUser();
+    if (error || !data.user || data.user.email?.toLowerCase() !== email) {
+      return { error: "Your password reset link has expired. Request a new reset email." };
+    }
+  }
+  const { error: resetError } = await client.auth.resetPassword({ newPassword: password });
   if (resetError) return { error: resetError.message };
   return { success: "Your password has been updated. You can now sign in." };
 }

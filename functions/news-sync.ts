@@ -1,4 +1,4 @@
-import { createAdminClient } from "npm:@insforge/sdk";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,14 +31,14 @@ export default async function (request: Request): Promise<Response> {
     return Response.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
   }
 
-  const baseUrl = Deno.env.get("INSFORGE_BASE_URL");
-  const apiKey = Deno.env.get("API_KEY");
+  const baseUrl = Deno.env.get("SUPABASE_URL");
+  const apiKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const gnewsKey = Deno.env.get("GNEWS_API_KEY");
   if (!baseUrl || !apiKey || !gnewsKey) {
     return Response.json({ error: "News sync is not configured. Set GNEWS_API_KEY and backend credentials." }, { status: 500, headers: corsHeaders });
   }
 
-  const admin = createAdminClient({ baseUrl, apiKey });
+  const admin = createClient(baseUrl, apiKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const now = new Date();
   let inserted = 0;
   let requestsCreated = 0;
@@ -61,14 +61,14 @@ export default async function (request: Request): Promise<Response> {
     const title = article.title?.trim();
     const sourceUrl = article.url?.trim();
     if (!title || !sourceUrl || !/^https?:\/\//i.test(sourceUrl)) continue;
-    const { data: existing, error: lookupError } = await admin.database
+    const { data: existing, error: lookupError } = await admin
       .from("news").select("id").eq("source_url", sourceUrl).maybeSingle();
     if (lookupError) throw lookupError;
     if (existing) continue;
 
     const description = article.description?.trim() || title;
     const fetchedAt = now.toISOString();
-    const { error } = await admin.database.from("news").insert([{
+    const { error } = await admin.from("news").insert([{
       slug: slugFromTitle(title, sourceUrl),
       title: title.slice(0, 200),
       excerpt: description.slice(0, 300),
@@ -89,7 +89,7 @@ export default async function (request: Request): Promise<Response> {
   }
 
   // Expired articles remain public until a staff member approves deletion.
-  const { data: expired, error: expiredError } = await admin.database
+  const { data: expired, error: expiredError } = await admin
     .from("news")
     .select("id,title,source_url,expires_at")
     .eq("status", "published")
@@ -97,7 +97,7 @@ export default async function (request: Request): Promise<Response> {
   if (expiredError) throw expiredError;
 
   for (const article of expired ?? []) {
-    const { data: requestRow, error: requestError } = await admin.database
+    const { data: requestRow, error: requestError } = await admin
       .from("news_deletion_requests")
       .upsert([{
         news_id: article.id,
@@ -110,11 +110,11 @@ export default async function (request: Request): Promise<Response> {
     if (requestError) throw requestError;
     if (requestRow) {
       requestsCreated++;
-      const { data: staff, error: staffError } = await admin.database
+      const { data: staff, error: staffError } = await admin
         .from("profiles").select("id").in("role", ["admin", "moderator"]);
       if (staffError) throw staffError;
       if (staff?.length) {
-        const { error: notificationError } = await admin.database.from("notifications").insert(
+        const { error: notificationError } = await admin.from("notifications").insert(
           staff.map((person: { id: string }) => ({
             user_id: person.id,
             title: "News deletion approval required",

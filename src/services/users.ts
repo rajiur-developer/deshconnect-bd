@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 
 import { insforgeGet, insforgeInsert, insforgeUpdate, insforgeDelete, insforgeSelectOne, insforgeSelectMany } from "@/lib/insforge";
 import { getDatabase } from "@/lib/db/store";
@@ -78,7 +78,7 @@ export async function insforgeListUsers(query?: {
 }
 
 export async function listAdminUsers() {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database.from("profiles")
     .select("id,username,full_name,email,phone,avatar,bio,division_id,district_id,upazila_id,role,status,email_verified,terms_accepted_at,blood_group,gender,date_of_birth,created_at,updated_at")
     .order("created_at", { ascending: false }).limit(500);
@@ -93,7 +93,7 @@ export async function listAdminUsers() {
 }
 
 export async function insforgeUpdateUserStatus(userId: string, status: string) {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database.from("profiles").update({ status, updated_at: new Date().toISOString() }).eq("id", userId).select("id,status").maybeSingle();
   if (error) throw error;
   return data;
@@ -105,7 +105,7 @@ export async function insforgeDeleteUser(userId: string) {
 }
 export const setUserStatus = insforgeUpdateUserStatus;
 export async function setUserRole(userId: string, role: string) {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error } = await client.database.from("profiles").update({ role, updated_at: new Date().toISOString() }).eq("id", userId).select("id,role").maybeSingle();
   if (error) throw error;
   return data;
