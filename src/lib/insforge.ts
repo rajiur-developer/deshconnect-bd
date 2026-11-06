@@ -1,40 +1,7 @@
 import "server-only";
 
-import { createClient } from "@insforge/sdk";
-import { cookies } from "next/headers";
 import { getDatabase, saveDatabase } from "@/lib/db/store";
 import { createPublicClient, createServerClient } from "@/lib/supabase/server";
-
-// Trailing slashes must be stripped: paths below already start with "/", so
-// "https://host/" would produce "https://host//api/..." which InsForge answers
-// with a 404 HTML page instead of JSON.
-const INSFORGE_URL = process.env.NEXT_PUBLIC_INSFORGE_URL?.trim().replace(/\/+$/, "");
-const ANON_KEY = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY?.trim();
-
-if (!INSFORGE_URL || !ANON_KEY) {
-  throw new Error(
-    "NEXT_PUBLIC_INSFORGE_URL and NEXT_PUBLIC_INSFORGE_ANON_KEY are required. " +
-      "Set them in .env.local (see .env.example); the URL must not end with a slash.",
-  );
-}
-
-async function currentAccessToken(): Promise<string | null> {
-  const store = await cookies();
-  return store.get("insforge_access_token")?.value ?? null;
-}
-
-export const insforge = createClient({
-  baseUrl: INSFORGE_URL,
-  anonKey: ANON_KEY,
-  fetch: async (input, init) => {
-    const headers = new Headers(input instanceof Request ? input.headers : undefined);
-    new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
-    const accessToken = await currentAccessToken();
-    headers.set("apikey", ANON_KEY);
-    headers.set("Authorization", `Bearer ${accessToken ?? ANON_KEY}`);
-    return fetch(input, { ...init, headers });
-  },
-});
 
 const LOCAL_TABLES: Record<string, string> = {
   profiles: "users", divisions: "divisions", districts: "districts", upazilas: "upazilas",
