@@ -15,7 +15,7 @@ export function useRealtimeConversation(conversationId: string, onMessage: (mess
       try {
         // subscribe() connects automatically and preserves this subscription
         // across socket reconnects; manually subscribing on `connect` races it.
-        const result = await client.realtime.subscribe(channel);
+        const result = await client.realtime.subscribe(channel) as { ok?: boolean; error?: { message?: string } };
         if (active && result.ok === false) {
           console.error(`Realtime subscription failed for ${channel}:`, result.error?.message);
         }
