@@ -60,7 +60,7 @@ export async function insforgeGetConversationForUser(conversationId: string, use
   if (!data) return null;
   const otherId = (data.participant_ids ?? []).find((id: string) => id !== userId);
   if (!otherId || data.participant_ids.length !== 2) return null;
-  const { data: connection } = await insforgeSelectOne("connections", { status: "eq.accepted", or: `(and(requester_id.eq.${userId},addressee_id.eq.${otherId}),and(requester_id.eq.${otherId},addressee_id.eq.${userId}))` });
+  const { data: connection } = await insforgeSelectOne("connections", { status: "eq.accepted", or: `and(requester_id.eq.${userId},addressee_id.eq.${otherId}),and(requester_id.eq.${otherId},addressee_id.eq.${userId})` });
   if (!connection) return null;
   return {
     id: data.id,
