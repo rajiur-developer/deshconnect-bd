@@ -14,6 +14,7 @@ function makeUsername(email: string, id: string) {
 
 async function resolveProfile(user: any): Promise<PublicUser | null> {
   const email = user.email ?? "";
+  const isVerified = Boolean(user.email_confirmed_at);
   const fallback: PublicUser = {
     id: user.id,
     username: makeUsername(email, user.id),
