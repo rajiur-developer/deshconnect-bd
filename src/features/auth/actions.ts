@@ -132,7 +132,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   let signUpError: Awaited<ReturnType<typeof actions.signUp>>["error"];
   try {
     ({ actions, cookieStore } = await freshAuth());
-    ({ data: response, error: signUpError } = await actions.signUp({ email: data.email, password: data.password, name: data.fullName }));
+    ({ data: response, error: signUpError } = await actions.signUp({ email: data.email, password: data.password, name: data.fullName, metadata: { username: data.username.toLowerCase(), phone: data.phone ?? null, divisionId: data.divisionId ?? null, districtId: data.districtId ?? null, upazilaId: data.upazilaId ?? null, bloodGroup: data.bloodGroup ?? null, gender: data.gender ?? null, dateOfBirth: data.dateOfBirth ?? null, termsAccepted: String(data.termsAccepted) } }));
   } catch (cause) {
     console.error("Registration request failed before returning an auth result.", cause instanceof Error ? cause.name : "Unknown error");
     return { error: "We could not reach the registration service. Please try again." };
