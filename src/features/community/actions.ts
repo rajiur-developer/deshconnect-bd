@@ -4,7 +4,7 @@ import { COMMUNITY_POST_IMAGE_BUCKET, PROFILE_IMAGE_BUCKET } from "@/features/ac
 import { isR2PublicMediaUrl, isTrustedPublicImageUrl } from "@/lib/storage/media-url";
 import { deleteR2Object } from "@/lib/storage/r2";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/current-user"; import { insforgeDelete, insforgeSelectOne, insforgeUpdate } from "@/lib/insforge"; import { mapDbRow } from "@/lib/db/insforge"; import type { Report } from "@/types/community"; import { formatZodError, commentSchema, postSchema, reportSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import { rateLimitAsync } from "@/lib/security/rate-limit"; import { RATES } from "@/lib/constants"; import { can } from "@/lib/auth/permissions"; import { getRolePermissionOverrides } from "@/services/role-permissions";
 export type CommunityFormState = { error?: string; success?: string };
 export async function createPostAction(_prev: CommunityFormState, formData: FormData): Promise<CommunityFormState> {
