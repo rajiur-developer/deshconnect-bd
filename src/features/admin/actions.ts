@@ -18,13 +18,13 @@ return user; }
 async function audit(user: { id: string; fullName: string }, action: string, entity: string, entityId: string, outcome: "success" | "denied" = "success", detail?: string) {
 await recordAudit({ actorId: user.id, actorName: user.fullName, action, entity, entityId, outcome, detail }); }
 async function deleteAdminRow(table: string, id: string) {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from(table).delete().eq("id", id).select("id").maybeSingle();
 if (error) throw error;
 return data;
 }
 async function updateAdminRow(table: string, id: string, values: Record<string, unknown>) {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from(table).update({ ...values, updated_at: new Date().toISOString() }).eq("id", id).select("id").maybeSingle();
 if (error) throw error;
 return data;
@@ -64,7 +64,7 @@ const user = await requireMainAdmin();
 const section = categorySectionFromForm(formData);
 const name = String(formData.get("name") ?? "").trim();
 if (!section || name.length < 1 || name.length > 80) return { error: "Enter a category name between 1 and 80 characters." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const value = createId("category");
 const { data, error } = await client.database.from("content_categories")
 .insert([{ section, value, name: sanitizeText(name, 80) }])
@@ -84,7 +84,7 @@ const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 const name = String(formData.get("name") ?? "").trim();
 if (!section || !value || name.length < 1 || name.length > 80) return { error: "Enter a category name between 1 and 80 characters." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("content_categories")
 .update({ name: sanitizeText(name, 80), updated_at: new Date().toISOString() })
 .eq("section", section).eq("value", value).select("value").maybeSingle();
@@ -103,7 +103,7 @@ const section = categorySectionFromForm(formData);
 const value = String(formData.get("value") ?? "");
 if (!section || !value) return { error: "Invalid category." };
 const table = section === "place" ? "places" : section === "news" ? "news" : section === "hospital" ? "hospitals" : section === "government-service" ? "government_services" : "institutions";
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: uses, error: usesError } = await client.database.from(table).select("id").eq("category", value).limit(1);
 if (usesError) {
 console.error("Could not check category usage before delete", { section, code: usesError.code, message: usesError.message });
@@ -125,7 +125,7 @@ export async function adminSetNewsStatusAction(id: string, status: "pending_revi
 if (!id || !["pending_review", "published", "rejected", "archived"].includes(status)) return { ok: false, error: "Invalid news update." };
 const requiredPermission: PermissionAction = status === "published" ? "news:publish" : status === "pending_review" || status === "rejected" ? "news:approve" : "news:edit";
 const user = await guard(requiredPermission);
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").update({ status, updated_at: new Date().toISOString() }).eq("id", id).select("id").maybeSingle();
 if (error) { console.error("News status update failed", { code: error.code, message: error.message }); return { ok: false, error: "Could not update the news status." }; }
 if (!data) return { ok: false, error: "News post not found or permission denied." };
@@ -142,7 +142,7 @@ image: formData.get("image") || undefined,
 });
 if (!parsed.success) return { ok: false, error: formatZodError(parsed.error) };
 if (!(await isContentCategory("news", parsed.data.category))) return { ok: false, error: "Please choose a valid news category." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").update({
 title: sanitizeText(parsed.data.title, 200), excerpt: sanitizeText(parsed.data.excerpt, 300),
 body: sanitizeMultiline(parsed.data.body), category: parsed.data.category,
@@ -158,7 +158,7 @@ return { ok: true }; }
 export async function adminDeleteNewsAction(id: string): Promise<{ ok: boolean; error?: string }> {
 const user = await guard("news:edit");
 if (!id) return { ok: false, error: "Invalid news post." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").delete().eq("id", id).select("id").maybeSingle();
 if (error) { console.error("News delete failed", { code: error.code, message: error.message }); return { ok: false, error: "Could not delete the news post." }; }
 if (!data) return { ok: false, error: "News post not found or permission denied." };
@@ -202,7 +202,7 @@ revalidatePath("/admin/roles"); }
 */ export async function toggleModeratorAction(userId: string): Promise<{ ok: boolean; role?: Role; error?: string }> {
 const actor = await requireUser("/admin");
 if (actor.role !== "admin") return { ok: false, error: "Only an admin can change account roles." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: target, error: readError } = await client.database.from("profiles").select("id,username,role").eq("id", userId).maybeSingle();
 if (readError) return { ok: false, error: readError.message };
 if (!target) return { ok: false, error: "User not found." };
@@ -292,7 +292,7 @@ export async function adminSaveSettingsAction(_prev: { error?: string; success?:
 const user = await guard("settings:manage");
 const siteName = String(formData.get("siteName") ?? "").trim();
 if (!siteName) return { error: "Site name is required." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { error } = await client.database.from("platform_settings").upsert([{ id: "platform", site_name: siteName, allow_public_posts: formData.get("allowPublicPosts") === "on", require_news_approval: formData.get("requireNewsApproval") === "on", donor_directory_enabled: formData.get("donorDirectoryEnabled") === "on", updated_by: user.id, updated_at: new Date().toISOString() }]);
 if (error) return { error: "Settings could not be saved. Please try again." };
 await audit(user, "settings:update", "settings", "platform");
@@ -315,7 +315,7 @@ export async function adminDeleteUserAction(userId: string) {
 const user = await requireUser("/admin");
 if (user.role !== "admin") throw new Error("Only an admin can manage user accounts.");
 if (user.id === userId) return;
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: deleted, error } = await client.database.rpc("admin_delete_user", { target_user_id: userId });
 if (error) throw error;
 if (!deleted) return;
@@ -367,7 +367,7 @@ divisionId: parsed.data.divisionId ?? null,
 districtId: parsed.data.districtId ?? null,
 upazilaId: parsed.data.upazilaId ?? null,
 };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 let created;
 try {
 const result = await client.database.from("places").insert([{ slug: place.slug, name: place.name, category: place.category, summary: place.summary, description: place.description, address: place.address, latitude: place.latitude, longitude: place.longitude, image: place.image, gallery: place.gallery, rating: place.rating, review_count: place.reviewCount, opening_hours: place.openingHours, entry_fee: place.entryFee, best_time: place.bestTime, status: place.status, verification: place.verification, division_id: place.divisionId, district_id: place.districtId, upazila_id: place.upazilaId }]).select("id").single();
@@ -418,7 +418,7 @@ if (parsed.data.image && !isValidAdminDirectoryImageUrl(parsed.data.image, user.
 return { error: "The selected image could not be verified. Please upload it again." };
 }
 const slug = `${slugify(parsed.data.name) || entity}-${createId(entity).slice(-8)}`;
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 let created;
 try {
 const result = await client.database.from(table).insert([{
@@ -487,7 +487,7 @@ publishedAt: now,
 createdAt: now,
 updatedAt: now,
 };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data, error } = await client.database.from("news").insert([{
 slug: article.slug, title: article.title, excerpt: article.excerpt, body: article.body,
 image: article.image, category: article.category, author_id: user.id, source: article.source,
@@ -512,7 +512,7 @@ notes: formData.get("notes") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
 const now = new Date().toISOString();
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: request, error: requestError } = await client.database.from("blood_requests").insert([{ requester_id: user.id, blood_group: parsed.data.bloodGroup, units: parsed.data.units, hospital: sanitizeText(parsed.data.hospital, 200), needed_by: parsed.data.neededBy, notes: parsed.data.notes ? sanitizeText(parsed.data.notes, 1000) : null, status: "active" }]).select("id").single();
 if (requestError) return { error: "Emergency blood request could not be published." };
 const { data: recipients, error: usersError } = await client.database.from("profiles").select("id");
@@ -565,7 +565,7 @@ divisionId: parsed.data.divisionId ?? null,
 districtId: parsed.data.districtId ?? null,
 upazilaId: parsed.data.upazilaId ?? null,
 };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: created, error } = await client.database.from("government_services").insert([{ slug: service.slug, name: service.name, category: service.category, description: service.description, office_address: service.officeAddress, phone: service.phone, emergency_phone: service.emergencyPhone, website: service.website, hours: service.hours, required_documents: service.requiredDocuments ?? [], status: service.status, division_id: service.divisionId, district_id: service.districtId, upazila_id: service.upazilaId }]).select("id").single();
 if (error) return { error: "Government service could not be saved. Please try again." };
 await audit(user, "service:create", "government_service", created.id);
@@ -614,7 +614,7 @@ divisionId: parsed.data.divisionId ?? null,
 districtId: parsed.data.districtId ?? null,
 upazilaId: parsed.data.upazilaId ?? null,
 };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: created, error } = await client.database.from("businesses").insert([{ slug: business.slug, name: business.name, category: business.category, description: business.description, address: business.address, phone: business.phone, website: business.website, image: business.image, status: business.status, verification: business.verification, division_id: business.divisionId, district_id: business.districtId, upazila_id: business.upazilaId }]).select("id").single();
 if (error) return { error: "Business could not be saved. Please try again." };
 await audit(user, "business:create", "business", created.id);
@@ -638,7 +638,7 @@ const parentId = parsed.data.parentId ?? "";
 if (parsed.data.category !== "division" && !parentId) {
 return { error: "Select a parent division/district for this location." };
 }
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 let table: string; let row: Record<string, unknown>;
 if (parsed.data.category === "division") {
 table = "divisions"; row = { id: createId("div"), slug: slugify(name), name, capital: name, districts_count: 0, summary: title, image };
@@ -852,7 +852,7 @@ const status = String(formData.get("status") ?? "active") as "active" | "suspend
 if (!id || !fullName) return { error: "Name is required." };
 if (!["user", "moderator", "admin"].includes(role) || !["active", "suspended", "pending"].includes(status)) return { error: "Invalid role or status." };
 if (actor.id === id && role !== actor.role) return { error: "You cannot change your own role." };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: target, error: readError } = await client.database.from("profiles").select("id,role").eq("id", id).maybeSingle();
 if (readError || !target) return { error: "User not found." };
 if (actor.role !== "admin" && (target.role !== role || target.role === "admin" || role === "admin")) return { error: "Only an admin can change account roles." };
