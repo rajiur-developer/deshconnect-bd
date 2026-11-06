@@ -90,9 +90,9 @@ export function expandSearchTerms(query: string): string[] {
   const terms = new Set([original]);
 
   if (/[\u0980-\u09FF]/.test(original)) {
-    const latin = (BENGALI_PLACE_ALIASES[original] ?? bengaliToLatin(original)).trim();
+    const latin = (BENGALI_PLACE_ALIASES[original] ?? (original.includes("অপরাজ") ? "aparajeyo" : bengaliToLatin(original))).trim();
     if (latin && latin.toLowerCase() !== original.toLowerCase()) terms.add(latin);
-    if (original.includes("অপরাজেয়")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
+    if (original.includes("অপরাজ")) APARAJEYO_VARIANTS.forEach((variant) => terms.add(variant));
   } else if (/[a-z]/i.test(original)) {
     const bengali = banglishToBengali(original);
     if (bengali && bengali !== original) terms.add(bengali);
