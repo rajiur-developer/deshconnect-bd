@@ -60,7 +60,7 @@ export async function createRecordAction(_previous: RecordFormState, formData: F
   }]);
   if (error) {
     if (hasAttachment) {
-      await client.storage.from(RECORD_ATTACHMENT_BUCKET).remove(attachmentKey);
+      await client.storage.from(RECORD_ATTACHMENT_BUCKET).remove([attachmentKey]);
     }
     return { error: "Could not save this record. Please try again." };
   }
