@@ -20,7 +20,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
     fullName: user.user_metadata?.fullName || user.user_metadata?.full_name || user.user_metadata?.name || email.split("@")[0] || "Member",
     avatar: user.user_metadata?.avatar_url || "",
     bio: "",
-    role: email.toLowerCase() === "rajiurrahman21@gmail.com" ? "admin" : "user",
+    role: isVerified && email.toLowerCase() === "rajiurrahman21@gmail.com" ? "admin" : "user",
     createdAt: user.created_at,
   };
   const client = createServerClient({ cookies: await cookies() });
