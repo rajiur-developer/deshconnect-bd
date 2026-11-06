@@ -13,10 +13,11 @@ function makeUsername(email: string, id: string) {
 }
 
 async function resolveProfile(user: any): Promise<PublicUser | null> {
+  const email = typeof user.email === "string" ? user.email : "";
   const fallback: PublicUser = {
     id: user.id,
-    username: makeUsername(user.email, user.id),
-    fullName: user.profile?.name || user.email.split("@")[0] || "Member",
+    username: makeUsername(email, user.id),
+    fullName: user.profile?.fullName || user.profile?.full_name || user.profile?.name || email.split("@")[0] || "Member",
     avatar: user.profile?.avatar_url || "",
     bio: "",
     role: "user",
@@ -29,7 +30,7 @@ async function resolveProfile(user: any): Promise<PublicUser | null> {
   if (!profile && !error) {
     const { error: insertError } = await client.database.from("profiles").insert([{
       id: user.id, username: fallback.username, full_name: fallback.fullName,
-      email: user.email, avatar: fallback.avatar, role: "user", status: "active",
+      email, avatar: fallback.avatar, role: "user", status: "active",
       email_verified: user.emailVerified,
     }]);
     if (insertError) console.error("Could not create a missing profile for the current user.", insertError.message);
@@ -58,7 +59,7 @@ export const getCurrentUser = cache(async (): Promise<PublicUser | null> => {
   return resolveProfile(data.user);
 });
 
-/** Require an InsForge Auth session, otherwise redirect to /login. */
+/** Require a Supabase Auth session, otherwise redirect to /login. */
 export async function requireUser(redirectTo?: string): Promise<PublicUser> {
   const user = await getCurrentUser();
   if (!user) redirect(redirectTo ? `/login?next=${encodeURIComponent(redirectTo)}` : "/login");
