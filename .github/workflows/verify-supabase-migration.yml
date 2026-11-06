@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+      - fix/supabase-full-backend-migration
   workflow_dispatch:
 
 jobs:
