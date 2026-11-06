@@ -81,12 +81,12 @@ export function createAuthActions(options: { cookies: CookieStore }) {
       const client = await clientPromise;
       return client.auth.signInWithPassword(input);
     },
-    async signUp(input: { email: string; password: string; name: string }) {
+    async signUp(input: { email: string; password: string; name: string; metadata?: Record<string, unknown> }) {
       const client = await clientPromise;
       const result = await client.auth.signUp({
         email: input.email,
         password: input.password,
-        options: { data: { name: input.name, fullName: input.name } },
+        options: { data: { name: input.name, fullName: input.name, ...(input.metadata ?? {}) } },
       });
       return {
         data: { user: result.data.user, requireEmailVerification: !result.data.session },
