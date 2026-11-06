@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/current-user"; import { can, rolePermissions } from "@/lib/auth/permissions"; import { ALL_ACTIONS, type PermissionAction } from "@/config/permissions"; import { setNewsStatus } from "@/services/news"; import { setPostStatus, setReportStatus, setReviewStatus } from "@/services/community"; import { setUserRole, setUserStatus } from "@/services/users"; import { setBloodRequestStatus } from "@/services/blood"; import { recordAudit } from "@/services/audit"; import { createId, slugify } from "@/lib/utils"; import { formatZodError, emergencyAlertSchema, businessSchema, institutionSchema, locationSchema, placeSchema, serviceSchema, staffNewsSchema } from "@/lib/validation/schemas"; import { sanitizeMultiline, sanitizeText } from "@/lib/security/sanitize"; import type { Business, GovernmentService, News, Place } from "@/types/content"; import type { Role } from "@/types/auth";
 import { cookies } from "next/headers";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { getRolePermissionOverrides, saveRolePermissionOverrides } from "@/services/role-permissions";
 import { isContentCategory, type ContentCategorySection } from "@/services/content-categories";
 import { isValidAdminDirectoryImageUrl, isValidAdminPlaceImageUrl } from "@/features/admin/place-image";
