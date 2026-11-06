@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { TranslatedText } from "@/components/i18n/translated-text";
-import { createServerClient } from "@insforge/sdk/ssr";
+import { createServerClient } from "@/lib/supabase/server";
 import { AccountShell } from "@/components/layout/account-shell";
 import { RecordForm } from "@/components/records/record-form";
 import { requireUser } from "@/lib/auth/current-user";
