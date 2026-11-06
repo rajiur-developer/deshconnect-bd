@@ -34,7 +34,7 @@ export function SearchAutocomplete({
     pathname.startsWith("/hospitals") ? "hospitals" :
     pathname.startsWith("/businesses") ? "businesses" :
     pathname.startsWith("/government-services") ? "government-services" :
-    pathname.startsWith("/news") ? "news" : "none";
+    pathname.startsWith("/news") ? "news" : "all";
   const [internalValue, setInternalValue] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
