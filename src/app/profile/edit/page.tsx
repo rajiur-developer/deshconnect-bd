@@ -5,7 +5,7 @@ const user = await requireUser("/profile/edit");
 const [full, options] = await Promise.all([getUserById(user.id), getDirectoryLocationOptions()]);
 let avatar = full?.avatar;
 if (full?.avatarKey && !isR2PublicMediaUrl(full.avatar ?? "", full.avatarKey)) {
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data } = await client.storage.from(PROFILE_IMAGE_BUCKET).createSignedUrl(full.avatarKey, 3600);
 avatar = data?.signedUrl ?? "";
 }
