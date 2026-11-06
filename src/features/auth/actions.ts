@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createAuthActions, createServerClient } from "@insforge/sdk/ssr";
+import { createAuthActions, createServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { rateLimitAsync } from "@/lib/security/rate-limit";
 import { RATES } from "@/lib/constants";
