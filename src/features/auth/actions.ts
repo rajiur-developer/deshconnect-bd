@@ -233,12 +233,20 @@ export async function resetPasswordAction(_prev: FormState, formData: FormData):
   const code = String(formData.get("code") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
-  if (!email || !/^\d{6}$/.test(code)) return { error: "Enter the 6-digit code sent to your email." };
+  if (!email) return { error: "Enter your account email address." };
+  if (code && !/^\d{6}$/.test(code)) return { error: "Enter the 6-digit code sent to your email." };
   if (password.length < 8 || password.length > 128) return { error: "Password must be between 8 and 128 characters." };
   if (password !== confirmPassword) return { error: "Passwords do not match." };
   const client = await createServerClient({ cookies: await cookies() });
-  const { data, error } = await client.auth.exchangeResetPasswordToken({ email, code });
-  if (error || !data?.token) return { error: error?.message ?? "The code is invalid or expired." };
+  if (code) {
+    const { error } = await client.auth.exchangeResetPasswordToken({ email, code });
+    if (error) return { error: error.message };
+  } else {
+    const { data, error } = await client.auth.getUser();
+    if (error || !data.user || data.user.email?.toLowerCase() !== email) {
+      return { error: "Your password reset link has expired. Request a new reset email." };
+    }
+  }
   const { error: resetError } = await client.auth.resetPassword({ newPassword: password });
   if (resetError) return { error: resetError.message };
   return { success: "Your password has been updated. You can now sign in." };
