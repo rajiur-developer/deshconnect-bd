@@ -3,7 +3,7 @@ import "server-only";
 import { createClient } from "@insforge/sdk";
 import { cookies } from "next/headers";
 import { getDatabase, saveDatabase } from "@/lib/db/store";
-import { createServerClient } from "@/lib/supabase/server";
+import { createPublicClient, createServerClient } from "@/lib/supabase/server";
 
 // Trailing slashes must be stripped: paths below already start with "/", so
 // "https://host/" would produce "https://host//api/..." which InsForge answers
@@ -137,7 +137,7 @@ function applySupabaseParams(query: any, params: Record<string, string>) {
 }
 
 async function insforgeRequest(table: string, method: string, params: Record<string, string> = {}, body?: unknown, includeCount = false): Promise<any> {
-  const client = await createServerClient();
+  const client = ["public_profiles", "public_blood_donors"].includes(table) ? createPublicClient() : await createServerClient();
   let query: any;
   if (method === "GET") {
     query = client.from(table).select(params.select ?? "*", includeCount ? { count: "exact" } : undefined);
