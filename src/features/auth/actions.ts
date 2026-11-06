@@ -31,7 +31,6 @@ function toProfile(formData: FormData) {
     gender: String(formData.get("gender") ?? "").trim() || null,
     date_of_birth: String(formData.get("dateOfBirth") ?? "").trim() || null,
     terms_accepted_at: new Date().toISOString(),
-    email_verified: true,
     updated_at: new Date().toISOString(),
   };
 }
@@ -134,7 +133,7 @@ export async function resendRegistrationCodeAction(_prev: FormState, formData: F
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!email) return { error: "Enter your email address." };
   const { error } = await (await supabase()).auth.resend({ type: "signup", email });
-  if (error) return { error: "Could not resend the verification code. Please try again." };
+  if (error) return { error: "Could not resend the verification link. Please try again." };
   return { success: "A new verification link has been sent." };
 }
 
