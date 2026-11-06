@@ -22,7 +22,7 @@ return (
 <Link
 href={entry.href}
 aria-current={isActive ? "page" : undefined}
-className={`relative z-10 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 hover:scale-[1.04] ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
+className={`relative z-10 shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 hover:scale-[1.04] ${isBloodDonation ? `blood-nav-link text-accent-600 hover:bg-accent-50 hover:text-accent-700${isActive ? " text-accent-700" : ""}` : `text-slate-600 hover:bg-brand-50 hover:text-brand-700${isActive ? " text-brand-700" : ""}`}`}
 >
 {isBloodDonation && <Icon name="droplet" aria-hidden="true" className="mr-1 inline h-4 w-4" />}
 {t(entry.label)}{entry.href === "/messages" && <UnreadMessageBadge count={unreadTotal} />}
@@ -36,7 +36,7 @@ const dismissMenu = () => {
 };
 return (
 <div
-className="group relative z-10"
+className="group relative z-10 shrink-0 whitespace-nowrap"
 onMouseEnter={() => { if (!dismissedByClick) setOpen(true); }}
 onMouseLeave={() => { setOpen(false); setDismissedByClick(false); }}
 >
