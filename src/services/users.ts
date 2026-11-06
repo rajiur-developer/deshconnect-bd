@@ -111,7 +111,7 @@ export async function setUserRole(userId: string, role: string) {
   return data;
 }
 export async function listConnections(userId: string) {
-  const { data: edges } = await insforgeSelectMany("connections", { or: `(requester_id.eq.${userId},addressee_id.eq.${userId})`, status: "eq.accepted" });
+  const { data: edges } = await insforgeSelectMany("connections", { or: `requester_id.eq.${userId},addressee_id.eq.${userId}`, status: "eq.accepted" });
   const ids = [...new Set(edges.map((edge: any) => edge.requester_id === userId ? edge.addressee_id : edge.requester_id))];
   const users = await Promise.all(ids.map((id) => insforgeGetUserById(id)));
   return users.filter(Boolean);
