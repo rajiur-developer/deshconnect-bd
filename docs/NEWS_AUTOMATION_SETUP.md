@@ -1,42 +1,37 @@
 # DeshConnect automated Bengali news
 
-This feature uses GNews to import Bengali Bangladesh news, keeps imported articles visible for 48 hours from the fetch time, and then creates a separate admin deletion-approval request. An expired article is **not** hidden or deleted until a staff member approves it.
+This feature imports Bengali Bangladesh news through GNews, keeps imported articles visible for 48 hours from fetch time, and then creates an admin deletion-approval request. An expired article is **not** hidden or deleted until a staff member approves it.
 
-## Required InsForge setup
+## Supabase setup
 
 1. Obtain a GNews API key from https://gnews.io/.
-2. Add these InsForge secrets (never put them in a `NEXT_PUBLIC_*` variable):
-   - `GNEWS_API_KEY`: the GNews API key.
-   - `NEWS_SYNC_TOKEN`: a long random token. Generate one with `openssl rand -hex 32`.
-3. Apply the migration in `migrations/20261101090000_automated-news-expiry-approval.sql`.
+2. Set the Edge Function secrets in the linked Supabase project (never use `NEXT_PUBLIC_*` variables):
+   ```bash
+   supabase secrets set GNEWS_API_KEY=YOUR_GNEWS_API_KEY NEWS_SYNC_TOKEN=YOUR_LONG_RANDOM_TOKEN --project-ref eqxqlblyanfgghygofsj
+   ```
+   Generate a token locally with `openssl rand -hex 32`. Supabase provides `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to Edge Functions automatically.
+3. Apply the database migration:
+   ```bash
+   supabase db push --project-ref eqxqlblyanfgghygofsj
+   ```
+   The migration adds the external source fields, a unique source URL index, the approval queue, and the staff-only decision RPC.
 4. Deploy the function:
    ```bash
-   npx @insforge/cli functions deploy news-sync --file functions/news-sync.ts
+   supabase functions deploy news-sync --project-ref eqxqlblyanfgghygofsj --no-verify-jwt
    ```
-5. Create the 30-minute schedule (replace the host with the linked InsForge project's host):
-   ```bash
-   npx @insforge/cli schedules create \
-     --name "DeshConnect Bengali News Sync" \
-     --cron "*/30 * * * *" \
-     --url "https://qk8ksk3i.us-east.insforge.app/functions/news-sync" \
-     --method POST \
-     --headers '{"Authorization":"Bearer ${{secrets.NEWS_SYNC_TOKEN}}"}'
-   ```
-6. Confirm the schedule is active and inspect its logs:
-   ```bash
-   npx @insforge/cli schedules list
-   npx @insforge/cli schedules logs <schedule-id>
-   ```
+   The function validates `NEWS_SYNC_TOKEN` itself. Do not expose this token in browser code.
+5. Schedule a POST every 30 minutes to:
+   `https://eqxqlblyanfgghygofsj.supabase.co/functions/v1/news-sync`
+   with header `Authorization: Bearer YOUR_NEWS_SYNC_TOKEN`. Store the token in the scheduler's secret store; never put it in source control or a public environment variable.
 
 ## Runtime behavior
 
 - Fetches up to 10 Bengali-language Bangladesh results per run from GNews.
-- Avoids duplicates using the source URL and external ID unique indexes.
-- Stores only the provider's headline, short description, source, image URL and link to the original report; it does not copy the full source article.
+- Avoids duplicates using unique source URL and external ID indexes.
+- Stores the provider's headline, short description, source, image URL and original article link; it does not copy the full source article.
 - Sets `fetched_at` and `expires_at = fetched_at + 48 hours`.
-- The public news listing already sorts published news newest-first.
-- On/after expiry, creates one row in `news_deletion_requests` and notifies admins/moderators.
+- After expiry, creates one row in `news_deletion_requests` and notifies admins/moderators.
 - The article remains public while the request is pending.
 - Approve permanently deletes the news row; reject leaves the article published. The decision is retained in the separate request table.
 
-The scheduled job will not run until the migration, function deployment, both secrets, and schedule are configured in InsForge.
+The scheduled job will not run until the GNews key, function token, function deployment, and 30-minute schedule are configured in Supabase.
