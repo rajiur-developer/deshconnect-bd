@@ -3443,6 +3443,6 @@ html[lang="en"] .dc-desktop-nav > div > button {
 
 
 .account-create-btn {
-  height: 25px  !important;
-  width: 70px !important;
+  width: 150px !important; 
+  /* text-align: center !important; */
 }

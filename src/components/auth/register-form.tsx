@@ -73,7 +73,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
       <div className="mx-auto w-full max-w-xl">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-700" aria-hidden="true">
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t("Verify your email")}</h1>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t("Enter the 6-digit verification code sent to")} <strong className="break-all text-slate-800">{state.email}</strong>.</p>
@@ -236,7 +236,7 @@ export function RegisterForm({ divisions, districts, upazilas }: Props) {
             {state.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{t(state.error)}</p>}
             <div className="mt-6 grid grid-cols-2 gap-3">
               <Button type="button" variant="outline" className="rounded-xl py-3" onClick={() => setStep(1)}>{t("← Back")}</Button>
-              <Button type="submit" className="rounded-xl py-3" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Creating account…") : t("Create account")}</Button>
+              <Button type="submit" className="account-create-btn rounded-xl py-3 text-center" disabled={pending} aria-busy={pending}>{pending && <Spinner />}{pending ? t("Creating account…") : t("Create account")}</Button>
             </div>
             <p className="mt-4 text-center text-xs leading-5 text-slate-500">{t("You can leave optional profile details blank and add them later.")}</p>
           </>
