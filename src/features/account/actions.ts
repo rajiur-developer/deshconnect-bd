@@ -42,7 +42,7 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: previousProfile, error: profileReadError } = await client.database.from("profiles").select("avatar,avatar_key").eq("id", user.id).maybeSingle();
 if (profileReadError) return { error: "Could not load your profile. Please try again." };
 const update: Record<string, unknown> = {
@@ -90,7 +90,7 @@ return { success: "Profile updated, but the activity log could not be saved." };
 return { success: "Profile updated." }; }
 export async function requestConnectionAction(username: string): Promise<{ ok: boolean; error?: string }> {
 const user = await requireUser();
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: target, error: targetError } = await createPublicClient().from("public_profiles")
 .select("id").eq("username", username).maybeSingle();
 if (targetError) throw targetError;
@@ -117,7 +117,7 @@ return { ok: true }; }
 export async function respondConnectionAction(connectionId: string, action: "accepted" | "rejected"): Promise<{ ok: boolean }> {
 if (action !== "accepted" && action !== "rejected") return { ok: false };
 const user = await requireUser();
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: updated, error } = await client.database.from("connections")
 .update({ status: action, updated_at: new Date().toISOString() })
 .eq("id", connectionId).eq("addressee_id", user.id).eq("status", "pending")
@@ -131,7 +131,7 @@ revalidatePath("/community");
 return { ok: true }; }
 export async function cancelConnectionAction(connectionId: string): Promise<{ ok: boolean }> {
 const user = await requireUser();
-const client = createServerClient({ cookies: await cookies() });
+const client = await createServerClient({ cookies: await cookies() });
 const { data: deleted, error } = await client.database.from("connections").delete()
 .eq("id", connectionId).eq("requester_id", user.id).eq("status", "pending")
 .select("id").maybeSingle();
@@ -260,7 +260,7 @@ revalidatePath("/messages");
 return { ok: true, count: Number(data ?? 0) };
 }
 export async function markConversationMessagesDeliveredAction(conversationId: string): Promise<void> {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error: authError } = await client.auth.getCurrentUser();
   if (authError || !data?.user) return;
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(conversationId)) return;
@@ -269,7 +269,7 @@ export async function markConversationMessagesDeliveredAction(conversationId: st
 }
 
 export async function getMessageNotificationSnapshotAction(since: string) {
-  const client = createServerClient({ cookies: await cookies() });
+  const client = await createServerClient({ cookies: await cookies() });
   const { data, error: authError } = await client.auth.getCurrentUser();
   if (authError || !data?.user) {
     return { authenticated: false as const, conversations: [], unreadMessages: [], messages: [] };
