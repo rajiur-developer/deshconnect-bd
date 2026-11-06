@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - fix/supabase-full-backend-migration
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
