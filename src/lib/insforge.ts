@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@insforge/sdk";
 import { cookies } from "next/headers";
 import { getDatabase, saveDatabase } from "@/lib/db/store";
+import { createServerClient } from "@/lib/supabase/server";
 
 // Trailing slashes must be stripped: paths below already start with "/", so
 // "https://host/" would produce "https://host//api/..." which InsForge answers
@@ -101,38 +102,60 @@ async function localRows(table: string, params: Record<string, string>): Promise
   return { data: rows.slice(offset, Number.isFinite(limit) && limit >= 0 ? offset + limit : undefined), count };
 }
 
-async function insforgeRequest(table: string, method: string, params: Record<string, string> = {}, body?: unknown, includeCount = false): Promise<any> {
-  const query = new URLSearchParams(params).toString();
-  // InsForge exposes its PostgREST-compatible database API under this path.
-  // `/rest/v1` is a Supabase URL and returns `Cannot POST /rest/v1/...` here.
-  const url = `${INSFORGE_URL}/api/database/records/${table}${query ? `?${query}` : ""}`;
-  const accessToken = await currentAccessToken();
-  const res = await fetch(url, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      apikey: ANON_KEY,
-      ...((method === "POST" || method === "PATCH") ? { Prefer: "return=representation" } : {}),
-      ...(includeCount ? { Prefer: "count=exact" } : {}),
-      Authorization: `Bearer ${accessToken ?? ANON_KEY}`,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-    cache: "no-store",
-    // Never leave Server Actions pending forever when the database API stalls.
-    signal: AbortSignal.timeout(15000),
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`InsForge ${method} ${table} failed: ${res.status} ${text}`);
+function parseFilter(expression: string): { operator: string; value: string } {
+  const separator = expression.indexOf(".");
+  return separator < 0
+    ? { operator: "eq", value: expression }
+    : { operator: expression.slice(0, separator), value: expression.slice(separator + 1) };
+}
+
+function applySupabaseParams(query: any, params: Record<string, string>) {
+  for (const [field, expression] of Object.entries(params)) {
+    if (["select", "offset", "limit", "order", "or"].includes(field)) continue;
+    const { operator, value } = parseFilter(expression);
+    if (operator === "eq") query = query.eq(field, value);
+    else if (operator === "neq") query = query.neq(field, value);
+    else if (operator === "ilike") query = query.ilike(field, value);
+    else if (operator === "like") query = query.like(field, value);
+    else if (operator === "gte") query = query.gte(field, value);
+    else if (operator === "lte") query = query.lte(field, value);
+    else if (operator === "gt") query = query.gt(field, value);
+    else if (operator === "lt") query = query.lt(field, value);
+    else if (operator === "in") query = query.in(field, value.replace(/^\\(|\\)$/g, "").split(",").map((item) => item.replace(/^"|"$/g, "")));
+    else if (operator === "cs") query = query.contains(field, value.startsWith("{") ? value.slice(1, -1).split(",") : value);
   }
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
-  if (!includeCount) return data;
-  const contentRange = res.headers.get("content-range");
-  const totalValue = contentRange?.split("/").at(-1);
-  const count = totalValue && totalValue !== "*" ? Number(totalValue) : undefined;
-  return { data, count: Number.isFinite(count) ? count : undefined };
+  if (params.or) query = query.or(params.or);
+  if (params.order) {
+    const [field, direction] = params.order.split(".");
+    query = query.order(field, { ascending: direction !== "desc" });
+  }
+  const offset = Math.max(0, Number(params.offset ?? 0) || 0);
+  const limit = Number(params.limit);
+  if (Number.isFinite(limit) && limit >= 0) query = query.range(offset, offset + limit - 1);
+  else if (offset > 0) query = query.range(offset, offset + 999);
+  return query;
+}
+
+async function insforgeRequest(table: string, method: string, params: Record<string, string> = {}, body?: unknown, includeCount = false): Promise<any> {
+  const client = await createServerClient();
+  let query: any;
+  if (method === "GET") {
+    query = client.from(table).select(params.select ?? "*", includeCount ? { count: "exact" } : undefined);
+    query = applySupabaseParams(query, params);
+  } else if (method === "POST") {
+    query = client.from(table).insert(body).select("*");
+  } else if (method === "PATCH") {
+    query = client.from(table).update(body);
+    query = applySupabaseParams(query, params).select("*");
+  } else if (method === "DELETE") {
+    query = client.from(table).delete();
+    query = applySupabaseParams(query, params);
+  } else {
+    throw new Error(`Unsupported database operation: ${method}`);
+  }
+  const { data, error, count } = await query;
+  if (error) throw new Error(`Supabase ${method} ${table} failed: ${error.message}`);
+  return includeCount ? { data, count: count ?? data?.length ?? 0 } : data;
 }
 
 export async function insforgeGet(table: string, params: Record<string, string> = {}): Promise<any> {
@@ -239,5 +262,5 @@ export async function insforgeSelectMany(table: string, params: Record<string, s
 }
 
 export function isInsforgeConfigured(): boolean {
-  return Boolean(INSFORGE_URL && ANON_KEY);
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY));
 }
