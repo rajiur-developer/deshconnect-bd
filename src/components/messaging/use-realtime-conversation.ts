@@ -50,16 +50,6 @@ export function useRealtimeConversation(conversationId: string, onMessage: (mess
         const message = toMessage(payload.new);
         if (message) window.dispatchEvent(new CustomEvent("chat-message-updated", { detail: message }));
       })
-      .on("postgres_changes", {
-        event: "DELETE",
-        schema: "public",
-        table: "messages",
-      }, (payload: any) => {
-        const message = toMessage(payload.old);
-        if (message?.conversationId === conversationId) {
-          window.dispatchEvent(new CustomEvent("chat-message-deleted", { detail: message }));
-        }
-      })
       .subscribe((status: string, error?: Error) => {
         if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
           console.error(`Supabase realtime subscription failed for chat:${conversationId}`, error);
