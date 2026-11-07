@@ -27,6 +27,17 @@ const BENGALI_PLACE_ALIASES: Record<string, string> = {
   "ময়মনসিংহ":"mymensingh","জামালপুর":"jamalpur","নেত্রকোণা":"netrokona","শেরপুর":"sherpur"
 };
 
+// Reverse lookup makes common district/division names searchable in Banglish.
+const LATIN_TO_BENGALI_PLACE_ALIASES: Record<string, string> = {
+  ...Object.fromEntries(Object.entries(BENGALI_PLACE_ALIASES).map(([bengali, latin]) => [latin, bengali])),
+  chittagong: "চট্টগ্রাম",
+  comilla: "কুমিল্লা",
+  bogra: "বগুড়া",
+  jessore: "যশোর",
+  barisal: "বরিশাল",
+};
+
+
 export function normalizeSearchIdentity(value: string): string {
   const normalized = value.normalize("NFC").trim().toLocaleLowerCase();
   const alias = BENGALI_PLACE_ALIASES[normalized];
@@ -69,6 +80,8 @@ export function banglishToBengali(value: string): string {
 
   return input.split(/([\s-]+)/).map((part) => {
     if (!part || /^[\s-]+$/.test(part)) return part;
+    const placeAlias = LATIN_TO_BENGALI_PLACE_ALIASES[part];
+    if (placeAlias) return placeAlias;
     let output = "";
     for (let index = 0; index < part.length;) {
       const match = ROMAN_TO_BENGALI.find(([roman]) => part.startsWith(roman, index));
