@@ -9,12 +9,12 @@ function escapeOverpass(value: string) {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const user = await requireUser("/admin");
-    if (!["admin", "moderator"].includes(user.role)) {
-      return NextResponse.json({ error: "আপনার এই অনুসন্ধানের অনুমতি নেই।" }, { status: 403 });
-    }
+  const user = await requireUser("/admin");
+  if (!["admin", "moderator"].includes(user.role)) {
+    return NextResponse.json({ error: "আপনার এই অনুসন্ধানের অনুমতি নেই।" }, { status: 403 });
+  }
 
+  try {
     const params = request.nextUrl.searchParams;
     const name = (params.get("name") ?? "").trim().slice(0, 100);
     const districtId = (params.get("districtId") ?? "").trim();
