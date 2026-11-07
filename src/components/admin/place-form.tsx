@@ -3,7 +3,8 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import {
 adminUpdatePlaceAction,
 createPlaceAction,
-type AdminFormState, } from "@/features/admin/actions"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields"; import { ImageUpload } from "@/components/forms/image-upload"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import type { Place } from "@/types/content";
+type AdminFormState, } from "@/features/admin/actions"; import { Button } from "@/components/ui/button"; import { Field, Input, Textarea } from "@/components/ui/input"; import { LocationFields } from "@/components/forms/location-fields";
+import { MapLocationSearch } from "@/components/admin/map-location-search"; import { ImageUpload } from "@/components/forms/image-upload"; import { useFormStateToast } from "@/components/ui/toast"; import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters"; import type { Place } from "@/types/content";
 import type { ContentCategory } from "@/services/content-categories";
 const selectClass = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus-ring";
 type Props = {
@@ -35,7 +36,7 @@ setResetKey((key) => key + 1);
 }
 }, [record, state]);
 return (
-<form ref={formRef} action={formAction} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+<form ref={formRef} action={formAction} data-admin-location-form className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
 <h2 className="font-semibold text-slate-900">{record ? "Update place" : "Add a new place"}</h2>
 {!record && <p className="text-sm text-slate-600">Places created here are published immediately and marked as verified.</p>}
 {record && <input type="hidden" name="id" value={record.id} />}
@@ -72,6 +73,12 @@ divisionId: record?.divisionId ?? undefined,
 districtId: record?.districtId ?? undefined,
 upazilaId: record?.upazilaId ?? undefined,
 }}
+/>
+<MapLocationSearch
+  districts={districts}
+  initialDistrictId={record?.districtId ?? ""}
+  initialLatitude={record?.latitude ?? null}
+  initialLongitude={record?.longitude ?? null}
 />
 <ImageUpload
 key={`image-${resetKey}`}
