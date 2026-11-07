@@ -86,7 +86,7 @@ function suggestionIdentity(value: string): string {
 /** Fetch names in either script; when both spellings exist, expose both in one suggestion. */
 export async function searchSuggestions(query: string, perCategory = 8, scope = "all"): Promise<SearchSuggestion[]> {
   const q = query.trim();
-  if (q.length < 2) return [];
+  if (q.length < 1) return [];
 
   const categories = scope === "all"
     ? ["places", "institutions", "hospitals", "businesses", "government-services", "news"]
