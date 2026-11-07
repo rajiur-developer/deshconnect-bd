@@ -50,7 +50,7 @@ className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hove
 {error && <p role="alert" className="basis-full text-xs text-accent-600">{t(error)}</p>}
 </>
 ); }
-export function RespondButtons({ connectionId }: { connectionId: string }) {
+export function RespondButtons({ connectionId, compact = false }: { connectionId: string; compact?: boolean }) {
 const { t } = useLanguage();
 const [pending, startTransition] = useTransition();
 const [error, setError] = useState("");
@@ -67,16 +67,16 @@ setError("Could not update this request. Please try again.");
 }
 });
 return (
-<div className="flex items-center gap-2">
+<div className={`flex shrink-0 items-center ${compact ? "gap-1" : "gap-2"}`}>
 <button
 type="button"
 disabled={pending}
 onClick={() => respond("accepted")}
 aria-label={t("Accept friend request")}
 title={t("Accept")}
-className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 transition hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+className={`inline-flex shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 transition hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 ${compact ? "h-7 w-7" : "h-9 w-9"}`}
 >
-<Icon name="check" className="h-5 w-5" />
+<Icon name="check" className={compact ? "h-3.5 w-3.5" : "h-5 w-5"} />
 </button>
 <button
 type="button"
@@ -84,9 +84,9 @@ disabled={pending}
 onClick={() => respond("rejected")}
 aria-label={t("Decline friend request")}
 title={t("Decline")}
-className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50"
+className={`inline-flex shrink-0 items-center justify-center rounded-full border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-50 ${compact ? "h-7 w-7" : "h-9 w-9"}`}
 >
-<Icon name="close" className="h-5 w-5" />
+<Icon name="close" className={compact ? "h-3.5 w-3.5" : "h-5 w-5"} />
 </button>
 {error && <p role="alert" className="text-xs text-accent-600">{t(error)}</p>}
 </div>
