@@ -4,6 +4,10 @@ import type { PublicUser } from "@/types/auth";
 import { PageHeader } from "@/components/layout/page-header";
 import { Icon } from "@/components/ui/icons";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { RespondButtons } from "@/components/account/account-actions";
+
+type SidebarFriendRequest = { id: string; member: { id: string; username: string; fullName: string; avatar: string | null; avatarKey: string | null } };
 
 const NAV_GROUPS = [
   {
@@ -49,6 +53,7 @@ export function AccountShell({
   description,
   messagesOnly = false,
   minimalDashboard = false,
+  friendRequests = [],
   children,
 }: {
   user: PublicUser;
@@ -56,6 +61,7 @@ export function AccountShell({
   description?: string;
   messagesOnly?: boolean;
   minimalDashboard?: boolean;
+  friendRequests?: SidebarFriendRequest[];
   children: React.ReactNode;
 }) {
   const { t } = useLanguage();
@@ -122,6 +128,20 @@ export function AccountShell({
                           <span>{t(item.label)}</span>
                           {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-600" />}
                         </Link>
+                        {messagesOnly && item.href === "/friend-requests" && friendRequests.length > 0 && (
+                          <div className="ml-3 mt-2 space-y-2 border-l-2 border-emerald-100 pl-3" aria-label={t("Pending friend requests")}>
+                            {friendRequests.map((request) => (
+                              <div key={request.id} className="flex min-w-0 items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2">
+                                <ProfileAvatar name={request.member.fullName} src={request.member.avatar} storageKey={request.member.avatarKey} className="h-8 w-8 shrink-0" textClassName="text-[10px]" />
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-xs font-semibold text-slate-800">{request.member.fullName}</p>
+                                  <p className="truncate text-[10px] text-slate-500">@{request.member.username}</p>
+                                </div>
+                                <RespondButtons connectionId={request.id} />
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       );
                     })}
                   </div>
