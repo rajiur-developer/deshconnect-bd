@@ -51,7 +51,7 @@ export function SearchAutocomplete({
 
   useEffect(() => {
     const query = currentValue.trim();
-    if (query.length < 2) {
+    if (query.length < 1) {
       requestRef.current?.abort();
       setSuggestions([]);
       setOpen(false);
@@ -84,7 +84,7 @@ export function SearchAutocomplete({
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
-    }, 220);
+    }, 180);
 
     return () => {
       window.clearTimeout(timer);
