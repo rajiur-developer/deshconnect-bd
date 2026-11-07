@@ -13,11 +13,13 @@ import { UnreadMessageBadge, type UnreadConversation } from "@/components/messag
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { Icon } from "@/components/ui/icons";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { RespondButtons } from "@/components/account/account-actions";
 
 type Member = Pick<PublicUser, "id" | "username" | "fullName" | "avatar" | "avatarKey">;
 type Chat = { id: string; member: Member };
+type FriendRequest = { id: string; requesterId: string; createdAt: string; member: Member };
 type MessagePreview = { id: string; conversationId: string; senderId: string; body: string; attachmentType: "image" | "audio" | null; createdAt: string };
-export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMessages = [], initialPreviews = [] }: { userId: string; chats: Chat[]; initialUsername?: string; initialUnreadMessages?: UnreadConversation[]; initialPreviews?: MessagePreview[] }) {
+export function MessagesInbox({ userId, chats, friendRequests = [], initialUsername, initialUnreadMessages = [], initialPreviews = [] }: { userId: string; chats: Chat[]; friendRequests?: FriendRequest[]; initialUsername?: string; initialUnreadMessages?: UnreadConversation[]; initialPreviews?: MessagePreview[] }) {
   const { t } = useLanguage();
   const [chatList, setChatList] = useState(chats);
   const [active, setActive] = useState<Chat | null>(null);
@@ -228,6 +230,11 @@ export function MessagesInbox({ userId, chats, initialUsername, initialUnreadMes
         {notificationPermission === "denied" && <p className="mt-2 text-xs text-slate-500">{t("Allow notifications in your browser settings.")}</p>}
         {notificationError && <p className="mt-2 text-xs text-red-700" role="alert">{t(notificationError)}</p>}
       </div>
+      {friendRequests.length > 0 && <section className="shrink-0 border-b border-amber-100 bg-amber-50/60 px-3 py-3" aria-label={t("Friend requests")}>
+        <div className="mb-2 flex items-center justify-between gap-2 px-1"><h3 className="text-xs font-bold uppercase tracking-wide text-slate-800">{t("Friend requests")}</h3><span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">{friendRequests.length}</span></div>
+        <div className="max-h-52 space-y-2 overflow-y-auto">{friendRequests.map((request) => <div key={request.id} className="flex min-w-0 items-center gap-2 rounded-xl border border-amber-100 bg-white p-2.5"><ProfileAvatar name={request.member.fullName} src={request.member.avatar} storageKey={request.member.avatarKey} className="h-9 w-9 shrink-0" textClassName="text-xs" /><div className="min-w-0 flex-1"><p className="truncate text-xs font-semibold text-slate-900">{request.member.fullName}</p><p className="truncate text-[10px] text-slate-500">@{request.member.username}</p></div><RespondButtons connectionId={request.id} /></div>)}</div>
+        <Link href="/friend-requests" className="mt-2 inline-flex px-1 text-[11px] font-semibold text-brand-700 hover:underline">{t("View all friend requests")}</Link>
+      </section>}
       {chatList.length > 0 && <div className="shrink-0 border-b border-slate-100 px-3 py-3 md:hidden">
         <div className="flex gap-3 overflow-x-auto pb-1" aria-label={t("Quick access to friends")}>
           {chatList.map((chat) => <button key={chat.member.id} type="button" onClick={() => void openChat(chat)} className="flex w-16 shrink-0 flex-col items-center gap-1.5 rounded-lg p-1 text-center hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600" aria-label={`${t("Message")} ${chat.member.fullName}`}>
