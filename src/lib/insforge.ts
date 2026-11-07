@@ -88,7 +88,7 @@ function applySupabaseParams(query: any, params: Record<string, string>) {
     else if (operator === "lte") query = query.lte(field, value);
     else if (operator === "gt") query = query.gt(field, value);
     else if (operator === "lt") query = query.lt(field, value);
-    else if (operator === "in") query = query.in(field, value.replace(/^\\(|\\)$/g, "").split(",").map((item) => item.replace(/^"|"$/g, "")));
+    else if (operator === "in") query = query.in(field, value.replace(/^\(|\)$/g, "").split(",").map((item) => item.replace(/^"|"$/g, "")));
     else if (operator === "cs") query = query.contains(field, value.startsWith("{") ? value.slice(1, -1).split(",") : value);
   }
   if (params.or) query = query.or(params.or);
