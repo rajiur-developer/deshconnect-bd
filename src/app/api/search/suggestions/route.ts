@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const allowedScopes = new Set(["all", "places", "institutions", "hospitals", "businesses", "government-services", "news"]);
   const requestedScope = request.nextUrl.searchParams.get("scope") ?? "none";
   const scope = allowedScopes.has(requestedScope) ? requestedScope : "none";
-  if (query.length < 2) return NextResponse.json({ suggestions: [] });
+  if (query.length < 1) return NextResponse.json({ suggestions: [] });
 
   try {
     const suggestions = scope === "none" ? [] : await searchSuggestions(query, 8, scope);
