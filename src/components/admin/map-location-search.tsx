@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { DistrictOption } from "@/components/search/directory-filters";
 
 type Result = {
@@ -26,7 +26,11 @@ export function MapLocationSearch({
   initialLatitude = null,
   initialLongitude = null,
 }: Props) {
+  const rootRef = useRef<HTMLElement | null>(null);
   const [districtId, setDistrictId] = useState(initialDistrictId);
+  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(
+    initialLatitude != null && initialLongitude != null ? { latitude: initialLatitude, longitude: initialLongitude } : null,
+  );
   const [name, setName] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [selected, setSelected] = useState<Result | null>(null);
@@ -35,8 +39,7 @@ export function MapLocationSearch({
 
   function syncFormDistrict(nextDistrictId: string) {
     const district = districts.find((item) => item.id === nextDistrictId);
-    const form = document.currentScript?.closest("form") as HTMLFormElement | null;
-    const targetForm = form ?? document.querySelector<HTMLFormElement>("[data-admin-location-form]");
+    const targetForm = rootRef.current?.closest("form") as HTMLFormElement | null;
     if (!targetForm || !district) return;
     const division = targetForm.querySelector<HTMLSelectElement>('select[name="divisionId"]');
     const districtSelect = targetForm.querySelector<HTMLSelectElement>('select[name="districtId"]');
@@ -81,11 +84,12 @@ export function MapLocationSearch({
 
   function choose(result: Result) {
     setSelected(result);
-    const form = document.querySelector<HTMLFormElement>("[data-admin-location-form]");
+    const form = rootRef.current?.closest("form") as HTMLFormElement | null;
     const latitude = form?.querySelector<HTMLInputElement>('input[name="latitude"]');
     const longitude = form?.querySelector<HTMLInputElement>('input[name="longitude"]');
     if (latitude) latitude.value = String(result.latitude);
     if (longitude) longitude.value = String(result.longitude);
+    setCoordinates({ latitude: result.latitude, longitude: result.longitude });
     syncFormDistrict(districtId);
   }
 
@@ -98,11 +102,11 @@ export function MapLocationSearch({
       <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
         <label className="text-sm font-medium text-slate-700">
           Place / institution name
-          <input value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void search(); } }} placeholder="যেমন: Thakurgaon Government College" className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm" />
+          <input value={name} onChange={(event) => { setName(event.target.value); setCoordinates(null); setSelected(null); }} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void search(); } }} placeholder="যেমন: Thakurgaon Government College" className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm" />
         </label>
         <label className="text-sm font-medium text-slate-700">
           Search within district
-          <select value={districtId} onChange={(event) => { setDistrictId(event.target.value); setResults([]); setSelected(null); syncFormDistrict(event.target.value); }} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+          <select value={districtId} onChange={(event) => { setDistrictId(event.target.value); setResults([]); setSelected(null); setCoordinates(null); syncFormDistrict(event.target.value); }} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
             <option value="">জেলা নির্বাচন করুন</option>
             {districts.map((district) => <option key={district.id} value={district.id}>{district.name}</option>)}
           </select>
