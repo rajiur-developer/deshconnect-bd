@@ -8,6 +8,7 @@ requestConnectionAction,
 respondConnectionAction,
 } from "@/features/account/actions";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { Icon } from "@/components/ui/icons";
 export function ConnectButton({ username, pendingConnectionId }: { username: string; pendingConnectionId?: string }) {
 const { t } = useLanguage();
 const [state, setState] = useState<"idle" | "sent">("idle");
@@ -60,7 +61,7 @@ setError("");
 try {
 const result = await respondConnectionAction(connectionId, action);
 if (result.ok) router.refresh();
-else setError(result.error ?? "Could not update this request.");
+else setError("Could not update this request. Please try again.");
 } catch {
 setError("Could not update this request. Please try again.");
 }
