@@ -24,7 +24,7 @@ export default async function MessagesPage({ searchParams }: { searchParams: Pro
     return otherId ? [[otherId, conversation.id] as const] : [];
   }));
   const chats = friends.map((member) => ({ id: conversationByMember.get(member.id) ?? "", member }));
-  return <AccountShell user={user} title="Messages" description="Chat with members who accepted your connection request." messagesOnly>
-    <MessagesInbox userId={user.id} chats={chats} friendRequests={friendRequests} initialUsername={to} initialUnreadMessages={unreadMessages} initialPreviews={previews} />
+  return <AccountShell user={user} title="Messages" description="Chat with members who accepted your connection request." messagesOnly friendRequests={friendRequests}>
+    <MessagesInbox userId={user.id} chats={chats} initialUsername={to} initialUnreadMessages={unreadMessages} initialPreviews={previews} />
   </AccountShell>;
 }
