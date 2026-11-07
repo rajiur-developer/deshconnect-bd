@@ -15,6 +15,19 @@ if (!can(user.role, action, overrides)) {
 throw new Error("You do not have permission to perform this action.");
 }
 return user; }
+function readSubmittedCoordinates(formData: FormData): { latitude: number | null; longitude: number | null } | { error: string } {
+const latitudeValue = String(formData.get("latitude") ?? "").trim();
+const longitudeValue = String(formData.get("longitude") ?? "").trim();
+if (!latitudeValue && !longitudeValue) return { latitude: null, longitude: null };
+if (!latitudeValue || !longitudeValue) return { error: "Please select a complete map location." };
+const latitude = Number(latitudeValue);
+const longitude = Number(longitudeValue);
+if (!Number.isFinite(latitude) || !Number.isFinite(longitude)
+|| latitude < 20.5 || latitude > 26.7 || longitude < 88 || longitude > 92.7) {
+return { error: "The selected coordinates are not within Bangladesh. Please choose a valid location." };
+}
+return { latitude, longitude };
+}
 async function audit(user: { id: string; fullName: string }, action: string, entity: string, entityId: string, outcome: "success" | "denied" = "success", detail?: string) {
 await recordAudit({ actorId: user.id, actorName: user.fullName, action, entity, entityId, outcome, detail }); }
 async function deleteAdminRow(table: string, id: string) {
@@ -338,6 +351,8 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+const coordinates = readSubmittedCoordinates(formData);
+if ("error" in coordinates) return { error: coordinates.error };
 if (!(await isContentCategory("place", parsed.data.category))) return { error: "Please choose a valid place category." };
 if (parsed.data.image && !isValidAdminPlaceImageUrl(parsed.data.image, user.id)) {
 return { error: "The selected place image could not be verified. Please upload it again." };
@@ -350,8 +365,8 @@ category: parsed.data.category,
 summary: sanitizeText(parsed.data.summary, 10_000),
 description: sanitizeMultiline(parsed.data.description),
 address: sanitizeText(parsed.data.address, 300),
-latitude: null,
-longitude: null,
+latitude: coordinates.latitude,
+longitude: coordinates.longitude,
 image: parsed.data.image || "/images/places/p1.svg",
 gallery: [],
 rating: 0,
@@ -408,6 +423,8 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+const coordinates = readSubmittedCoordinates(formData);
+if ("error" in coordinates) return { error: coordinates.error };
 const isHospital = formData.get("isHospital") === "true";
 if (!isHospital && !(await isContentCategory("institution", parsed.data.category))) {
 return { error: "Please choose a valid institution category." };
@@ -431,6 +448,8 @@ phone: parsed.data.phone ? sanitizeText(parsed.data.phone, 50) : null,
 email: parsed.data.email ? sanitizeText(parsed.data.email, 200) : null,
 website: parsed.data.website ? sanitizeText(parsed.data.website, 200) : null,
 emergency_phone: parsed.data.emergencyPhone ? sanitizeText(parsed.data.emergencyPhone, 50) : null,
+latitude: coordinates.latitude,
+longitude: coordinates.longitude,
 image: parsed.data.image || "/images/places/p1.svg",
 verification: "verified",
 status: "published",
@@ -712,13 +731,15 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+const coordinates = readSubmittedCoordinates(formData);
+if ("error" in coordinates) return { error: coordinates.error };
 if (!(await isContentCategory("place", parsed.data.category))) return { error: "Please choose a valid place category." };
 if (imageChanged && parsed.data.image && !isValidAdminPlaceImageUrl(parsed.data.image, user.id)) {
 return { error: "The selected place image could not be verified. Please upload it again." };
 }
 let updated;
 try {
-updated = await updateAdminRow("places", id, { name: sanitizeText(parsed.data.name, 200), category: parsed.data.category, summary: sanitizeText(parsed.data.summary, 10_000), description: sanitizeMultiline(parsed.data.description), address: sanitizeText(parsed.data.address, 300), opening_hours: parsed.data.openingHours ?? null, entry_fee: parsed.data.entryFee ?? null, best_time: parsed.data.bestTime ?? null, ...(imageChanged ? { image: parsed.data.image || "/images/places/p1.svg" } : {}), division_id: parsed.data.divisionId ?? null, district_id: parsed.data.districtId ?? null, upazila_id: parsed.data.upazilaId ?? null });
+updated = await updateAdminRow("places", id, { name: sanitizeText(parsed.data.name, 200), category: parsed.data.category, summary: sanitizeText(parsed.data.summary, 10_000), description: sanitizeMultiline(parsed.data.description), address: sanitizeText(parsed.data.address, 300), latitude: coordinates.latitude, longitude: coordinates.longitude, opening_hours: parsed.data.openingHours ?? null, entry_fee: parsed.data.entryFee ?? null, best_time: parsed.data.bestTime ?? null, ...(imageChanged ? { image: parsed.data.image || "/images/places/p1.svg" } : {}), division_id: parsed.data.divisionId ?? null, district_id: parsed.data.districtId ?? null, upazila_id: parsed.data.upazilaId ?? null });
 } catch (error) {
 console.error("Place update failed.", error instanceof Error ? error.message : "Unknown error");
 return { error: "Could not save this place. Please try again." };
@@ -749,6 +770,8 @@ districtId: formData.get("districtId") || undefined,
 upazilaId: formData.get("upazilaId") || undefined,
 });
 if (!parsed.success) return { error: formatZodError(parsed.error) };
+const coordinates = readSubmittedCoordinates(formData);
+if ("error" in coordinates) return { error: coordinates.error };
 const isHospital = formData.get("isHospital") === "true";
 if (!isHospital && !(await isContentCategory("institution", parsed.data.category))) {
 return { error: "Please choose a valid institution category." };
@@ -769,6 +792,8 @@ phone: parsed.data.phone ? sanitizeText(parsed.data.phone, 50) : null,
 email: parsed.data.email ? sanitizeText(parsed.data.email, 200) : null,
 website: parsed.data.website ? sanitizeText(parsed.data.website, 200) : null,
 emergency_phone: parsed.data.emergencyPhone ? sanitizeText(parsed.data.emergencyPhone, 50) : null,
+latitude: coordinates.latitude,
+longitude: coordinates.longitude,
 ...(imageChanged ? { image: parsed.data.image || "/images/places/p1.svg" } : {}),
 division_id: parsed.data.divisionId ?? null,
 district_id: parsed.data.districtId ?? null,

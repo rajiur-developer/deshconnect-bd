@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { LocationFields } from "@/components/forms/location-fields";
+import { MapLocationSearch } from "@/components/admin/map-location-search";
 import { ImageUpload } from "@/components/forms/image-upload";
 import { useFormStateToast } from "@/components/ui/toast";
 import type { DistrictOption, LocationOption, UpazilaOption } from "@/components/search/directory-filters";
@@ -49,7 +50,7 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, is
   }, [record, state]);
 
   return (
-    <form ref={formRef} action={formAction} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+    <form ref={formRef} action={formAction} data-admin-location-form className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
       <h2 className="font-semibold text-slate-900">{record ? (isHospital ? "Update hospital" : "Update institution") : (isHospital ? "Add a hospital" : "Add an institution")}</h2>
       {!record && <p className="text-sm text-slate-600">New listings are published immediately and marked as verified.</p>}
       <input type="hidden" name="isHospital" value={isHospital ? "true" : "false"} />
@@ -84,6 +85,12 @@ export function InstitutionForm({ divisions, districts, upazilas, categories, is
           districtId: record?.districtId ?? undefined,
           upazilaId: record?.upazilaId ?? undefined,
         }}
+      />
+      <MapLocationSearch
+        districts={districts}
+        initialDistrictId={record?.districtId ?? ""}
+        initialLatitude={record?.latitude ?? null}
+        initialLongitude={record?.longitude ?? null}
       />
       <ImageUpload
         key={`image-${resetKey}`}
