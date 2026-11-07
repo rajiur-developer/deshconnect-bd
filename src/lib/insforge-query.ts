@@ -14,7 +14,7 @@ export function addTextSearch(
     const pattern = `*${term}*`;
     return fields.map((field) => `${field}.ilike.${pattern}`);
   });
-  params.or = `(${clauses.join(",")})`;
+  params.or = clauses.join(",");
 }
 
 export function makePageMeta(total: number, page: number, pageSize: number) {
