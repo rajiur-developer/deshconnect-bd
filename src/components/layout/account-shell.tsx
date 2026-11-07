@@ -115,6 +115,7 @@ export function AccountShell({
                     {group.links.map((item) => {
                       const active = item.href === "/profile" && title.toLowerCase() === "my profile";
                       return (
+                        <>
                         <Link
                           key={item.href}
                           href={item.href}
@@ -142,6 +143,7 @@ export function AccountShell({
                             ))}
                           </div>
                         )}
+                        </>
                       );
                     })}
                   </div>
