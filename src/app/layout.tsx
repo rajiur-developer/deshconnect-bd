@@ -35,7 +35,8 @@ function HeaderFallback() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const savedLanguage = cookieStore.get("dc_language")?.value;
-  const initialLanguage: Language = savedLanguage === "en" ? "en" : "bn";
+  // First-time visitors use English; returning visitors keep their saved choice.
+  const initialLanguage: Language = savedLanguage === "bn" ? "bn" : "en";
 
   return (
     <html lang={initialLanguage}>
