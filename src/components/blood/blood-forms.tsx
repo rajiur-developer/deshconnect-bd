@@ -65,6 +65,11 @@ return (
 {profile?.archivedAt && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
 {t("Your donor profile is archived and hidden from public listings. Your record remains available to admins. Save this form to restore your listing.")}
 </p>}
+<section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+<div>
+<h4 className="text-base font-semibold text-slate-900">Donor information</h4>
+<p className="mt-1 text-sm text-slate-500">Choose your blood group and preferred contact method.</p>
+</div>
 <div className="grid gap-3 sm:grid-cols-2">
 <Field label="Blood group" htmlFor="bloodGroup" required>
 <select id="bloodGroup" name="bloodGroup" defaultValue={profile?.bloodGroup ?? ""} required className={selectClass}>
@@ -82,21 +87,35 @@ return (
 <option value="in-app">{t("In-app")}</option>
 </select>
 </Field>
+</div>
+</section>
+<section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+<div>
+<h4 className="text-base font-semibold text-slate-900">Contact information</h4>
+<p className="mt-1 text-sm text-slate-500">Provide the phone numbers people can use to contact you.</p>
+</div>
+<div className="grid gap-3 sm:grid-cols-2">
 <Field label="Phone number" htmlFor="phone" required hint="Shown publicly on your donor card when you consent below.">
 <Input id="phone" name="phone" type="tel" defaultValue={profile?.phone ?? ""} placeholder="01712345678" required />
 </Field>
 <Field label="WhatsApp number" htmlFor="whatsapp" required hint="Shown publicly on your donor card when you consent below.">
 <Input id="whatsapp" name="whatsapp" type="tel" defaultValue={profile?.whatsapp ?? ""} placeholder="01712345678" required />
 </Field>
-
 </div>
-<LocationFields idPrefix="donor-" divisions={divisions} districts={districts} upazilas={upazilas} current={{ divisionId: profile?.divisionId ?? undefined, districtId: profile?.districtId ?? undefined, upazilaId: profile?.upazilaId ?? undefined }} required />\n</div>\n</section>
+</section>
+<section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+<div>
+<h4 className="text-base font-semibold text-slate-900">Location</h4>
+<p className="mt-1 text-sm text-slate-500">Select where you are available to donate blood.</p>
+</div>
+<LocationFields idPrefix="donor-" divisions={divisions} districts={districts} upazilas={upazilas} current={{ divisionId: profile?.divisionId ?? undefined, districtId: profile?.districtId ?? undefined, upazilaId: profile?.upazilaId ?? undefined }} required />
+</section>
 <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Donation details</h4>
-<p className="mt-1 text-sm text-slate-500">Add your last donation date to check when you can donate again.</p>
+<p className="mt-1 text-sm text-slate-500">Enter your last donation date. Your availability option will appear after a valid date is selected.</p>
 </div>
-<Field label="Last donation date" htmlFor="lastDonationAt" required hint="You can select Ready after 75 days from your last donation.">
+<Field label="Last donation date" htmlFor="lastDonationAt" required hint="You can select Ready only after 75 days from your last donation.">
 <DateInput id="lastDonationAt" name="lastDonationAt" value={lastDonationAt} max={todayDate()} onChange={(value) => {
 setLastDonationAt(value);
 if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "available" ? "busy" : current);
