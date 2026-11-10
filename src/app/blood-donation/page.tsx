@@ -141,12 +141,12 @@ action={user?.id === request.requesterId ? (
 </div>
 )}
 <div className="grid gap-8 lg:grid-cols-2">
-<div id="donor-form" className="scroll-mt-24 rounded-2xl border border-brand-200 bg-gradient-to-b from-brand-50 to-white p-5 shadow-sm">
+<div id="donor-form" className="scroll-mt-24 rounded-2xl border border-brand-200 bg-gradient-to-b from-brand-50 to-white p-4 shadow-sm">
 <h3 className="font-semibold text-slate-900">Donor registration</h3>
 <p className="mt-1 text-sm text-slate-600">
 {donorProfile ? "Update your donor profile and availability." : "Register as a voluntary blood donor."}
 </p>
-<div className="mt-4">
+<div className="mt-3">
 <DonorForm divisions={options.divisions} districts={options.districts} upazilas={options.upazilas} profile={donorProfile} />
 </div>
 </div>
