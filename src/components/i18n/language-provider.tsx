@@ -18,7 +18,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({
   children,
-  initialLanguage = "bn",
+  initialLanguage = "en",
 }: {
   children: ReactNode;
   initialLanguage?: Language;
