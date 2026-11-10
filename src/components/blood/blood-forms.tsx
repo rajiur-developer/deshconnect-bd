@@ -61,11 +61,11 @@ useEffect(() => {
 if (lastDonationAt && !canDonate && availability === "available") setAvailability("busy");
 }, [lastDonationAt, canDonate, availability]);
 return (
-<form action={formAction} className="space-y-3">
+<form action={formAction} className="space-y-4">
 {profile?.archivedAt && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
 {t("Your donor profile is archived and hidden from public listings. Your record remains available to admins. Save this form to restore your listing.")}
 </p>}
-<section className="space-y-2 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+<section className="space-y-3">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Donor information</h4>
 <p className="mt-1 text-sm text-slate-500">Choose your blood group and preferred contact method.</p>
@@ -89,7 +89,7 @@ return (
 </Field>
 </div>
 </section>
-<section className="space-y-2 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+<section className="space-y-3">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Contact information</h4>
 <p className="mt-1 text-sm text-slate-500">Provide the phone numbers people can use to contact you.</p>
@@ -103,14 +103,14 @@ return (
 </Field>
 </div>
 </section>
-<section className="space-y-2 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+<section className="space-y-3">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Location</h4>
 <p className="mt-1 text-sm text-slate-500">Select where you are available to donate blood.</p>
 </div>
 <LocationFields idPrefix="donor-" divisions={divisions} districts={districts} upazilas={upazilas} current={{ divisionId: profile?.divisionId ?? undefined, districtId: profile?.districtId ?? undefined, upazilaId: profile?.upazilaId ?? undefined }} required />
 </section>
-<section className="space-y-3 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+<section className="space-y-3">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Donation details</h4>
 <p className="mt-1 text-sm text-slate-500">Enter your last donation date. Your availability option will appear after a valid date is selected.</p>
@@ -141,7 +141,7 @@ if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "
 )}
 {lastDonationAt && !eligibility && <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{t("Enter a valid last donation date.")}</p>}
 </section>
-<section className="space-y-2 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+<section className="space-y-3">
 <div>
 <h4 className="text-base font-semibold text-slate-900">Additional information</h4>
 <p className="mt-1 text-sm text-slate-500">Add an optional note for people looking for a donor.</p>
@@ -150,7 +150,7 @@ if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "
 <Input id="notes" name="notes" defaultValue={profile?.notes ?? ""} placeholder="What donors should know" />
 </Field>
 </section>
-<div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+<div className="space-y-3">
 <label className="flex items-start gap-2 text-sm text-slate-700">
 <input type="checkbox" name="consentListed" defaultChecked={profile?.consentListed ?? false} required className="mt-1" />
 <span>{t("I consent to my name being listed publicly as a blood donor.")}</span>
