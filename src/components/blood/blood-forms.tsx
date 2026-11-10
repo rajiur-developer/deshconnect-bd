@@ -61,7 +61,7 @@ useEffect(() => {
 if (lastDonationAt && !canDonate && availability === "available") setAvailability("busy");
 }, [lastDonationAt, canDonate, availability]);
 return (
-<form action={formAction} className="space-y-4">
+<form action={formAction} className="space-y-5">
 {profile?.archivedAt && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
 {t("Your donor profile is archived and hidden from public listings. Your record remains available to admins. Save this form to restore your listing.")}
 </p>}
@@ -74,17 +74,6 @@ return (
 ))}
 </select>
 </Field>
-<Field label="Availability" htmlFor="availability" required>
-<select id="availability" name="availability" value={availability} onChange={(event) => setAvailability(event.target.value as DonorAvailability)} required className={selectClass}>
-<option value="available" disabled={!canDonate}>{t("Ready")}</option>
-<option value="busy">{t("Busy")}</option>
-<option value="unavailable">{t("Not available")}</option>
-</select>
-</Field>
-{lastDonationAt && eligibility && !eligibility.eligible && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 sm:col-span-2">
-{t("You can mark yourself Ready in")} <strong>{cooldownLabel(eligibility.remainingMs)}</strong> {t("(75 days after your last donation).")}
-</p>}
-{lastDonationAt && !eligibility && <p role="alert" className="text-sm text-accent-600 sm:col-span-2">{t("Enter a valid last donation date.")}</p>}
 <Field label="Preferred contact method" htmlFor="preferredContact" required>
 <select id="preferredContact" name="preferredContact" defaultValue={profile?.preferredContact ?? "phone"} required className={selectClass}>
 <option value="phone">{t("Phone")}</option>
@@ -101,18 +90,47 @@ return (
 </Field>
 
 </div>
-<LocationFields idPrefix="donor-" divisions={divisions} districts={districts} upazilas={upazilas} current={{ divisionId: profile?.divisionId ?? undefined, districtId: profile?.districtId ?? undefined, upazilaId: profile?.upazilaId ?? undefined }} required />
-<div className="grid gap-3 sm:grid-cols-2">
-<Field label="Last donation date" htmlFor="lastDonationAt" required hint="Ready status becomes available 75 days after this date.">
+<LocationFields idPrefix="donor-" divisions={divisions} districts={districts} upazilas={upazilas} current={{ divisionId: profile?.divisionId ?? undefined, districtId: profile?.districtId ?? undefined, upazilaId: profile?.upazilaId ?? undefined }} required />\n</div>\n</section>
+<section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+<div>
+<h4 className="text-base font-semibold text-slate-900">Donation details</h4>
+<p className="mt-1 text-sm text-slate-500">Add your last donation date to check when you can donate again.</p>
+</div>
+<Field label="Last donation date" htmlFor="lastDonationAt" required hint="You can select Ready after 75 days from your last donation.">
 <DateInput id="lastDonationAt" name="lastDonationAt" value={lastDonationAt} max={todayDate()} onChange={(value) => {
 setLastDonationAt(value);
 if (!isValidBloodDonationDate(value)) setAvailability((current) => current === "available" ? "busy" : current);
 }} required />
 </Field>
+{lastDonationAt && eligibility && (
+<div className={`rounded-xl border p-3 sm:p-4 ${eligibility.eligible ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
+<p className={`text-sm font-medium ${eligibility.eligible ? "text-emerald-800" : "text-amber-900"}`}>
+{eligibility.eligible
+? t("You are eligible to donate blood again.")
+: <>{t("You can mark yourself Ready in")} <strong>{cooldownLabel(eligibility.remainingMs)}</strong> {t("(75 days after your last donation).")}</>}
+</p>
+<div className="mt-3 max-w-sm">
+<Field label="Availability" htmlFor="availability" required>
+<select id="availability" name="availability" value={availability} onChange={(event) => setAvailability(event.target.value as DonorAvailability)} required className={selectClass}>
+<option value="available" disabled={!canDonate}>{t("Ready")}</option>
+<option value="busy">{t("Busy")}</option>
+<option value="unavailable">{t("Not available")}</option>
+</select>
+</Field>
+</div>
+</div>
+)}
+{lastDonationAt && !eligibility && <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{t("Enter a valid last donation date.")}</p>}
+</section>
+<section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+<div>
+<h4 className="text-base font-semibold text-slate-900">Additional information</h4>
+<p className="mt-1 text-sm text-slate-500">Add an optional note for people looking for a donor.</p>
+</div>
 <Field label="Notes" htmlFor="notes" hint="Optional">
 <Input id="notes" name="notes" defaultValue={profile?.notes ?? ""} placeholder="What donors should know" />
 </Field>
-</div>
+</section>
 <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
 <label className="flex items-start gap-2 text-sm text-slate-700">
 <input type="checkbox" name="consentListed" defaultChecked={profile?.consentListed ?? false} required className="mt-1" />
